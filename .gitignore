@@ -1,0 +1,13 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv/
+venv/
+
+# VSCode settings (如果你用 VS Code)
+.vscode/
+
+# Mac 系統檔案
+.DS_Store
