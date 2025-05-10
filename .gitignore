@@ -6,7 +6,7 @@ __pycache__/
 .venv/
 venv/
 
-# VSCode settings (如果你用 VS Code)
+# VSCode settings
 .vscode/
 
 # Mac 系統檔案
