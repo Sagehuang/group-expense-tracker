@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
-# from models.user import User
+from db.database import db
+from models.user import User
 
 users_bp = Blueprint("users", __name__, url_prefix="/api/users")
 
@@ -43,18 +44,20 @@ def sign_in():
     return jsonify(user), 200  # 用 json 格式回傳 user dict, 回傳 HTTP status code 200 (表示成功)
 
 """
-等到 db 完成後 route 應該會改寫成下面這樣，也就是不需要假資料的版本：
+# db 已完成 你可以換成下面的版本玩玩看
 @users_bp.route("/signin", methods=["POST"])
 def sign_in():
     data = request.get_json()
     name = data.get("name")
 
-    # 這段先不用管，用途是跟資料庫互動 e.g. 取資料、存資料、更新資料，等到 models.user 寫好就知道怎麼用了，在此之前可以先用簡單的邏輯代替，如上
-    user = User.query.filter_by(name=name).first()
+    # 嘗試找出是否已有此使用者
+    user = User.query.filter_by(name=name).first() # 若已有此使用者 return user object; 若無此使用者 return None
+
+    # 若無此使用者，則新增此使用者
     if not user:
-        user = User(name=name)
-        db.session.add(user)
-        db.session.commit()
+        user = User(name=name)  # 新增一個 User object
+        db.session.add(user)  # 將新使用者加入到資料庫
+        db.session.commit()  # 提交更改到資料庫
 
     return jsonify({"id": user.id, "name": user.name}), 200
 """
