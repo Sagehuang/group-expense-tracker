@@ -1,11 +1,11 @@
 from flask import Blueprint, request, jsonify
 from db.database import db
 from models.user import User
+from models.group import Group
 
 users_bp = Blueprint("users", __name__, url_prefix="/api/users")
 
-# 使用者登入（若不存在則自動註冊）
-# 根據 name 查詢使用者，若無則新增；最後回傳使用者資訊
+# 新增 group:
 @users_bp.route("/signin", methods=["POST"])
 def sign_in():
     data = request.get_json()
@@ -22,22 +22,41 @@ def sign_in():
 
     return jsonify({"id": user.id, "name": user.name}), 200
 
-# 取得所有使用者及其所屬群組
-@users_bp.route("/get_users", methods = ["GET"])
-def get_users():
-    users = User.query.all()
+# 根據 name 查詢 group data:
+@users_bp.route("/get_user", methods=["POST"])
+def get_user_by_name():
+    data = request.get_json()
+    name = data.get("name")
 
-    result = []
-    for user in users:
-        result.append({
-            "id": user.id,
-            "name": user.name,
-            "groups": [g.name for g in user.groups]  # Optional: list group names
-        })
+    user = User.query.filter_by(name=name).first()
+    if not user:
+        return jsonify({"error": "User not found"}), 404
 
-    return jsonify(result), 200
+    return jsonify({
+        "id": user.id,
+        "name": user.name,
+        "groups": [g.name for g in user.groups]
+    }), 200
 
-# 根據名稱刪除使用者
+# 新增 group 的 members
+@users_bp.route("/add_user_to_group", methods=["POST"])
+def add_user_to_group():
+    data = request.get_json()
+    user_name = data.get("user_name")
+    group_name = data.get("group_name")
+
+    user = User.query.filter_by(name=user_name).first()
+    group = Group.query.filter_by(name=group_name).first()
+
+    if not user or not group:
+        return jsonify({"error": "User or group not found"}), 404
+
+    user.groups.append(group)
+    db.session.commit()
+
+    return jsonify({"message": f"User '{user_name}' added to group '{group_name}'"}), 200
+
+# 移除 user:
 @users_bp.route("/delete_user", methods=["DELETE"])
 def delete_user():
     data = request.get_json()
@@ -56,9 +75,8 @@ def delete_user():
 
 
 """ Optional but useful additions later:
-Add a /get_user/<id> route to get a single user
 
-Support deleting users by id instead of just name
+Support adding and deleting users by id instead of just name
 
 Add input validation (e.g., ensure name is not empty) """
 
