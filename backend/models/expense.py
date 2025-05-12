@@ -68,6 +68,25 @@ class Expense(db.Model):
     group_id = db.Column(db.Integer, db.ForeignKey('groups_table.id'), nullable=False)
     group = db.relationship('Group', back_populates='expenses')
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "amount": self.amount,
+            "note": self.note,
+            "payer": {
+                "id": self.payer.id,
+                "name": self.payer.name
+            },
+            "participants": [
+                {"id": user.id, "name": user.name} for user in self.participants
+            ],
+            "group": {
+                "id": self.group.id,
+                "name": self.group.name
+            }
+        }
+
     def __repr__(self):
         user_names = [u.name for u in self.participants]
         return f"<Expense id={self.id}, name={self.name}, amount={self.amount}, note={self.note}, payer={self.payer.name}, participants={user_names}, group={self.group.name}>"

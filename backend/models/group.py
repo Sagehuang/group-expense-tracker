@@ -44,6 +44,18 @@ class Group(db.Model):
     # 一對多關聯：此 Group 有多筆 Expense
     expenses = db.relationship('Expense', back_populates='group', cascade='all, delete-orphan')  # 刪除 Group 時會自動刪除其所有 Expense
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "members": [
+                {"id": user.id, "name": user.name} for user in self.members
+            ],
+            "expenses": [
+                {"id": expense.id, "name": expense.name} for expense in self.expenses
+            ]
+        }
+
     def __repr__(self):
         user_names = [u.name for u in self.members]
         expense_names = [e.name for e in self.expenses]
