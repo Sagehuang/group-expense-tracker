@@ -7,9 +7,9 @@ ctk.set_default_color_theme('blue')
 
 
 class AddExpense(ctk.CTkFrame):
-    def __init__(self, master, username):
+    def __init__(self, master, group_name):
         super().__init__(master)
-        self.username = username
+        self.group_name = group_name
 
 
 
@@ -133,7 +133,6 @@ class AddExpense(ctk.CTkFrame):
             self.result_label.configure(text='Amount must be a valid positive number.')
             return
 
-        
         # # 回傳這筆added expense給後端
 
         # expense_data = {
