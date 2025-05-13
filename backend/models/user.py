@@ -40,6 +40,15 @@ class User(db.Model):
     # 多對多關聯：此 User 參加哪些 Group
     groups = db.relationship('Group', secondary=user_groups, back_populates='members')
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "groups": [
+                {"id": group.id, "name": group.name} for group in self.groups
+            ]
+        }
+
     def __repr__(self):
         group_names = [g.name for g in self.groups]
         return f"<User id={self.id}, name={self.name}, groups={group_names}>"
