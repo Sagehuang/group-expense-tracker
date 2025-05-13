@@ -26,16 +26,6 @@ def create_group():
 
     return jsonify(group.to_dict()), 201
 
-# 根據 name 查詢 group data:
-@group_bp.route("/by_name/<string:name>", methods=["GET"])
-def get_group_by_name(name):
-    group = Group.query.filter_by(name=name).first()
-
-    if not group:
-        return jsonify({"error": "Group not found"}), 404
-
-    return jsonify(group.to_dict()), 200
-
 # 新增 group 的 members
 @group_bp.route("/<int:group_id>/join", methods=["POST"])
 def join_group(group_id):
@@ -54,6 +44,14 @@ def join_group(group_id):
 
     return jsonify({"message": f"User {user.name} joined group {group.name}"}), 200
 
+# 根據 group_id 查詢 group 資料
+@group_bp.route("/<int:group_id>", methods=["GET"])
+def get_group(group_id):
+    group = Group.query.get(group_id)
+    if not group:
+        return jsonify({"error": "Group not found"}), 404
+    return jsonify(group.to_dict()), 200
+
 # 移除 group:
 @group_bp.route("/<int:group_id>", methods=["DELETE"])
 def delete_group(group_id):
@@ -66,10 +64,12 @@ def delete_group(group_id):
     db.session.commit()
     return jsonify({"message": f"Group '{group.name}' deleted successfully."}), 200
 
-# 根據 group_id 查詢 group 資料
-@group_bp.route("/<int:group_id>", methods=["GET"])
-def get_group(group_id):
-    group = Group.query.get(group_id)
+# 根據 name 查詢 group data (models.group 那邊註解開的函數)
+@group_bp.route("/by_name/<string:name>", methods=["GET"])
+def get_group_by_name(name):
+    group = Group.query.filter_by(name=name).first()
+
     if not group:
         return jsonify({"error": "Group not found"}), 404
+
     return jsonify(group.to_dict()), 200
