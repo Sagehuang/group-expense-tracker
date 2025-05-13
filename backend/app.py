@@ -6,7 +6,8 @@ from models.user import User  # db debug
 from models.group import Group  # db debug
 from models.expense import Expense  # db debug
 from routes.users import users_bp
-# from routes.groups import groups_bp
+from routes.groups import group_bp
+from routes.expenses import expense_bp
 # from routes.transactions import transactions_bp
 
 def create_app():
@@ -17,7 +18,8 @@ def create_app():
 
     # 設置 Blueprints
     app.register_blueprint(users_bp)
-    # app.register_blueprint(groups_bp)
+    app.register_blueprint(group_bp)
+    app.register_blueprint(expense_bp)
     # app.register_blueprint(transactions_bp)
 
     """

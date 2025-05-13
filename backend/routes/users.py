@@ -61,7 +61,7 @@ def sign_in():
         db.session.add(user)  # 將新使用者加入到資料庫
         db.session.commit()  # 提交更改到資料庫
 
-    return jsonify({"id": user.id, "name": user.name}), 200
+    return jsonify(user.to_dict()), 200
 
 # 根據 name 查詢 group data:
 @users_bp.route("/get_user", methods=["POST"])
@@ -73,11 +73,7 @@ def get_user_by_name():
     if not user:
         return jsonify({"error": "User not found"}), 404
 
-    return jsonify({
-        "id": user.id,
-        "name": user.name,
-        "groups": [g.name for g in user.groups]
-    }), 200
+    return jsonify(user.to_dict()), 200
 
 # 新增 group 的 members
 @users_bp.route("/add_user_to_group", methods=["POST"])
