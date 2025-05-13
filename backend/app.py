@@ -55,7 +55,7 @@ def create_app():
     def show_expenses():
         # 列出所有 Expense 資料
         expenses = Expense.query.all()
-        return "\n".join([f"ID: {expense.id}, Name: {expense.name}, Amount: {expense.amount}, Note: {expense.note}, Payer: {expense.payer.name}, Participants: {[user.name for user in expense.participants]}, Group: {expense.group.name}" for expense in expenses])
+        return "\n".join([f"ID: {expense.id}, Name: {expense.name}, Amount: {expense.amount}, Note: {expense.note}, Created_at: {expense.created_at}, Payer: {expense.payer.name}, Participants: {[user.name for user in expense.participants]}, Group: {expense.group.name}" for expense in expenses])
 
     return app
 

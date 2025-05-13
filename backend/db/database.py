@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 # 建立 SQLAlchemy 實例
 db = SQLAlchemy()
@@ -33,6 +34,7 @@ def init_db(app):
                 name='Dinner',
                 amount=150.0,
                 note='Group 1 dinner expense',
+                created_at=datetime.fromisoformat('2025-05-13T20:00:00'),
                 payer=user1,
                 group=group1,
                 participants=[user1, user2]
@@ -42,6 +44,7 @@ def init_db(app):
                 name='Hotel',
                 amount=300.0,
                 note='Group 2 hotel expense',
+                created_at=datetime.fromisoformat('2025-05-13T15:30:00'),
                 payer=user3,
                 group=group2,
                 participants=[user2, user3]
@@ -51,6 +54,7 @@ def init_db(app):
                 name='Museum Tickets',
                 amount=90.0,
                 note=None,  # 可為 None
+                created_at=datetime.fromisoformat('2025-05-13T09:00:00'),
                 payer=user2,
                 group=group1,
                 participants=[user1, user2]
