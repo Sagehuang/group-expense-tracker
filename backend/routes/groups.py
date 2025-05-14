@@ -41,6 +41,8 @@ def join_group(group_id):
     if user not in group.members:
         group.members.append(user)
         db.session.commit()
+    else:
+        return jsonify({"error": f"User {user.name} already joined group {group.name}"}), 400
 
     return jsonify({"message": f"User {user.name} joined group {group.name}"}), 200
 

@@ -79,11 +79,14 @@ def update_expense(expense_id):
         expense.payer = payer
 
     # 更新 participants
-    if "participant_ids" in data:
-        participant_ids = data.get("participant_ids")
-        participants = [
-            User.query.get(uid) for uid in participant_ids if User.query.get(uid)
-        ]
+    participant_ids = data.get("participant_ids")
+    if participant_ids:
+        participants = []
+        for uid in participant_ids:
+            user = User.query.get(uid)
+            if not user:
+                return jsonify({"error": f"Participant with id {uid} not found"}), 404
+            participants.append(user)
         expense.participants = participants
 
     db.session.commit()
