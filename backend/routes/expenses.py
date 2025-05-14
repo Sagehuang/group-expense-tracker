@@ -12,16 +12,16 @@ expense_bp = Blueprint("expenses", __name__, url_prefix="/api/expenses")
 def create_expense():
     data = request.get_json()
 
-    group_id = data.get("group_id")
-    payer_id = data.get("payer_id")
-    amount = data.get("amount")
     name = data.get("name")
+    amount = data.get("amount")
     note = data.get("note")
+    payer_id = data.get("payer_id")
     participant_ids = data.get("participant_ids")
+    group_id = data.get("group_id")
     created_at = datetime.now()  # 可讓後端決定時間
 
     # 欄位驗證
-    if not all([group_id, payer_id, name, amount, participant_ids]):
+    if not all([name, amount, payer_id, participant_ids, group_id]):
         return jsonify({"error": "Missing required fields"}), 400
 
     group = Group.query.get(group_id)
@@ -38,17 +38,17 @@ def create_expense():
         name=name,
         amount=amount,
         note=note,
-        created_at=created_at,
         payer=payer,
+        participants=participants,
         group=group,
-        participants=participants
+        created_at=created_at
     )
     db.session.add(expense)
     db.session.commit()
 
     return jsonify(expense.to_dict()), 201
 
-# 根據 id 查詢 expense data:
+# 根據 id 查詢 expense 資料:
 @expense_bp.route("/<int:expense_id>", methods=["GET"])
 def get_expense(expense_id):
     expense = Expense.query.get(expense_id)
@@ -90,7 +90,7 @@ def update_expense(expense_id):
         expense.participants = participants
 
     db.session.commit()
-    return jsonify(expense.to_dict()), 200
+    return jsonify({"message": f"Expense {expense.id} updated successfully."}), 200
 
 
 # 移除 expense:

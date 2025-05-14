@@ -8,7 +8,6 @@ from models.expense import Expense  # db debug
 from routes.users import users_bp
 from routes.groups import group_bp
 from routes.expenses import expense_bp
-# from routes.transactions import transactions_bp
 
 def create_app():
     app = Flask(__name__)
@@ -20,7 +19,6 @@ def create_app():
     app.register_blueprint(users_bp)
     app.register_blueprint(group_bp)
     app.register_blueprint(expense_bp)
-    # app.register_blueprint(transactions_bp)
 
     """
     route testing
