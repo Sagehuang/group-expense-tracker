@@ -23,6 +23,7 @@ group = Group.query.get(group_id)  # return a Group object -> 可以進一步利
 3. 新增 group 的 members
 group = Group.query.get(group_id)  # 先根據 id 找到要新增 member 的 group
 group.members.append(user)  # user 要是已經建立寫入資料庫的 User object
+db.session.commit()  # 提交變更
 # 注意：透過這個方法新增 group 的 member 後，對應的 User object 那邊也會自動在 groups 處新增這個 group (很方便，只要改一處另一處會自己改)
 
 4. 移除 group:
