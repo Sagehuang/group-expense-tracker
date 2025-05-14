@@ -16,15 +16,17 @@ user = User(name=name)  # 傳入 name 新增一個 User object
 db.session.add(user)  # 將新使用者加入到資料庫
 db.session.commit()  # 提交變更
 
-2. 根據 name 查詢 user data:
+2. 根據 name / id 查詢 user data:
 user = User.query.filter_by(name=name).first()  # return a User object -> 可以進一步利用 .id/.name/.groups 取得其 instance variables
+user = User.query.get(user_id)  # return a User object -> 可以進一步利用 .id/.name/.groups 取得其 instance variables
 
 3. 新增 user 的 group:
+user = User.query.get(user_id)  # 先根據 id 找到要新增 group 的 user
 user.groups.append(group)  # group 要是已經建立寫入資料庫的 Group object (也就是說必須在此之前先提交 db.session.commit() 細節見 models/group.py)
 # 注意：透過這個方法新增 user 的 group 後，對應的 Group object 那邊也會自動在 members 處新增這個 user (很方便，只要改一處另一處會自己改)
 
 4. 移除 user:
-user = User.query.filter_by(name=name).first()  # 先根據 name 找到要刪除的 user
+user = User.query.get(user_id)  # 先根據 id 找到要刪除的 user
 db.session.delete(user)  # 從 session 中刪除
 db.session.commit()  # 提交變更
 """

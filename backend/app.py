@@ -43,21 +43,21 @@ def create_app():
     def show_users():
         # 列出所有 User 資料
         users = User.query.all()
-        return "\n".join([f"ID: {user.id}, Name: {user.name}, Group: {[group.name for group in user.groups]}" for user in users])
+        return "\n".join([repr(user) for user in users])
     
     # db debug
     @app.route('/show_groups')
     def show_groups():
         # 列出所有 Group 資料
         groups = Group.query.all()
-        return "\n".join([f"ID: {group.id}, Name: {group.name}, Members: {[user.name for user in group.members]}, Expenses: {[expense.name for expense in group.expenses]}" for group in groups])
+        return "\n".join([repr(group) for group in groups])
     
     # db debug
     @app.route('/show_expenses')
     def show_expenses():
         # 列出所有 Expense 資料
         expenses = Expense.query.all()
-        return "\n".join([f"ID: {expense.id}, Name: {expense.name}, Amount: {expense.amount}, Note: {expense.note}, Created_at: {expense.created_at}, Payer: {expense.payer.name}, Participants: {[user.name for user in expense.participants]}, Group: {expense.group.name}" for expense in expenses])
+        return "\n".join([repr(expense) for expense in expenses])
 
     return app
 
