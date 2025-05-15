@@ -12,7 +12,7 @@ ctk.set_default_color_theme('blue')
 fake_database = {'000012': {'Group Name': 'Group A', 'Members': ['Alice', 'Bob']},
                  '000013': {'Group Name': 'Group B', 'Members': ['Charlie', 'Daisy']}}
 
-def get_group_info(group_id):
+def get_members_info(group_id):
     data = fake_database.get(group_id)
     if data:
         group_name = data['Group Name']
@@ -24,7 +24,7 @@ class ViewMembers(ctk.CTkFrame):
     def __init__(self, master, group_id):
         super().__init__(master)
 
-        group_name, members_list = get_group_info(group_id)
+        group_name, members_list = get_members_info(group_id)
 
 
         # 整體排版
