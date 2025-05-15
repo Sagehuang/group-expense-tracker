@@ -55,7 +55,7 @@ class ViewMembers(ctk.CTkFrame):
 
         # 模擬群組內有成員
         User_list = [User('Alice'), User('Bob')]
-        self.group_members = [Group('Group A', '000012', User_list)] 
+        self.group_members = [Group('Group A', str(000012), User_list)] 
         # 預期 self.group_members 是從資料庫抓取，列表中為 Group 類別
 
         if self.group_members:
