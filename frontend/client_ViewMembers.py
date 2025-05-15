@@ -5,26 +5,26 @@ ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
 
 
-# 先自行設定假資料
-class Group:
-    def __init__(self, name, ID, members):
-        self.name = name
-        self.ID = ID
-        self.members = members
 
-class User:
-    def __init__(self, name):
-        self.name = name
+# 先設定假資料
+# nested dictionary 
 
+fake_database = {'000012': {'Group Name': 'Group A', 'Members': ['Alice', 'Bob']},
+                 '000013': {'Group Name': 'Group B', 'Members': ['Charlie', 'Daisy']}}
 
-# =====
+def get_members_info(group_id):
+    data = fake_database.get(group_id)
+    if data:
+        group_name = data['Group Name']
+        members_list = data['Members']
+        return group_name, members_list
 
 
 class ViewMembers(ctk.CTkFrame):
-    def __init__(self, master, group_name):
+    def __init__(self, master, group_id):
         super().__init__(master)
-        self.group_name = group_name
 
+        group_name, members_list = get_members_info(group_id)
 
 
         # 整體排版
@@ -54,41 +54,27 @@ class ViewMembers(ctk.CTkFrame):
         scrollable.grid(row=1, column=0, sticky='nsew', padx=10)
 
         # 模擬群組內有成員
-        User_list = [User('Alice'), User('Bob')]
-        self.group_members = [Group('Group A', str(000012), User_list)] 
-        # 預期 self.group_members 是從資料庫抓取，列表中為 Group 類別
 
-        if self.group_members:
-            for i in range(len(self.group_members)):
-                members_frame = ctk.CTkFrame(scrollable, fg_color='transparent')
-                members_frame.pack(padx=10, pady=10, fill='x')
-                members_frame.grid_columnconfigure(0, weight=1)
+        if members_list:
+            members_frame = ctk.CTkFrame(scrollable, fg_color='transparent')
+            members_frame.pack(padx=10, pady=10, fill='x')
+            members_frame.grid_columnconfigure(0, weight=1)
 
-                group = self.group_members[i]
-                group_name = group.name
-                group_id = group.ID
-                group_members = group.members
 
-                group_name_label = ctk.CTkLabel(members_frame, text=f'Group Name: {group_name}', font=mid_font)
-                group_id_label = ctk.CTkLabel(members_frame, text=f'ID: {group_id}', font=small_font)
+            group_name_label = ctk.CTkLabel(members_frame, text=f'Group Name: {group_name}', font=mid_font)
+            group_id_label = ctk.CTkLabel(members_frame, text=f'ID: {group_id}', font=small_font)
 
-                group_name_label.grid(row=0, column=0, padx=20)
-                group_id_label.grid(row=1, column=0, padx=20)
+            group_name_label.grid(row=0, column=0, padx=20)
+            group_id_label.grid(row=1, column=0, padx=20)
 
-                # 正確：針對 group.members 迴圈
-                for idx_member, member in enumerate(self.group_members[i].members): # self.group_members[i].members：一個Group object裡面的屬性members
-                    # self.group_members：list（集合），每個元素都是一個 Group object
-                    # self.group_members[i]：一個Group object
-                    # self.group_members[i].name：一個Group object裡面的屬性name
-                    # self.group_members[i].ID：一個Group object裡面的屬性ID
-                    # self.group_members[i].members：一個Group object裡面的屬性members
-                    
-                    group_member_label = ctk.CTkLabel(members_frame, text=member.name, font=mid_font)
-                    group_member_label.grid(row=2 + idx_member * 2, column=0, padx=20, sticky='w') # double space
+            # 遍歷members_list
+            for index, member in enumerate(members_list): 
+                group_member_label = ctk.CTkLabel(members_frame, text=member, font=mid_font)
+                group_member_label.grid(row=2 + index * 2, column=0, padx=20, sticky='w') # double space
 
-                    # 加一條黑色橫線
-                    line_frame = ctk.CTkFrame(members_frame, height=1, fg_color='black')
-                    line_frame.grid(row=3 + idx_member * 2, column=0, padx=20, sticky='ew') # double space
+                # 加一條黑色橫線
+                line_frame = ctk.CTkFrame(members_frame, height=1, fg_color='black')
+                line_frame.grid(row=3 + index * 2, column=0, padx=20, sticky='ew') # double space
 
         else:
             no_members_label = ctk.CTkLabel(scrollable, text='There are no members in this group.', font=small_font)
@@ -123,7 +109,7 @@ if __name__ == '__main__':
     app.geometry('400x640')
     app.title('Group Expense Tracker')
 
-    view_members = ViewMembers(app, 'Group A')
+    view_members = ViewMembers(app, '000012')
     view_members.pack(fill='both', expand=True)
 
     app.mainloop()
