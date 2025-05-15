@@ -9,11 +9,11 @@ ctk.set_default_color_theme('blue')
 # 先設定假資料
 # nested dictionary 
 
-fake_database = {'000012': {'Group Name': 'Group A', 'Members': ['Alice', 'Bob']},
+members_database = {'000012': {'Group Name': 'Group A', 'Members': ['Alice', 'Bob']},
                  '000013': {'Group Name': 'Group B', 'Members': ['Charlie', 'Daisy']}}
 
 def get_members_info(group_id):
-    data = fake_database.get(group_id)
+    data = members_database.get(group_id)
     if data:
         group_name = data['Group Name']
         members_list = data['Members']
