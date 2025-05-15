@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify
 from db.database import db
 from models.user import User
-from models.group import Group
 
 users_bp = Blueprint("users", __name__, url_prefix="/api/users")
 
@@ -46,7 +45,7 @@ def get_user_detail(user_id):  # 上面用 <> 包起來的東西可以作為參�
 curl -X GET http://localhost:5001/api/users/1
 """
 
-# 使用者註冊 / 登入
+# 登入/註冊 user
 @users_bp.route("/signin", methods=["POST"])
 def signin():
     data = request.get_json()
@@ -62,7 +61,7 @@ def signin():
 
     return jsonify(user.to_dict()), 200
 
-# 根據 id 查詢 user
+# 根據 id 查詢 user 資料
 @users_bp.route("/<int:user_id>", methods=["GET"])
 def get_user_detail(user_id):
     user = User.query.get(user_id)
@@ -81,41 +80,6 @@ def delete_user_by_id(user_id):
     db.session.commit()
     return jsonify({"message": "User deleted successfully"}), 200
 
-# 根據 name 查詢 user data (models.user 那邊註解開的函數)
-@users_bp.route("/get_user", methods=["POST"])
-def get_user_by_name():
-    data = request.get_json()
-    name = data.get("name")
-    user = User.query.filter_by(name=name).first()
-    if not user:
-        return jsonify({"error": "User not found"}), 404
-    return jsonify(user.to_dict()), 200
-
-# 新增 user 的 group (models.user 那邊註解開的函數)
-@users_bp.route("/add_user_to_group", methods=["POST"])
-def add_user_to_group():
-    data = request.get_json()
-    user_name = data.get("user_name")
-    group_id = data.get("group_id")
-
-    user = User.query.filter_by(name=user_name).first()
-    group = Group.query.get(group_id)
-
-    if not user or not group:
-        return jsonify({"error": "User or group not found"}), 404
-
-    if group not in user.groups:
-        user.groups.append(group)
-        db.session.commit()
-
-    return jsonify({"message": f"User '{user.name}' added to group '{group.name}'"}), 200
-
-
-""" Optional but useful additions later:
-
-Support adding and deleting users by id instead of just name
-
-Add input validation (e.g., ensure name is not empty) """
 
 
 

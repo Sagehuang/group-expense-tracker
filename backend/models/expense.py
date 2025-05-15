@@ -31,7 +31,7 @@ db.session.add(expense)  # 將新支出加入到資料庫
 db.session.commit()  # 提交變更
 
 2. 根據 id 查詢 expense data:
-expense = Expense.query.get(expense_id)  # return a Expense object -> 可以進一步利用 .id/.name/.amount/.note/.payer/.group/.participants 取得其 instance variables
+expense = Expense.query.get(expense_id)  # return a Expense object -> 可以進一步利用 .id/.name/.amount/.note/.created_at/.payer/.group/.participants 取得其 instance variables
 
 3. 修改 expense:
 expense = Expense.query.get(expense_id)  # 先根據 id 找到要修改的 expense
@@ -39,13 +39,13 @@ expense.name = 'Updated Dinner'
 expense.amount = 200.0
 expense.note = 'updated note'
 expense.create_at = datetime.fromisoformat('2025-05-13T18:30:00')
-expense.payer = new_payer_user      # 可替換為其他 User object
-expense.group = new_group_object    # 可替換為其他 Group object
-expense.participants = [user1, user3]
+expense.payer = user3  # 可替換為其他 User object
+expense.group = group1  # 可替換為其他 Group object
+expense.participants = [user1, user3]  # 可替換為其他 User object
 db.session.commit()  # 提交變更
 
 4. 移除 expense:
-expense = Expense.query.get(expense_id)  # 先根據 id 找到要修改的 expense
+expense = Expense.query.get(expense_id)  # 先根據 id 找到要移除的 expense
 db.session.delete(expense)  # 從 session 中刪除
 db.session.commit()  # 提交變更
 """
@@ -94,4 +94,4 @@ class Expense(db.Model):
 
     def __repr__(self):
         user_names = [u.name for u in self.participants]
-        return f"<Expense id={self.id}, name={self.name}, amount={self.amount}, note={self.note}, payer={self.payer.name}, participants={user_names}, group={self.group.name}>"
+        return f"<Expense id={self.id}, name={self.name}, amount={self.amount}, note={self.note}, created_at={self.created_at}, payer={self.payer.name}, participants={user_names}, group={self.group.name}>"
