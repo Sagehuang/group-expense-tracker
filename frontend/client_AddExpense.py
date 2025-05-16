@@ -1,5 +1,7 @@
 import customtkinter as ctk
 from datetime import datetime
+from api_client import add_expense as api_add_expense
+# from api_client import get_group_name
 
 
 ctk.set_appearance_mode('System')
@@ -9,7 +11,7 @@ ctk.set_default_color_theme('blue')
 class AddExpense(ctk.CTkFrame):
     def __init__(self, master, group_name):
         super().__init__(master)
-        self.group_name = group_name
+        self.group_name = group_name # 存入Group Name
 
 
 
@@ -86,19 +88,19 @@ class AddExpense(ctk.CTkFrame):
         self.participants_entry.grid(row=4, column=1, padx=(5, 10), pady=10, sticky='ew')
 
 
-        # 5th row：Notes
-        self.notes_label = ctk.CTkLabel(bottom_frame, text='Notes', anchor='w')
-        self.notes_label.grid(row=5, column=0, padx=(10, 5), pady=10, sticky='w')
+        # 5th row：Note
+        self.note_label = ctk.CTkLabel(bottom_frame, text='Note', anchor='w')
+        self.note_label.grid(row=5, column=0, padx=(10, 5), pady=10, sticky='w')
 
-        self.notes_entry = ctk.CTkEntry(bottom_frame)
-        self.notes_entry.grid(row=5, column=1, padx=(5, 10), pady=10, sticky='ew')
+        self.note_entry = ctk.CTkEntry(bottom_frame)
+        self.note_entry.grid(row=5, column=1, padx=(5, 10), pady=10, sticky='ew')
 
 
         # 6th row：Add
         self.add_group_button = ctk.CTkButton(bottom_frame, text='Add', command=self.on_add)
         self.add_group_button.grid(row=6, column=0, columnspan=2, pady=20)
 
-        # 7th row (potential): 
+        # 7th row: result
         self.result_label = ctk.CTkLabel(bottom_frame, text='', text_color='red')
         self.result_label.grid(row=7, column=0, columnspan=2, pady=(5, 0))
 
@@ -106,10 +108,10 @@ class AddExpense(ctk.CTkFrame):
 
 # 轉換頁面
 
-    def on_navigate_back():
+    def on_navigate_back(self):
         return
 
-    def on_logout():
+    def on_logout(self):
         return
 
 
@@ -119,44 +121,55 @@ class AddExpense(ctk.CTkFrame):
         item = self.item_entry.get().strip()
         amount_str = self.amount_entry.get().strip()
         payer = self.payer_entry.get().strip()
-        participants = self.participants_entry.get().strip()
 
-        if not item or not amount_str or not payer or not participants:
-            self.result_label.configure(text='Please fill in all fields.')
+        participants_raw = self.participants_entry.get().strip()
+        participants_list = []
+        for participant in participants_raw.split(','):
+            stripped_participant = participant.strip()
+            if stripped_participant:
+                participants_list.append(stripped_participant)
+
+        note = self.note_entry.get().strip()
+
+
+        if not item or not amount_str or not payer or not participants_list:
+            self.result_label.configure(text='Please fill in all fields.', text_color='red')
             return
 
         try:
-            amount = float(amount_str)
+            amount = int(amount_str)
             if amount <= 0:
                 raise ValueError("Amount must be positive.")
         except ValueError:
             self.result_label.configure(text='Amount must be a valid positive number.')
             return
 
-        # # 回傳這筆added expense給後端
 
-        # expense_data = {
-        # 'item': item,
-        # 'amount': amount,
-        # 'payer': payer,
-        # 'note': note,
-        # 'date': datetime.now().strftime('%Y-%m-%d'),
-        # 'time': datetime.now().strftime('%H:%M'),
-        # 'group': self.username  # 假設 self.username 是 group 名
-        # }
+        # 資料集合成一個dictionary，回傳給後端
+        expense_data = {
+            'Date': datetime.now().strftime('%Y/%m/%d'),
+            'Time': datetime.now().strftime('%H:%M'),
+            'Item': item,
+            'Amount': amount,
+            'Payer': payer,
+            'Participants': participants_list,
+            'Note': note,
+            'Group Name': self.group_name  # 這筆資料存入這個Group
+        }
 
-        # success = send_expense_to_backend(expense_data)  # 回傳expense給後端的function
+        # 呼叫API function
+        success = api_add_expense(expense_data)
 
-        # if success:
-        #     self.result_label.configure(text='Expense added successfully.')
-            
-        #     # 清空輸入欄
-        #     self.item_entry.delete(0, 'end')
-        #     self.amount_entry.delete(0, 'end')
-        #     self.payer_entry.delete(0, 'end')
-        #     self.note_entry.delete(0, 'end')
-        # else:
-        #     self.result_label.configure(text='Failed to add expense.')
+        if success:
+            self.result_label.configure(text='Expense added successfully.', text_color='green')
+            # 清空欄位，使用者可以加入新的一筆expense
+            self.item_entry.delete(0, 'end')
+            self.amount_entry.delete(0, 'end')
+            self.payer_entry.delete(0, 'end')
+            self.participants_entry.delete(0, 'end')
+            self.note_entry.delete(0, 'end')
+        else:
+            self.result_label.configure(text='Failed to add expense.', text_color='red')
 
 
 if __name__ == '__main__':
@@ -164,7 +177,11 @@ if __name__ == '__main__':
     app.geometry('400x640')
     app.title('Group Expense Tracker')
 
-    add_expense = AddExpense(app, "Group A")
+    # group_name = get_group_name()
+
+    add_expense = AddExpense(app, 'Group A') # 自訂假資料
+    # add_expense = AddExpense(app, group_name)
+
     add_expense.pack(expand=True)
 
     app.mainloop()
