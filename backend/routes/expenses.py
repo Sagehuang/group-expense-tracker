@@ -18,7 +18,12 @@ def create_expense():
     payer_id = data.get("payer_id")
     participant_ids = data.get("participant_ids")
     group_id = data.get("group_id")
-    created_at = datetime.now()  # 可讓後端決定時間
+    created_at_str = data.get("created_at")
+
+    try:
+        created_at = datetime.fromisoformat(created_at_str)
+    except ValueError:
+        return jsonify({"error": "Invalid created_at format"}), 400
 
     # 欄位驗證
     if not all([name, amount, payer_id, participant_ids, group_id]):
