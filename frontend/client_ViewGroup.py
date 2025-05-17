@@ -1,23 +1,9 @@
 import customtkinter as ctk
+import datetime
 
 
 ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
-
-
-# 先自行設定假資料
-class Expense:
-    def __init__(self, name, amount, payer):
-        self.name = name
-        self.amount = amount
-        self.payer = payer
-
-
-class User:
-    def __init__(self, name):
-        self.name = name
-
-# =====
 
 
 class ViewGroup(ctk.CTkFrame):
@@ -52,30 +38,59 @@ class ViewGroup(ctk.CTkFrame):
         scrollable = ctk.CTkScrollableFrame(self)
         scrollable.grid(row=1, column=0, sticky='nsew', padx=10)
 
-        # 模擬群組內是否有項目
-        self.expenses = [Expense('晚餐晚餐晚餐晚餐晚餐晚餐晚餐', 200, User('Bob'))]  # !!!
-        # 預期 self.expenses 是從資料庫抓取，列表中為 Expense 類別。
+        # 群組內項目假資料
+        self.expenses = [
+            {
+                'name': 'Dinner',
+                'amount': 200.0,
+                'note': 'Sushi',
+                'created_at': datetime.datetime.strptime('2025-05-13 18:30:00', '%Y-%m-%d %H:%M:%S'),
+                'payer': (2, 'Bob'),  # (user id, username)
+                'participants': [101, 102],
+                'group': 901  # group id
+            },
+            {
+                'name': 'Really long name',
+                'amount': 1000.0,
+                'note': None,
+                'created_at': datetime.datetime.strptime('2025-05-14 19:00:00', '%Y-%m-%d %H:%M:%S'),
+                'payer': (1, 'Alice'),  # (user id, username)
+                'participants': [101, 102],
+                'group': 901  # group id
+            },
+            {
+                'name': 'Appliances',
+                'amount': 5000.0,
+                'note': None,
+                'created_at': datetime.datetime.strptime('2025-05-16 12:00:00', '%Y-%m-%d %H:%M:%S'),
+                'payer': (1, 'Alice'),  # (user id, username)
+                'participants': [101, 102],
+                'group': 901  # group id
+            },
+        ]
 
         if self.expenses:
-            for i in range(len(self.expenses)):
+            for exp in self.expenses:
                 expense_frame = ctk.CTkFrame(scrollable, fg_color='transparent')
-                expense_frame.pack(padx=10, pady=10, fill='x')
-                expense_frame.grid_columnconfigure((0, 1, 2), weight=1)
-                expense_frame.grid_columnconfigure(3, weight=0)
+                expense_frame.pack(padx=10, pady=15, fill='x')
+                expense_frame.grid_columnconfigure((0, 1), weight=1)
+                expense_frame.grid_columnconfigure(2, weight=0)
+                expense_frame.grid_rowconfigure((0, 1), weight=1)
 
-                item_name = self.expenses[i].name[:8] + '...' if len(self.expenses[i].name) > 10 else self.expenses[i].name
-                item_payer = self.expenses[i].payer.name
-                item_amount = self.expenses[i].amount
+                item_name = exp['name'][:8] + '...' if len(exp['name']) > 10 else exp['name']
+                item_payer = exp['payer'][1]
+                item_amount = exp['amount']
 
                 item_name_label = ctk.CTkLabel(expense_frame, text=item_name, font=mid_font)
                 item_payer_label = ctk.CTkLabel(expense_frame, text=item_payer + ' 先付', font=small_font)
-                item_amount_label = ctk.CTkLabel(expense_frame, text='NT$' + str(item_amount), font=mid_font)
-                edit_button_button = ctk.CTkButton(expense_frame, text='Edit', font=small_font, width=60, command=lambda e=self.expenses[i]: self.edit_expense(e))
+                item_amount_label = ctk.CTkLabel(expense_frame, text=f'NT$ {item_amount}', font=mid_font)
+                edit_button_button = ctk.CTkButton(expense_frame, text='Edit', font=small_font, width=60, border_width=1, border_color='#F3F6F4',
+                                                   fg_color='transparent', command=lambda e=exp: self.edit_expense(e))
 
                 item_name_label.grid(row=0, column=0, sticky='w')
-                item_payer_label.grid(row=0, column=1, sticky='w')
-                item_amount_label.grid(row=0, column=2, padx=5, sticky='e')
-                edit_button_button.grid(row=0, column=3, sticky='e')
+                item_payer_label.grid(row=1, column=0, sticky='w')
+                item_amount_label.grid(row=0, column=1, rowspan=2, padx=10, sticky='e')
+                edit_button_button.grid(row=0, column=2, rowspan=2, sticky='e')
         else:
             no_group_label = ctk.CTkLabel(scrollable, text='Add an expense!', font=small_font)
             no_group_label.pack(pady=20)
@@ -94,10 +109,7 @@ class ViewGroup(ctk.CTkFrame):
         self.plus_button.grid(row=0, column=1, padx=10, sticky='ew')
         self.settle_up_button.grid(row=0, column=2, padx=10, sticky='ew')
 
-
 # 轉換頁面
-
-
     def on_navigate_home(self):
         return
 

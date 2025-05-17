@@ -30,17 +30,21 @@ class Dashboard(ctk.CTkFrame):
         self.home_button.grid(row=0, column=0, padx=10, pady=10, sticky='w')
         self.title_label.grid(row=0, column=1, padx=10, pady=10)
 
+        # 群組假資料
+        self.current_groups = [{'id': 901, 'name': 'Group A', 'members': [101, 102, 104]},
+                               {'id': 902, 'name': 'Group B', 'members': [101, 103, 104]},
+                               {'id': 903, 'name': 'Group C', 'members': [101, 109, 110]},
+                               {'id': 904, 'name': 'Group D', 'members': [101, 108, 123]}]  # 空代表尚未加入任何群組
+
         # 主體捲動區
         scrollable = ctk.CTkScrollableFrame(self)
-        scrollable.grid(row=1, column=0, sticky='nsew', padx=10)
+        scrollable.grid(row=1, column=0, sticky='nsew')
 
-        # 模擬是否有群組
-        self.groups = []  # 空代表尚未加入群組
-
-        if self.groups:
-            for i, group_name in self.groups:
-                group_button = ctk.CTkButton(scrollable, text=group_name, font=small_font)
-                group_button.pack(pady=5)
+        if self.current_groups:
+            for group in self.current_groups:
+                group_button = ctk.CTkButton(scrollable, text=group['name'], font=small_font, border_width=1, border_color='#F3F6F4',
+                                             fg_color='transparent', command=lambda g=group: self.check_group(g))
+                group_button.pack(fill='x', padx=5, pady=5)
         else:
             no_group_label = ctk.CTkLabel(scrollable, text='Add or Join a group!', font=small_font)
             no_group_label.pack(pady=20)
@@ -57,21 +61,14 @@ class Dashboard(ctk.CTkFrame):
         self.add_group_button.grid(row=0, column=0, padx=10, sticky='ew')
         self.join_group_button.grid(row=0, column=1, padx=10, sticky='ew')
 
-        # # 查詢元件寬度
-        # def check_button_sizes():
-        #     print("Add Group button width:", self.add_group_button.winfo_width())
-        #     print("Join Group button width:", self.join_group_button.winfo_width())
-
-        # self.after(100, check_button_sizes)
-
-
-# 轉換頁面
-
-
+    # 轉換頁面
     def on_navigate_home(self):
         return
 
     def on_logout(self):
+        return
+
+    def check_group(self, group):
         return
 
     def on_add_group(self):
