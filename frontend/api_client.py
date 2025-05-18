@@ -38,15 +38,15 @@ def sign_in(name):
         )
     # 根據收到的 response 做處理
         if response.status_code == 200:
-            return response.json()
+            return response.json()["id"]
         else:
             print(f"Error! Server returned status code: {response.status_code}")
             return None
     except requests.exceptions.RequestException as e:
         print("Request failed:", e)
         return None
-alice = sign_in("Alice")
-print(alice["id"])
+# alice = sign_in("Alice")
+# print(alice)
 # """ 1. 登入（若無則建立）"""
 # def sign_in(name):
 #     headers = {"Content-Type": "application/json"}
