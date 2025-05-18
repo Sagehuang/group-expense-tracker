@@ -46,7 +46,7 @@ def sign_in(name):
         print("Request failed:", e)
         return None
 alice = sign_in("Alice")
-print(alice)
+print(alice["id"])
 # """ 1. 登入（若無則建立）"""
 # def sign_in(name):
 #     headers = {"Content-Type": "application/json"}
