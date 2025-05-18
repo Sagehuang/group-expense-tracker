@@ -99,20 +99,6 @@ def add_expense(expense_data):
 #         })
 # print(ex)
 
-# """ 1. 登入（若無則建立）"""
-# def sign_in(name):
-#     headers = {"Content-Type": "application/json"}
-#     payload = {"name": name}
-#     try:
-#         response = requests.post(f"{BASE_URL}/users/signin", headers=headers, json=payload)
-#         if response.status_code == 200:
-#             return response.json()
-#         else:
-#             print(f"[sign_in] failed: status code {response.status_code}")
-#             return None
-#     except Exception as e:
-#         print("[sign_in] exception:", e)
-#         return None
 
 # """2. 建立群組（同時將建立者加入群組）"""
 # def add_group(group_name, creator_id):
@@ -134,22 +120,6 @@ def add_expense(expense_data):
 #         print("[join_group] failed:", e)
 #         return False
 
-# """4. 新增支出（需提供 name, amount, payer_id, participant_ids, group_id）"""
-# def add_expense(expense_data):
-#     try:
-#         url = f"{BASE_URL}/expenses"
-#         print("📡 發送 POST 請求到：", url)
-#         response = requests.post(url, json=expense_data, headers={"Content-Type": "application/json"})
-        
-#         if response.status_code in [200, 201]:
-#             return True
-#         else:
-#             print("❌ [add_expense] response.status_code:", response.status_code)
-#             print("❌ response.text:", response.text)
-#             return False
-#     except Exception as e:
-#         print("🔥 [add_expense] exception:", e)
-#         return False
 
 # """ 5. 查詢某個群組的所有支出"""
 # def obtain_expense(group_id):
@@ -161,47 +131,6 @@ def add_expense(expense_data):
 #     except Exception as e:
 #         print("[obtain_expense] failed:", e)
 #         return []
-
-# """------------------ 🧪 測試區 ------------------"""
-# if __name__ == "__main__":
-#     print("🔹 登入 Alice")
-#     alice = sign_in("Alice")
-#     print(alice)
-
-#     print("🔹 登入 Bob")
-#     bob = sign_in("Bob")
-#     print(bob)
-
-#     alice_id = alice["id"]
-#     bob_id = bob["id"]
-
-#     print("🔹 建立群組：午餐小隊")
-#     group_created = add_group("午餐小隊", creator_id=alice_id)
-#     print("群組建立成功？", group_created)
-
-#     print("🔹 Alice 加入群組")
-#     joined_alice = join_group(group_id=1, user_id=alice_id)
-#     print("加入成功？", joined_alice)
-
-#     print("🔹 Bob 加入群組")
-#     joined_bob = join_group(group_id=1, user_id=bob_id)
-#     print("加入成功？", joined_bob)
-
-#     print("🔹 新增支出（Alice 付款，Alice + Bob 均攤）")
-#     test_expense = {
-#         "name": "午餐",
-#         "amount": 300.0,
-#         "note": "義大利麵+飲料",
-#         "payer_id": alice_id,
-#         "participant_ids": [alice_id, bob_id],
-#         "group_id": 1
-#     }
-#     added = add_expense(test_expense)
-#     print("支出新增成功？", added)
-
-#     print("🔹 查詢支出")
-#     expenses = obtain_expense(1)
-#     print(expenses)
 
 '''
 等到你徹底熟悉上面 function 的寫法就可以寫得更簡潔一點 以下是上面 function 的簡潔版:
