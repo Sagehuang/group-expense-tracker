@@ -8,7 +8,7 @@ from pages.homepage.client_AddGroup import AddGroup
 from pages.homepage.client_JoinGroup import JoinGroup
 from pages.homepage.client_ViewGroup import ViewGroup
 from pages.homepage.expenses.client_AddExpense import AddExpense
-from pages.homepage.expenses.client_EditExpense_undone import EditExpense
+from pages.homepage.expenses.client_EditExpense import EditExpense
 from pages.homepage.expenses.client_ViewMembers import ViewMembers
 from pages.homepage.expenses.client_SettleUp import SettleUp
 
