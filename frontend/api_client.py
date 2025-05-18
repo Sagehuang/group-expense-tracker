@@ -47,6 +47,58 @@ def sign_in(name):
         return None
 # alice = sign_in("Alice")
 # print(alice)
+
+#新增花費
+def add_expense(expense_data):
+    """
+    將新增的花費資訊傳入後端紀錄
+
+    parameter:
+    -expense_data (dictionary)：加入的一筆支出
+
+    return:
+    - x
+    """
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+        "name": "Hotel",
+        "amount": 200.0,
+        "note": "2-night stay",
+        "payer_id": 1,
+        "participant_ids": [1, 2],
+        "group_id": 1,
+        "created_at": "2025-05-13T18:30:00",
+        }
+    
+    try:
+        response = requests.post(
+            f"{BASE_URL}/expenses",
+            headers=headers,
+            json=payload
+        )
+    # 根據收到的 response 做處理
+        if response.status_code == 201:
+            print("支出新增成功")
+        else:
+            print(f"後端回傳錯誤狀態碼: {response.status_code}")
+            print("回傳內容：", response.text)
+    except requests.exceptions.RequestException as e:
+        print("發送失敗，錯誤為：", e)
+
+# ex = add_expense({
+#         "name": "Hotel",
+#         "amount": 300.0,
+#         "note": "2-night stay",
+#         "payer_id": 1,
+#         "participant_ids": [1, 2],
+#         "group_id": 1,
+#         "created_at": "2025-05-13T18:30:00",
+#         })
+# print(ex)
+
 # """ 1. 登入（若無則建立）"""
 # def sign_in(name):
 #     headers = {"Content-Type": "application/json"}
