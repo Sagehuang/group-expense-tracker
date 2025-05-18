@@ -12,7 +12,7 @@ import requests
 BASE_URL = "http://localhost:5001/api"  # 設定後端主機與 API 前綴
 
 #登入
-def sing_in(name):
+def sign_in(name):
     """
     傳送 name 給後端，若已有該 user 則登入，否則自動創建 user 後登入，回傳 user_info dict
 
@@ -45,7 +45,7 @@ def sing_in(name):
     except requests.exceptions.RequestException as e:
         print("Request failed:", e)
         return None
-alice = sing_in("Alice")
+alice = sign_in("Alice")
 print(alice)
 # """ 1. 登入（若無則建立）"""
 # def sign_in(name):
