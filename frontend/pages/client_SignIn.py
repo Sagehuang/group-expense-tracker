@@ -6,7 +6,7 @@ ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
 
 
-class HomePage(ctk.CTkFrame):
+class SignIn(ctk.CTkFrame):
     def __init__(self, master, on_sign_in_callback=None):
         super().__init__(master)
 
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     app.geometry('400x640')
     app.title('Group Expense Tracker')
 
-    home_page = HomePage(app)
+    home_page = SignIn(app)
     home_page.pack(expand=True)
 
     app.mainloop()

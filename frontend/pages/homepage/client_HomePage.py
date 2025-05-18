@@ -5,7 +5,7 @@ ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
 
 
-class Dashboard(ctk.CTkFrame):
+class HomePage(ctk.CTkFrame):
     def __init__(self, master, username):
         super().__init__(master)
         self.username = username
@@ -83,7 +83,7 @@ if __name__ == '__main__':
     app.geometry('400x640')
     app.title('Group Expense Tracker')
 
-    dashboard = Dashboard(app, 'Alice')
-    dashboard.pack(fill='both', expand=True)
+    homepage = HomePage(app, 'Alice')
+    homepage.pack(fill='both', expand=True)
 
     app.mainloop()
