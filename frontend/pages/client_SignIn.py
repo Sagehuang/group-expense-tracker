@@ -63,65 +63,6 @@ class HomePage(ctk.CTkFrame):
             self.result_label.configure(text='Sign-in failed.')
 
 
-'''
-class Dashboard(ctk.CTkFrame):
-    def __init__(self, master, username, on_navigate_home, on_logout,
-                 on_add_group=None, on_join_group=None):
-        super().__init__(master)
-        self.username = username
-
-        # 整體排版
-        self.grid_rowconfigure(1, weight=1)  # 可捲動區
-        self.grid_columnconfigure(0, weight=1)
-
-        # 頂端列
-        top_bar = ctk.CTkFrame(self, fg_color="blue")
-        top_bar.grid(row=0, column=0, sticky="ew")
-        top_bar.grid_columnconfigure(1, weight=1)
-
-        self.home_button = ctk.CTkButton(top_bar, text="Home",
-                                         command=on_navigate_home,
-                                         width=80)
-        self.title_label = ctk.CTkLabel(top_bar, text="My Group",
-                                        font=ctk.CTkFont(size=18,
-                                                         weight="bold"))
-        self.logout_button = ctk.CTkButton(top_bar, text="Logout",
-                                           command=on_logout, width=80)
-
-        self.logout_button.grid(row=0, column=2, padx=10, pady=10, sticky="e")
-        self.home_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
-        self.title_label.grid(row=0, column=1, padx=10, pady=10)
-
-        # 主體捲動區
-        scrollable = ctk.CTkScrollableFrame(self)
-        scrollable.grid(row=1, column=0, sticky="nsew", padx=10, pady=(0, 10))
-
-        # 模擬是否有群組
-        self.groups = []  # 空代表尚未加入群組
-
-        if self.groups:
-            for i, group_name in self.groups:
-                group_button = ctk.CTkButton(scrollable, text=group_name)
-                group_button.pack(pady=5)
-        else:
-            no_group_label = ctk.CTkLabel(scrollable,
-                                          text="Add or Join a group!",
-                                          font=ctk.CTkFont(size=14))
-            no_group_label.pack(pady=20)
-
-        # 底部按鈕
-        bottom_frame = ctk.CTkFrame(scrollable, fg_color="transparent")
-        bottom_frame.pack(pady=20)
-
-        self.add_group_button = ctk.CTkButton(bottom_frame, text="Add Group",
-                                              command=on_add_group)
-        self.add_group_button.pack(side="left", padx=10)
-
-        self.join_group_button = ctk.CTkButton(bottom_frame, text="Join Group",
-                                               command=on_join_group)
-        self.join_group_button.pack(side="left", padx=10)
-'''
-
 if __name__ == '__main__':
     app = ctk.CTk()
     app.geometry('400x640')
