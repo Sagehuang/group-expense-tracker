@@ -249,6 +249,46 @@ def obtain_expense(group_id):
 # info = obtain_expense(1)
 # print(info)
 
+#取得 expense 的資訊
+def get_expense_info(expense_id):
+    """
+    根據 expense id 查詢一筆 expense，回傳 expense 的資料
+
+    parameter:
+    -expense_id（int）
+
+    return:
+    -original_item (str)
+    -original_amount (int)
+    -original_payer (str)
+    -original_participants (list of str)
+    -orginial_note (str)
+    """
+    # 無request body, 所以不用寫 headers, payload
+    headers = {
+        "Content-Type": "application/json"
+    }
+    try:
+        response = requests.get(f"{BASE_URL}/expenses/{expense_id}")
+        if response.status_code == 200:
+            data = response.json()
+            result = {
+                "original_item": data["name"],
+                "original_amount": data["amount"],
+                "original_payer": data["payer"]["name"],
+                "original_participants": [p["name"] for p in data["participants"]],
+                "original_note": data["note"]
+            }
+            return result
+        else:
+            print(f"Error! Server returned status code: {response.status_code}")
+            return None
+    except requests.exceptions.RequestException as e:
+        print("Request failed:", e)
+        return None
+# expense = get_expense_info(3)
+# print(expense)
+
 # """2. 建立群組（同時將建立者加入群組）"""
 # def add_group(group_name, creator_id):
 #     try:
