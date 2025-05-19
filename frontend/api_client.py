@@ -289,6 +289,39 @@ def get_expense_info(expense_id):
 # expense = get_expense_info(3)
 # print(expense)
 
+#取得 member 資訊
+def get_members_info(group_id):
+    """
+    根據 group id 查詢群組名稱和成員名稱
+
+    parameter:
+    -group_id(int)
+
+    return:
+    -group_name (str)
+    -members_list (list of str)
+    """
+    # 無request body, 所以不用寫 payload
+    headers = {
+        "Content-Type": "application/json"
+    }
+    try:
+        response = requests.get(f"{BASE_URL}/groups/{group_id}")
+        if response.status_code == 200:
+            data = response.json()
+            result = {
+                "group_name": data["name"],
+                "members_list": [member["name"] for member in data["members"]]}
+            return result
+        else:
+            print(f"Error! Server returned status code: {response.status_code}")
+            return None
+    except requests.exceptions.RequestException as e:
+        print("Request failed:", e)
+        return None
+# infos = get_members_info(7)
+# print(infos)
+
 # """2. 建立群組（同時將建立者加入群組）"""
 # def add_group(group_name, creator_id):
 #     try:
