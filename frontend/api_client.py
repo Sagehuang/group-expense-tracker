@@ -87,7 +87,6 @@ def add_expense(expense_data):
             print("回傳內容：", response.text)
     except requests.exceptions.RequestException as e:
         print("發送失敗，錯誤為：", e)
-
 # ex = add_expense({
 #         "name": "Hotel",
 #         "amount": 300.0,
@@ -99,6 +98,51 @@ def add_expense(expense_data):
 #         })
 # print(ex)
 
+#編輯花費
+def edit_expense(expense_id,expense_data):
+    """
+    將修改的花費傳入後端
+
+    parameter:
+    -expense_data (dictionary)：修改的一筆支出
+
+    return:
+    - x
+    """
+    headers = {
+        "Content-Type": "application/json"
+    }
+    payload = {
+    "name": "Hotel (Updated)",
+    "amount": 250.0,
+    "note": "Updated note",
+    "payer_id": 2,
+    "participant_ids": [1, 2]
+    }
+
+    try:
+        response = requests.put(
+            f"{BASE_URL}/expenses/{expense_id}",
+            headers=headers,
+            json=payload
+        )
+        if response.status_code == 200:
+            print("支出編輯成功")
+        else:
+            print(f"後端回傳錯誤狀態碼: {response.status_code}")
+            print("回傳內容：", response.text)
+    except requests.exceptions.RequestException as e:
+        print("發送失敗，錯誤為：", e)
+
+# edit = edit_expense(4, 
+#                     {
+#   "name": "Hotel (Updated)",
+#   "amount": 250.0,
+#   "note": "Updated note",
+#   "payer_id": 2,
+#   "participant_ids": [1, 2]
+# })
+# print(edit)
 
 # """2. 建立群組（同時將建立者加入群組）"""
 # def add_group(group_name, creator_id):
