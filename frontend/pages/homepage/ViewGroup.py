@@ -5,14 +5,18 @@ import datetime
 ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
 
+# 【假資料】
+group_name = '這是一個名字非常非常長的群組'
+
 
 class ViewGroup(ctk.CTkFrame):
-    def __init__(self, master, username, group_name):
+    def __init__(self, master, show_page_callback): # user_name, group_name
         super().__init__(master)
-        self.username = username
-        self.group_name = group_name
+        self.show_page = show_page_callback
+        # self.user_name = user_name
+        # self.group_name = group_name
 
-        self.group_name_display = group_name[:8] + '...' if len(self.group_name) > 10 else self.group_name
+        self.group_name_display = group_name[:8] + '...' if len(group_name) > 10 else group_name # self
 
         # 整體排版
         self.grid_rowconfigure(1, weight=1)  # 可捲動區
@@ -42,28 +46,28 @@ class ViewGroup(ctk.CTkFrame):
         self.expenses = [
             {
                 'name': 'Dinner',
-                'amount': 200.0,
+                'amount': 200,
                 'note': 'Sushi',
                 'created_at': datetime.datetime.strptime('2025-05-13 18:30:00', '%Y-%m-%d %H:%M:%S'),
-                'payer': (2, 'Bob'),  # (user id, username)
+                'payer': (2, 'Bob'),  # (user id, user_name)
                 'participants': [101, 102],
                 'group': 901  # group id
             },
             {
                 'name': 'Really long name',
-                'amount': 1000.0,
+                'amount': 1000,
                 'note': None,
                 'created_at': datetime.datetime.strptime('2025-05-14 19:00:00', '%Y-%m-%d %H:%M:%S'),
-                'payer': (1, 'Alice'),  # (user id, username)
+                'payer': (1, 'Alice'),  # (user_id, user_name)
                 'participants': [101, 102],
                 'group': 901  # group id
             },
             {
                 'name': 'Appliances',
-                'amount': 5000.0,
+                'amount': 5000,
                 'note': None,
                 'created_at': datetime.datetime.strptime('2025-05-16 12:00:00', '%Y-%m-%d %H:%M:%S'),
-                'payer': (1, 'Alice'),  # (user id, username)
+                'payer': (1, 'Alice'),  # (user id, user_name)
                 'participants': [101, 102],
                 'group': 901  # group id
             },
@@ -85,7 +89,7 @@ class ViewGroup(ctk.CTkFrame):
                 item_payer_label = ctk.CTkLabel(expense_frame, text=item_payer + ' 先付', font=small_font)
                 item_amount_label = ctk.CTkLabel(expense_frame, text=f'NT$ {item_amount}', font=mid_font)
                 edit_button_button = ctk.CTkButton(expense_frame, text='Edit', font=small_font, width=60, border_width=1, border_color='#F3F6F4',
-                                                   fg_color='transparent', command=lambda e=exp: self.edit_expense(e))
+                                                   fg_color='transparent', command=self.on_edit) # command=lambda e=exp: self.on_edit(e)
 
                 item_name_label.grid(row=0, column=0, sticky='w')
                 item_payer_label.grid(row=1, column=0, sticky='w')
@@ -109,24 +113,24 @@ class ViewGroup(ctk.CTkFrame):
         self.plus_button.grid(row=0, column=1, padx=10, sticky='ew')
         self.settle_up_button.grid(row=0, column=2, padx=10, sticky='ew')
 
-# 轉換頁面
+    # 頁面切換
     def on_navigate_home(self):
-        return
+        self.show_page('HomePage')
 
     def on_logout(self):
-        return
+        self.show_page('SignIn')
 
     def on_members(self):
-        return
+        self.show_page('ViewMembers')
 
     def on_plus(self):
-        return
+        self.show_page('AddExpense')
 
     def on_settle_up(self):
-        return
+        self.show_page('SettleUp')
 
-    def edit_expense(self, expense):
-        return
+    def on_edit(self):
+        self.show_page('EditExpense')
 
 
 if __name__ == '__main__':
@@ -134,7 +138,10 @@ if __name__ == '__main__':
     app.geometry('400x640')
     app.title('Group Expense Tracker')
 
-    view_group = ViewGroup(app, 'Alice', '這是一個名字非常非常長的群組')
-    view_group.pack(fill='both', expand=True)
+    app.grid_rowconfigure(0, weight=1)
+    app.grid_columnconfigure(0, weight=1)
+
+    view_group = ViewGroup(app, show_page_callback)
+    view_group.grid(row=0, column=0, sticky='nsew')
 
     app.mainloop()

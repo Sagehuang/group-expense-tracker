@@ -1,49 +1,28 @@
 import customtkinter as ctk
+# from api_client import get_balance_info
+# from api_client import get_settle_info
 
 
 ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
 
 
-
-# 先設定假資料（上半部balance_frame）
-# nested dictionary 
-balance_database = {'000012': {'Alice': -250, 'Bob': 250},
-                 '000013': {'Charlie': 300, 'Daisy': -300}}
-        
-def get_balance_info(group_id):
-    balance_data = balance_database.get(group_id)
-    if balance_data:
-        members_balance_list = list(balance_data.keys())
-        amount_balance_list = list(balance_data.values())
-        return members_balance_list, amount_balance_list
-
-
-# 先設定假資料（下半部settle_frame）
-# nested dictionary 
-settle_database = {'000012': {('Alice', 'Bob'): 250, ('Anna', 'Brian'): 500},
-                   '000013': {('Charlie', 'Daisy'): 750, ('Calvin', 'Dora'): 1000}}
-
-def get_settle_info(group_id):
-    settle_data = settle_database.get(group_id)
-    if settle_data:
-        members_settle_list = list(settle_data.keys())
-        amount_settle_list = list(settle_data.values())
-        return members_settle_list, amount_settle_list
-
-
+##【假資料】
+group_id = 1
+balance_list = [{'user_name': 'Alice', 'net_balance': -500}, {'user_name': 'Bob', 'net_balance': 250}, {'user_name': 'Brian', 'net_balance': 250}]
+settle_list = [{'payer': 'Alice', 'receiver': 'Bob', 'amount': 250}, {'payer': 'Alice', 'receiver': 'Brian', 'amount': 250}]
 
 
 class SettleUp(ctk.CTkFrame):
-    def __init__(self, master, group_id):
+    def __init__(self, master, show_page_callback):
         super().__init__(master)
+        self.show_page = show_page_callback
 
-        members_balance_list, amount_balance_list = get_balance_info(group_id)
-        members_settle_list, amount_settle_list = get_settle_info(group_id)
-
+        # balance_list = get_balance_info(group_id)
+        # settle_list = get_settle_info(group_id)
 
         # 整體排版
-        self.grid_rowconfigure(1, weight=1)  # 可捲動區
+        self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
         font_top_bar = ctk.CTkFont(family='Gotham', size=20, weight='bold')
@@ -70,18 +49,19 @@ class SettleUp(ctk.CTkFrame):
 
 
         # 模擬群組內有成員
-        if members_balance_list and amount_balance_list:
+        if balance_list:
             balance_frame = ctk.CTkFrame(scrollable, fg_color='transparent')
             balance_frame.pack(padx=10, pady=10, fill='x')
             balance_frame.grid_columnconfigure(0, weight=1)
 
             # 遍歷members_balance_list
-            for index, member_balance in enumerate(members_balance_list): 
-                amount_balance = amount_balance_list[index]
-                member_balance_label = ctk.CTkLabel(balance_frame, text=member_balance, font=mid_font)
+            for index, balance_dict in enumerate(balance_list): 
+                # 組員
+                member_balance_label = ctk.CTkLabel(balance_frame, text=balance_dict['user_name'], font=mid_font)
                 member_balance_label.grid(row= index * 2, column=0, padx=20, sticky='w') # double space
                 
                 # 金額
+                amount_balance = balance_dict['net_balance']
                 if amount_balance >= 0:
                     amount_balance_label = ctk.CTkLabel(balance_frame, text='+ NT$' + str(amount_balance), font=mid_font)
                 else:
@@ -105,27 +85,21 @@ class SettleUp(ctk.CTkFrame):
         separator2.pack(fill='x', pady=(0, 0)) # 0, 10
 
 
-
         # 模擬群組內有成員
-        if members_settle_list and amount_settle_list:
+        if settle_list:
             settle_frame = ctk.CTkFrame(scrollable, fg_color='transparent')
             settle_frame.pack(padx=10, pady=5, fill='x')
             settle_frame.grid_columnconfigure(0, weight=1)
 
             # 遍歷members_settle_list
-            for index, member_settle in enumerate(members_settle_list): 
-                # members_settle_list = [('Alice', 'Bob'), ('Anna', 'Brian')]
-                # at index=0, member_settle = ('Alice', 'Bob')
-                # at index=1, member_settle = ('Anna', 'Brian')
-
-                debtor = member_settle[0]
-                creditor = member_settle[1]
-                amount_settle = amount_settle_list[index]
-
-                member_settle_label = ctk.CTkLabel(settle_frame, text= f'{debtor}   ⥤   {creditor}', font=mid_font) # 箭頭很醜，之後再弄好看一點
+            for index, settle_dict in enumerate(settle_list):
+            
+                # 組員
+                member_settle_label = ctk.CTkLabel(settle_frame, text= f'{settle_dict['payer']}   ⥤   {settle_dict['receiver']}', font=mid_font)
                 member_settle_label.grid(row= index * 2, column=0, padx=20, sticky='w') # double space
                 
                 # 金額
+                amount_settle = settle_dict['amount']
                 amount_settle_label = ctk.CTkLabel(settle_frame, text='NT$' + str(amount_settle), font=mid_font)
                 amount_settle_label.grid(row= index * 2, column=1, padx=20, sticky='e')
 
@@ -133,16 +107,12 @@ class SettleUp(ctk.CTkFrame):
                 line_frame = ctk.CTkFrame(settle_frame, height=1, fg_color='black')
                 line_frame.grid(row=1 + index * 2, column=0, columnspan=2, padx=20, sticky='ew') # double space
 
-
-
-# 轉換頁面
-
+    # 頁面切換
     def on_navigate_back(self):
-        return
+        self.show_page('ViewGroup')
 
     def on_logout(self):
-        return
-
+        self.show_page('SignIn')
 
 
 if __name__ == '__main__':
@@ -150,7 +120,10 @@ if __name__ == '__main__':
     app.geometry('400x640')
     app.title('Group Expense Tracker')
 
-    settle_up = SettleUp(app, '000012')
-    settle_up.pack(fill='both', expand=True)
+    app.grid_rowconfigure(0, weight=1)
+    app.grid_columnconfigure(0, weight=1)
+
+    settle_up = SettleUp(app, show_page_callback)
+    settle_up.grid(row=0, column=0, sticky='nsew')
 
     app.mainloop()

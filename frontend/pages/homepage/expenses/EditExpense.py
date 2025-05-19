@@ -1,29 +1,44 @@
 import customtkinter as ctk
 from datetime import datetime
-from api_client import add_expense as api_add_expense
-# from api_client import get_group_name
+# from api_client import get_expense_info
+# from api_client import edit_expense as api_edit_expense
 
 
 ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
 
 
-class AddExpense(ctk.CTkFrame):
-    def __init__(self, master, group_name):
+##【假資料】
+group_id = 1
+expense_id = 1
+original_item = 'Food'
+original_amount = 300
+original_payer = 'Alice'
+original_participants = ['Bob', 'Charlie']
+orginial_note = 'McDonald\'s'
+
+
+# 代入：group_id, expense_id
+class EditExpense(ctk.CTkFrame):
+    def __init__(self, master, show_page_callback):
         super().__init__(master)
-        self.group_name = group_name # 存入Group Name
+        self.show_page = show_page_callback
+        
+        # original_item, original_amount, original_payer, original_participants, orginial_note = get_expense_info(expense_id)
 
-
+        # 整體排版
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_columnconfigure(0, weight=1)
 
         # 1st frame: top bar
-        top_bar = ctk.CTkFrame(self, fg_color='#0066CC')
+        top_bar = ctk.CTkFrame(self, fg_color='#F3F6F4')
         top_bar.grid(row=0, column=0, sticky='ew')
         top_bar.grid_columnconfigure(1, weight=1)
 
         self.back_button = ctk.CTkButton(top_bar, text='Back',
                                          command=self.on_navigate_back,
                                          width=80)
-        self.title_label = ctk.CTkLabel(top_bar, text='Add Expense',
+        self.title_label = ctk.CTkLabel(top_bar, text='Edit Expense',
                                         font=ctk.CTkFont(size=18,
                                                          weight='bold'))
         self.logout_button = ctk.CTkButton(top_bar, text='Logout',
@@ -34,26 +49,30 @@ class AddExpense(ctk.CTkFrame):
         self.logout_button.grid(row=0, column=2, padx=10, pady=10, sticky='e')
 
 
-
-        # 2rd frame（主要容器）: Item, Amount, Payer, Participants, Note, Add
+        # 2rd frame（主要容器）: Item, Amount, Payer, Participants, Note, Edit button
         bottom_frame = ctk.CTkFrame(self, fg_color='transparent')
         bottom_frame.grid(row=1, column=0, pady=20, sticky='n')
         bottom_frame.grid_columnconfigure((0, 1), weight=1)
         bottom_frame.grid_rowconfigure((1, 2, 3, 4, 5, 6, 7), weight=1)
 
+
         # 3rd frame（2nd frame的子容器）: Date, Time
         top_date_time_frame = ctk.CTkFrame(bottom_frame)
-        top_date_time_frame.grid(row=0, column=0, columnspan=2, pady=5, sticky="w")
+        top_date_time_frame.grid(row=0, column=0, columnspan=2, pady=5, sticky='ew')
+
+        # 設定 frame 的欄寬，使內容置中
+        top_date_time_frame.grid_columnconfigure(0, weight=1)
+        top_date_time_frame.grid_columnconfigure(1, weight=1)
 
         now = datetime.now()
         date_str = now.strftime("%Y/%m/%d")  # Y：完整年份
         time_str = now.strftime("%H:%M")
 
         self.date_label = ctk.CTkLabel(top_date_time_frame, text=f"Date: {date_str}")
-        self.date_label.grid(row=0, column=0, padx=10, pady=5, sticky='w')
+        self.date_label.grid(row=0, column=0, padx=10, pady=5, sticky='e')  # 靠右對齊
 
         self.time_label = ctk.CTkLabel(top_date_time_frame, text=f"Time: {time_str}")
-        self.time_label.grid(row=0, column=1, padx=10, pady=5, sticky='e')
+        self.time_label.grid(row=0, column=1, padx=10, pady=5, sticky='w')  # 靠左對齊
 
 
         # 1st row：Item
@@ -62,14 +81,24 @@ class AddExpense(ctk.CTkFrame):
 
         self.item_entry = ctk.CTkEntry(bottom_frame)
         self.item_entry.grid(row=1, column=1, padx=(5, 10), pady=10, sticky='ew')
+        self.item_entry.insert(0, original_item)
 
 
         # 2nd row：Amount
         self.amount_label = ctk.CTkLabel(bottom_frame, text='Amount', anchor='w')
         self.amount_label.grid(row=2, column=0, padx=(10, 5), pady=10, sticky='w')
 
-        self.amount_entry = ctk.CTkEntry(bottom_frame)
-        self.amount_entry.grid(row=2, column=1, padx=(5, 10), pady=10, sticky='ew')
+
+        # 4th frame（放NT$ + entry）
+        amount_frame = ctk.CTkFrame(bottom_frame, fg_color='transparent') 
+        amount_frame.grid(row=2, column=1, columnspan=2, padx=(5, 10), pady=10, sticky='w')
+
+        self.amount_prefix_label = ctk.CTkLabel(amount_frame, text='NT$', anchor='w')
+        self.amount_prefix_label.pack(side='left', padx=(0, 2))
+
+        self.amount_entry = ctk.CTkEntry(amount_frame, width=120)
+        self.amount_entry.pack(side='left')
+        self.amount_entry.insert(0, original_amount)
 
 
         # 3rd row：Payer
@@ -78,6 +107,7 @@ class AddExpense(ctk.CTkFrame):
 
         self.payer_entry = ctk.CTkEntry(bottom_frame)
         self.payer_entry.grid(row=3, column=1, padx=(5, 10), pady=10, sticky='ew')
+        self.payer_entry.insert(0, original_payer)
 
 
         # 4th row：Participants
@@ -86,6 +116,7 @@ class AddExpense(ctk.CTkFrame):
 
         self.participants_entry = ctk.CTkEntry(bottom_frame)
         self.participants_entry.grid(row=4, column=1, padx=(5, 10), pady=10, sticky='ew')
+        self.participants_entry.insert(0, ', '.join(original_participants))
 
 
         # 5th row：Note
@@ -94,82 +125,81 @@ class AddExpense(ctk.CTkFrame):
 
         self.note_entry = ctk.CTkEntry(bottom_frame)
         self.note_entry.grid(row=5, column=1, padx=(5, 10), pady=10, sticky='ew')
+        self.note_entry.insert(0, orginial_note)
 
 
-        # 6th row：Add
-        self.add_group_button = ctk.CTkButton(bottom_frame, text='Add', command=self.on_add)
-        self.add_group_button.grid(row=6, column=0, columnspan=2, pady=20)
+        # 6th row：Edit button
+        self.edit_group_button = ctk.CTkButton(bottom_frame, text='Edit', command=self.on_edit)
+        self.edit_group_button.grid(row=6, column=0, columnspan=2, pady=20)
+
 
         # 7th row: result
         self.result_label = ctk.CTkLabel(bottom_frame, text='', text_color='red')
         self.result_label.grid(row=7, column=0, columnspan=2, pady=(5, 0))
 
-
-
-# 轉換頁面
-
+    # 頁面切換
     def on_navigate_back(self):
-        return
+        self.show_page('ViewGroup')
 
     def on_logout(self):
-        return
+        self.show_page('SignIn')
 
-
-
-# ADD EXPENSE
-    def on_add(self):
+    # EDIT EXPENSE
+    def on_edit(self):
+        
+        # collect data
         item = self.item_entry.get().strip()
-        amount_str = self.amount_entry.get().strip()
+
+        amount_str = self.amount_entry.get().strip().replace(',', '')
+
         payer = self.payer_entry.get().strip()
 
         participants_raw = self.participants_entry.get().strip()
-        participants_list = []
+        participants = []
         for participant in participants_raw.split(','):
             stripped_participant = participant.strip()
             if stripped_participant:
-                participants_list.append(stripped_participant)
+                participants.append(stripped_participant)
 
         note = self.note_entry.get().strip()
 
-
-        if not item or not amount_str or not payer or not participants_list:
+        if not item or not amount_str or not payer or not participants_raw:
             self.result_label.configure(text='Please fill in all fields.', text_color='red')
             return
-
-        try:
-            amount = int(amount_str)
-            if amount <= 0:
-                raise ValueError("Amount must be positive.")
-        except ValueError:
+        if not amount_str.isdigit():
+            self.result_label.configure(text='Amount must contain numbers.')
+            return 
+        amount = int(amount_str)
+        if amount <= 0:
             self.result_label.configure(text='Amount must be a valid positive number.')
             return
 
-
-        # 資料集合成一個dictionary，回傳給後端
+        # 回傳資料（依後端API形式）
         expense_data = {
-            'Date': datetime.now().strftime('%Y/%m/%d'),
-            'Time': datetime.now().strftime('%H:%M'),
-            'Item': item,
-            'Amount': amount,
-            'Payer': payer,
-            'Participants': participants_list,
-            'Note': note,
-            'Group Name': self.group_name  # 這筆資料存入這個Group
-        }
+            'created_at': datetime.now(),
+            'name': item,                   
+            'amount': amount,
+            'payer': payer,           
+            'participants': participants,
+            'note': note,
+            'group_id': group_id            
+        }  
 
-        # 呼叫API function
-        success = api_add_expense(expense_data)
+        ## 呼叫API function
+        # success = api_edit_expense(expense_data)
 
+        ## 驗證是否成功
+        # print('送出資料:', expense_data)
+        # print('API 回傳:', success)
+
+        # 假設成功
+        success = True
         if success:
-            self.result_label.configure(text='Expense added successfully.', text_color='green')
-            # 清空欄位，使用者可以加入新的一筆expense
-            self.item_entry.delete(0, 'end')
-            self.amount_entry.delete(0, 'end')
-            self.payer_entry.delete(0, 'end')
-            self.participants_entry.delete(0, 'end')
-            self.note_entry.delete(0, 'end')
+            self.result_label.configure(text='Expense edited successfully.', text_color='green')
+            # 1秒後回到ViewGroup
+            self.after(1000, lambda: self.on_navigate_back())
         else:
-            self.result_label.configure(text='Failed to add expense.', text_color='red')
+            self.result_label.configure(text='Failed to edit expense.', text_color='red')
 
 
 if __name__ == '__main__':
@@ -177,11 +207,10 @@ if __name__ == '__main__':
     app.geometry('400x640')
     app.title('Group Expense Tracker')
 
-    # group_name = get_group_name()
+    app.grid_rowconfigure(0, weight=1)
+    app.grid_columnconfigure(0, weight=1)
 
-    add_expense = AddExpense(app, 'Group A') # 自訂假資料
-    # add_expense = AddExpense(app, group_name)
-
-    add_expense.pack(expand=True)
+    edit_expense = EditExpense(app, show_page_callback)
+    edit_expense.grid(row=0, column=0, sticky='nsew')
 
     app.mainloop()
