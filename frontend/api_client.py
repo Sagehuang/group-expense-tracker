@@ -183,6 +183,43 @@ def add_group(group_name):
 # )
 # print(new)
 
+#加入群組
+def join_group(group_id,user_id):
+    """
+    根據 group id 將當前 user 加入該 group
+
+    parameter:
+    -group_id (int)：欲加入的群組 ID（需確定該 group 存在）
+    -user_id（int）：欲加入該 group_id 的 user（需不在該群組中）
+
+    return:
+    - join_success (bool): 是否成功加入 group，
+    若成功加入，回傳"True"
+    """
+    headers = {
+        "Content-Type": "application/json"
+    }
+    payload = {
+  "user_id":user_id
+}
+    
+    try:
+        response = requests.post(f"{BASE_URL}/groups/{group_id}/join",
+            headers=headers,
+            json=payload)
+        if response.status_code == 200:
+            return True
+        else:
+            print(f"Error! Server returned status code: {response.status_code}")
+            return False
+    except requests.exceptions.RequestException as e:
+        print("Request failed:", e)
+        return False
+# join = join_group(7, 2
+# )
+# print(join)
+
+
 # """2. 建立群組（同時將建立者加入群組）"""
 # def add_group(group_name, creator_id):
 #     try:
