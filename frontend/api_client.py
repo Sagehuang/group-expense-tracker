@@ -219,6 +219,35 @@ def join_group(group_id,user_id):
 # )
 # print(join)
 
+#顯示該群組的所有 expense
+def obtain_expense(group_id):
+    """
+    根據 group id 查詢該 group 的所有 expenses，回傳所有 expenses
+
+    利用後端的「查看群組詳情」
+
+    parameter:
+    -group_id(int)：欲顯示支出的目標群組 ID
+    
+    return:
+    -group_expenses (a list of dict): 該 group 的所有 expenses
+    """
+    # 無request body, 所以不用寫 headers, payload
+    headers = {
+        "Content-Type": "application/json"
+    }
+    try:
+        response = requests.get(f"{BASE_URL}/groups/{group_id}")
+        if response.status_code == 200:
+            return response.json()["expenses"]
+        else:
+            print(f"Error! Server returned status code: {response.status_code}")
+            return None
+    except requests.exceptions.RequestException as e:
+        print("Request failed:", e)
+        return None
+# info = obtain_expense(1)
+# print(info)
 
 # """2. 建立群組（同時將建立者加入群組）"""
 # def add_group(group_name, creator_id):
