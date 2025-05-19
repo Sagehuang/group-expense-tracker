@@ -100,4 +100,5 @@ def settle_up(balances):
             j += 1
 
     return transactions
+
 '''
