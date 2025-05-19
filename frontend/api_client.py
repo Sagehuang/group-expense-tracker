@@ -144,6 +144,45 @@ def edit_expense(expense_id,expense_data):
 # })
 # print(edit)
 
+#新增群組
+def add_group(group_name):
+    """
+    以 group name 創建一個新的 group，並新增 user 於該群組
+
+    parameter:
+    -group_name (str)：新增的群組名稱
+
+    return:
+    - x
+    """
+    headers = {
+        "Content-Type": "application/json"
+    }
+    payload = {
+    "name": "Trip to Japan",
+    "creator_id": 1   #使用者_ID
+    }
+
+    try:
+        response = requests.post(
+            f"{BASE_URL}/groups",
+            headers=headers,
+            json=payload
+        )
+        if response.status_code == 201:
+            print("新增群組成功")
+        else:
+            print(f"後端回傳錯誤狀態碼: {response.status_code}")
+            print("回傳內容：", response.text)
+    except requests.exceptions.RequestException as e:
+        print("發送失敗，錯誤為：", e)
+# new = add_group({
+#   "name": "Trip to Japan",
+#   "creator_id": 1   #使用者_ID
+# }
+# )
+# print(new)
+
 # """2. 建立群組（同時將建立者加入群組）"""
 # def add_group(group_name, creator_id):
 #     try:
