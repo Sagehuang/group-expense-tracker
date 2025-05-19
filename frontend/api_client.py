@@ -392,4 +392,3 @@ def sign_in(name):
         print("Request failed:", e)
         return None
 '''
-
