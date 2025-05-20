@@ -38,6 +38,7 @@ class HomePage(ctk.CTkFrame):
                                {'id': 902, 'name': 'Group B', 'members': [101, 103, 104]},
                                {'id': 903, 'name': 'Group C', 'members': [101, 109, 110]},
                                {'id': 904, 'name': 'Group D', 'members': [101, 108, 123]}]
+        ### 要讓HomePage頁面上能出現所有加入的Group，會需要跨頁面傳遞user_id, list of group_id（使用者ID、該ID加入了哪些群組）
 
         # 主體捲動區
         scrollable = ctk.CTkScrollableFrame(self)
@@ -46,9 +47,10 @@ class HomePage(ctk.CTkFrame):
 
         if self.current_groups:
             for group in self.current_groups:
-                group_button = ctk.CTkButton(scrollable, text=group['name'], font=small_font,
-                                             border_width=1, border_color='#F3F6F4',
-                                             fg_color='transparent', command=lambda g=group: self.check_group(g))
+                group_button = ctk.CTkButton(scrollable, text=group['name'], text_color='#FFFFFF', font=small_font,
+                                                         border_width=1, border_color='#B0B0B0', # '#F3F6F4'
+                                                         fg_color='#B0B0B0', # 'transparent'
+                                                         command=lambda g=group: self.check_group(g))
                 group_button.pack(fill='x', padx=5, pady=5)
         else:
             no_group_label = ctk.CTkLabel(scrollable, text='Add or Join a group!', font=small_font)

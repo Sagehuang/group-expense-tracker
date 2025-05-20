@@ -1,6 +1,5 @@
 import customtkinter as ctk
 # from api_client import get_members_info
-# from api_client import get_user_name
 # from api_client import leave_group
 
 
@@ -13,12 +12,15 @@ user_name = 'Alice'
 group_id = 1
 group_name = 'Group A'
 members_list = ['Alice', 'Bob', 'Charlie']
+## 要讓ViewMembers頁面上能出現組員名單，會需要跨頁面傳遞group_id, user_id（群組ID、可能要退出群組的當前使用者的ID）
 
 
 class ViewMembers(ctk.CTkFrame):
     def __init__(self, master, show_page_callback):
         super().__init__(master)
         self.show_page = show_page_callback
+
+        # group_name, members_list = get_members_info(group_id)
 
         # 整體排版
         self.grid_rowconfigure(1, weight=1)  # 可捲動區

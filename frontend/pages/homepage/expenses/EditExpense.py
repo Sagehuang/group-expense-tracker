@@ -16,6 +16,7 @@ original_amount = 300
 original_payer = 'Alice'
 original_participants = ['Bob', 'Charlie']
 orginial_note = 'McDonald\'s'
+## 要讓EditExpense頁面上能出現要修改的那筆expense的資訊，會需要跨頁面傳遞group_id, expense_id（群組ID、修改的那筆expense）
 
 
 # 代入：group_id, expense_id

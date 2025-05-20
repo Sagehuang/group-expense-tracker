@@ -7,6 +7,7 @@ ctk.set_default_color_theme('blue')
 
 # 【假資料】
 group_name = '這是一個名字非常非常長的群組'
+## 要讓ViewGroup頁面上能出現組內所有expense的資訊，會需要跨頁面傳遞group_id, list of expense_id（群組ID、該ID有哪些expense）
 
 
 class ViewGroup(ctk.CTkFrame):
@@ -16,7 +17,8 @@ class ViewGroup(ctk.CTkFrame):
         # self.user_name = user_name
         # self.group_name = group_name
 
-        self.group_name_display = group_name[:8] + '...' if len(group_name) > 10 else group_name # self
+        # self.group_name_display = group_name[:8] + '...' if len(group_name) > 10 else group_name # self
+        self.group_name_display = group_name
 
         # 整體排版
         self.grid_rowconfigure(1, weight=1)  # 可捲動區
@@ -81,20 +83,28 @@ class ViewGroup(ctk.CTkFrame):
                 expense_frame.grid_columnconfigure(2, weight=0)
                 expense_frame.grid_rowconfigure((0, 1), weight=1)
 
-                item_name = exp['name'][:8] + '...' if len(exp['name']) > 10 else exp['name']
+                # item_name = exp['name'][:8] + '...' if len(exp['name']) > 10 else exp['name']
+                item_name = exp['name']
                 item_payer = exp['payer'][1]
                 item_amount = exp['amount']
 
                 item_name_label = ctk.CTkLabel(expense_frame, text=item_name, font=mid_font)
-                item_payer_label = ctk.CTkLabel(expense_frame, text=item_payer + ' 先付', font=small_font)
+                item_payer_label = ctk.CTkLabel(expense_frame, text=f'Paid by {item_payer}', font=small_font) # text=item_payer + ' 先付'
                 item_amount_label = ctk.CTkLabel(expense_frame, text=f'NT$ {item_amount}', font=mid_font)
-                edit_button_button = ctk.CTkButton(expense_frame, text='Edit', font=small_font, width=60, border_width=1, border_color='#F3F6F4',
-                                                   fg_color='transparent', command=self.on_edit) # command=lambda e=exp: self.on_edit(e)
+                edit_button_button = ctk.CTkButton(expense_frame, text='Edit', text_color='#FFFFFF', font=small_font, 
+                                                                  width=60, border_width=1, border_color='#B0B0B0', # '#F3F6F4'
+                                                                  fg_color='#B0B0B0', # 'transparent'
+                                                                  command=self.on_edit) # command=lambda e=exp: self.on_edit(e)
 
                 item_name_label.grid(row=0, column=0, sticky='w')
                 item_payer_label.grid(row=1, column=0, sticky='w')
                 item_amount_label.grid(row=0, column=1, rowspan=2, padx=10, sticky='e')
                 edit_button_button.grid(row=0, column=2, rowspan=2, sticky='e')
+
+                # 底線
+                line_frame = ctk.CTkFrame(scrollable, height=1, fg_color='black')
+                line_frame.pack(fill='x', padx=10, pady=(0, 10))
+
         else:
             no_group_label = ctk.CTkLabel(scrollable, text='Add an expense!', font=small_font)
             no_group_label.pack(pady=20)

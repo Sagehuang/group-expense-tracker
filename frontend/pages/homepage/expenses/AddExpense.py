@@ -9,6 +9,7 @@ ctk.set_default_color_theme('blue')
 
 #【假資料】
 group_id = 1
+## 要回傳加入的expense給後端，會需要跨頁面傳遞group_id
 
 
 # 代入：group_id

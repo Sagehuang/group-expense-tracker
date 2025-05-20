@@ -60,13 +60,16 @@ class SignIn(ctk.CTkFrame):
             self.result_label.configure(text='Please enter a name.')
             return
 
-        user = sign_in(name)
-        print(user)
-        if user:
-            self.result_label.configure(text=f"Signed in as {user['name']}.")
-            self.show_page('HomePage')
+        user_id = sign_in(name)
+        print(user_id)
+        ### 要取得user_id為跨頁面參數，以辨識當前使用者
+
+        if user_id:
+            self.result_label.configure(text=f'Welcome, {name}!', text_color='green')
+            # 1秒後跳到HomePage
+            self.after(1000, lambda: self.show_page('HomePage'))
         else:
-            self.result_label.configure(text='Sign-in failed.')
+            self.result_label.configure(text='Sign-in failed.', text_color='red')
 
     def reset_fields(self):
         self.name_entry.delete(0, 'end')

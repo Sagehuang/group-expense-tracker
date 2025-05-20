@@ -77,12 +77,26 @@ class JoinGroup(ctk.CTkFrame):
     def add_new_group(self):
         group_id = self.group_name_entry.get().strip()
         if group_id:
-            ## 要讓HomePage頁面上能出現新加入的Group，會需要跨頁面傳遞group_id
             ## 呼叫API function：join_group()
-            self.show_page('HomePage')
+            # success = join_group(group_id, user_id)
+
+            ## 驗證是否成功
+            # print('送出資料:', expense_data)
+            # print('API 回傳:', success)
+
+            # 假設成功
+            success = True
+            if success:
+                self.result_label.configure(text='Group joined successfully.', text_color='green')
+                # 1秒後回到HomePage
+                self.after(1000, lambda: self.on_navigate_home())
+            else:
+                self.result_label.configure(text='Failed to join group.', text_color='red')
+                return
         else:
             self.result_label.configure(text='Please enter a Group ID.')
-            return
+
+         ### 要讓HomePage頁面上能出現新加入的Group，會需要跨頁面傳遞group_id
 
 
 if __name__ == '__main__':

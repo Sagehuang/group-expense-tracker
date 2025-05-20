@@ -77,12 +77,25 @@ class AddGroup(ctk.CTkFrame):
     def add_new_group(self):
         group_name = self.group_name_entry.get().strip()
         if group_name:
-            ## 要讓HomePage頁面上能出現新加入的Group，會需要跨頁面傳遞group_id
             ## 呼叫API function：add_group()
-            self.show_page('HomePage')
+            # success = add_group(group_name, user_id)
+
+            ## 驗證是否成功
+            # print('送出資料:', expense_data)
+            # print('API 回傳:', success)
+
+            # 假設成功
+            success = True
+            if success:
+                self.result_label.configure(text='Group added successfully.', text_color='green')
+                # 1秒後回到HomePage
+                self.after(1000, lambda: self.on_navigate_home())
+            else:
+                self.result_label.configure(text='Failed to add group.', text_color='red')
         else:
             self.result_label.configure(text='Please enter a Group Name.')
-            return
+
+         ### 要讓HomePage頁面上能出現新加入的Group，會需要跨頁面傳遞group_id
 
 
 if __name__ == '__main__':
