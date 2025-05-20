@@ -94,7 +94,7 @@ class JoinGroup(ctk.CTkFrame):
                 self.result_label.configure(text='Failed to join group.', text_color='red')
                 return
         else:
-            self.result_label.configure(text='Please enter a Group ID.')
+            self.result_label.configure(text='Please enter a Group ID.', text_color='red')
 
          ### 要讓HomePage頁面上能出現新加入的Group，會需要跨頁面傳遞group_id
 

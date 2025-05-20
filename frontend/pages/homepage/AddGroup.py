@@ -93,7 +93,7 @@ class AddGroup(ctk.CTkFrame):
             else:
                 self.result_label.configure(text='Failed to add group.', text_color='red')
         else:
-            self.result_label.configure(text='Please enter a Group Name.')
+            self.result_label.configure(text='Please enter a Group Name.', text_color='red')
 
          ### 要讓HomePage頁面上能出現新加入的Group，會需要跨頁面傳遞group_id
 

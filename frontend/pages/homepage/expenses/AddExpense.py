@@ -162,11 +162,11 @@ class AddExpense(ctk.CTkFrame):
             self.result_label.configure(text='Please fill in all fields.', text_color='red')
             return
         if not amount_str.isdigit():
-            self.result_label.configure(text='Amount must contain numbers.')
+            self.result_label.configure(text='Amount must contain numbers.', text_color='red')
             return 
         amount = int(amount_str)
         if amount <= 0:
-            self.result_label.configure(text='Amount must be a valid positive number.')
+            self.result_label.configure(text='Amount must be a valid positive number.', text_color='red')
             return
 
         # 回傳資料（依後端API形式）
