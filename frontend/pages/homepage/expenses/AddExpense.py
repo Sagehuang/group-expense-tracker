@@ -19,7 +19,7 @@ class AddExpense(ctk.CTkFrame):
         self.show_page = show_page_callback
 
         # 整體排版
-        self.grid_rowconfigure(1, weight=1)
+        self.grid_rowconfigure((0, 1), weight=1)
         self.grid_columnconfigure(0, weight=1)
 
         # 1st frame: top bar
@@ -43,10 +43,11 @@ class AddExpense(ctk.CTkFrame):
 
         # 2rd frame（主要容器）: Item, Amount, Payer, Participants, Note, Add
         bottom_frame = ctk.CTkFrame(self, fg_color='transparent')
-        bottom_frame.grid(row=1, column=0, pady=20, sticky='n')
+        bottom_frame.grid(row=1, column=0, pady=20, sticky='nsew') #'n'
+
         bottom_frame.grid_columnconfigure((0, 1), weight=1)
         bottom_frame.grid_rowconfigure((1, 2, 3, 4, 5, 6, 7), weight=1)
-
+        
 
         # 3rd frame（2nd frame的子容器）: Date, Time
         top_date_time_frame = ctk.CTkFrame(bottom_frame)
@@ -83,12 +84,13 @@ class AddExpense(ctk.CTkFrame):
         # 4th frame（放NT$ + entry）
         amount_frame = ctk.CTkFrame(bottom_frame, fg_color='transparent')  
         amount_frame.grid(row=2, column=1, columnspan=2, padx=(5, 10), pady=10, sticky='w')
+        amount_frame.grid_columnconfigure((0, 1), weight=1)
 
         self.amount_prefix_label = ctk.CTkLabel(amount_frame, text='NT$', anchor='w')
-        self.amount_prefix_label.pack(side='left', padx=(0, 2))
+        self.amount_prefix_label.grid(row=0, column=0, padx=(0, 2), sticky='w')
 
-        self.amount_entry = ctk.CTkEntry(amount_frame, width=120)
-        self.amount_entry.pack(side='left')
+        self.amount_entry = ctk.CTkEntry(amount_frame)
+        self.amount_entry.grid(row=0, column=1, sticky='ew')
 
 
         # 3rd row：Payer
@@ -206,6 +208,6 @@ if __name__ == '__main__':
     app.grid_columnconfigure(0, weight=1)
 
     add_expense = AddExpense(app, show_page_callback)
-    add_group.grid(row=0, column=0, sticky='nsew')
+    add_expense.grid(row=0, column=0, sticky='nsew')
     
     app.mainloop()
