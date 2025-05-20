@@ -48,6 +48,23 @@ def join_group(group_id):
 
     return jsonify({"message": f"User {user.name} added to group {group.name}"}), 200
 
+# 使用者退出 group
+@group_bp.route("/<int:group_id>/leave", methods=["POST"])
+def leave_group(group_id):
+    data = request.get_json()
+    user_id = data.get("user_id")
+
+    group = Group.query.get(group_id)
+    user = User.query.get(user_id)
+
+    if not group or not user:
+        return jsonify({"error": "Group or user not found"}), 404
+    
+    group.members.remove(user)
+    db.session.commit()
+    return jsonify({"message": f"User {user.name} has left group {group.name}"}), 200
+
+
 # 根據 group_id 查詢 group 資料
 @group_bp.route("/<int:group_id>", methods=["GET"])
 def get_group(group_id):
@@ -56,7 +73,7 @@ def get_group(group_id):
         return jsonify({"error": "Group not found"}), 404
     return jsonify(group.to_dict()), 200
 
-# 移除 group:
+# 移除 group
 @group_bp.route("/<int:group_id>", methods=["DELETE"])
 def delete_group(group_id):
     group = Group.query.get(group_id)
