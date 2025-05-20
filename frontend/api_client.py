@@ -11,44 +11,48 @@ import requests
 
 BASE_URL = "http://localhost:5001/api"  # 設定後端主機與 API 前綴
 
-#登入
-def sign_in(name):
-    """
-    傳送 name 給後端，若已有該 user 則登入，否則自動創建 user 後登入，回傳 user_info dict
 
-    parameters:
-    - name (str): user name
+# 登入
+# def sign_in(name):
+#     """
+#     傳送 name 給後端，若已有該 user 則登入，否則自動創建 user 後登入，回傳 user_info dict
 
-    return:
-    - user_info (dict): 連線成功, 回傳使用者資訊包含 user id, name, groups
-    - None: 連線失敗
-    """
-    headers = {
-        "Content-Type": "application/json"
-    }
-    payload = {
-        "name": name
-    }
+#     parameters:
+#     - name (str): user name
 
-    try:
-        response = requests.post(
-            f"{BASE_URL}/users/signin",
-            headers=headers,
-            json=payload
-        )
-    # 根據收到的 response 做處理
-        if response.status_code == 200:
-            return response.json()["id"]
-        else:
-            print(f"Error! Server returned status code: {response.status_code}")
-            return None
-    except requests.exceptions.RequestException as e:
-        print("Request failed:", e)
-        return None
-# alice = sign_in("Alice")
-# print(alice)
+#     return:
+#     - user_info (dict): 連線成功, 回傳使用者資訊包含 user id, name, groups
+#     - None: 連線失敗
+#     """
+#     headers = {
+#         "Content-Type": "application/json"
+#     }
+#     payload = {
+#         "name": name
+#     }
 
-#新增花費
+#     try:
+#         response = requests.post(
+#             f"{BASE_URL}/users/signin",
+#             headers=headers,
+#             json=payload
+#         )
+#     # 根據收到的 response 做處理
+#         if response.status_code == 200:
+#             return response.json()["id"]
+#         else:
+#             print(f"Error! Server returned status code: {response.status_code}")
+#             return None
+#     except requests.exceptions.RequestException as e:
+#         print("Request failed:", e)
+#         return None
+# chris = sign_in("Chris")
+# print(chris)
+# dog = sign_in("Dog")
+# print(dog)
+
+
+# 新增花費 # 已修改
 def add_expense(expense_data):
     """
     將新增的花費資訊傳入後端紀錄
@@ -63,16 +67,7 @@ def add_expense(expense_data):
         "Content-Type": "application/json"
     }
 
-    payload = {
-        "name": "Hotel",
-        "amount": 200.0,
-        "note": "2-night stay",
-        "payer_id": 1,
-        "participant_ids": [1, 2],
-        "group_id": 1,
-        "created_at": "2025-05-13T18:30:00",
-        }
-    
+    payload = expense_data
     try:
         response = requests.post(
             f"{BASE_URL}/expenses",
@@ -81,25 +76,27 @@ def add_expense(expense_data):
         )
     # 根據收到的 response 做處理
         if response.status_code == 201:
-            print("支出新增成功")
+            return
         else:
             print(f"後端回傳錯誤狀態碼: {response.status_code}")
             print("回傳內容：", response.text)
     except requests.exceptions.RequestException as e:
         print("發送失敗，錯誤為：", e)
+
 # ex = add_expense({
 #         "name": "Hotel",
-#         "amount": 300.0,
+#         "amount": 3002.0,
 #         "note": "2-night stay",
-#         "payer_id": 1,
-#         "participant_ids": [1, 2],
-#         "group_id": 1,
-#         "created_at": "2025-05-13T18:30:00",
+#         "payer_id": 4,
+#         "participant_ids": [4, 5],
+#         "group_id": 8,
+#         "created_at": "2025-05-20T18:30:00",
 #         })
 # print(ex)
 
-#編輯花費
-def edit_expense(expense_id,expense_data):
+
+# 編輯花費 # 已修改
+def edit_expense(expense_id, expense_data):
     """
     將修改的花費傳入後端
 
@@ -113,12 +110,12 @@ def edit_expense(expense_id,expense_data):
         "Content-Type": "application/json"
     }
     payload = {
-    "name": "Hotel (Updated)",
-    "amount": 250.0,
-    "note": "Updated note",
-    "payer_id": 2,
-    "participant_ids": [1, 2]
-    }
+        "name": "Hotel (Updated)",
+        "amount": 250.0,
+        "note": "Updated note",
+        "payer_id": 2,
+        "participant_ids": [1, 2]
+        }
 
     try:
         response = requests.put(
@@ -127,14 +124,14 @@ def edit_expense(expense_id,expense_data):
             json=payload
         )
         if response.status_code == 200:
-            print("支出編輯成功")
+            return
         else:
             print(f"後端回傳錯誤狀態碼: {response.status_code}")
             print("回傳內容：", response.text)
     except requests.exceptions.RequestException as e:
         print("發送失敗，錯誤為：", e)
 
-# edit = edit_expense(4, 
+# edit = edit_expense(4,
 #                     {
 #   "name": "Hotel (Updated)",
 #   "amount": 250.0,
@@ -144,7 +141,8 @@ def edit_expense(expense_id,expense_data):
 # })
 # print(edit)
 
-#新增群組
+
+# 新增群組 # 已修改
 def add_group(group_name):
     """
     以 group name 創建一個新的 group，並新增 user 於該群組
@@ -159,9 +157,9 @@ def add_group(group_name):
         "Content-Type": "application/json"
     }
     payload = {
-    "name": "Trip to Japan",
-    "creator_id": 1   #使用者_ID
-    }
+        "name": "Trip to Japan",
+        "creator_id": 1   # 使用者_ID
+        }
 
     try:
         response = requests.post(
@@ -170,7 +168,7 @@ def add_group(group_name):
             json=payload
         )
         if response.status_code == 201:
-            print("新增群組成功")
+            return None
         else:
             print(f"後端回傳錯誤狀態碼: {response.status_code}")
             print("回傳內容：", response.text)
@@ -178,19 +176,20 @@ def add_group(group_name):
         print("發送失敗，錯誤為：", e)
 # new = add_group({
 #   "name": "Trip to Japan",
-#   "creator_id": 1   #使用者_ID
+#   "creator_id": 2   #使用者_ID
 # }
 # )
 # print(new)
 
-#加入群組
-def join_group(group_id,user_id):
+
+# 加入群組
+def join_group(group_id, user_id):
     """
     根據 group id 將當前 user 加入該 group
 
     parameter:
-    -group_id (int)：欲加入的群組 ID（需確定該 group 存在）
-    -user_id（int）：欲加入該 group_id 的 user（需不在該群組中）
+    -group_id (int)：欲加入的群組 ID
+    -user_id(int)：欲加入該 group_id 的 user(需不在該群組中)
 
     return:
     - join_success (bool): 是否成功加入 group，
@@ -200,13 +199,14 @@ def join_group(group_id,user_id):
         "Content-Type": "application/json"
     }
     payload = {
-  "user_id":user_id
-}
-    
+        "user_id": user_id
+        }
     try:
-        response = requests.post(f"{BASE_URL}/groups/{group_id}/join",
+        response = requests.post(
+            f"{BASE_URL}/groups/{group_id}/join",
             headers=headers,
-            json=payload)
+            json=payload
+        )
         if response.status_code == 200:
             return True
         else:
@@ -215,11 +215,14 @@ def join_group(group_id,user_id):
     except requests.exceptions.RequestException as e:
         print("Request failed:", e)
         return False
-# join = join_group(7, 2
+# join = join_group(8, 4
 # )
 # print(join)
+# join_2 = join_group(8, 5)
+# print(join_2)
 
-#顯示該群組的所有 expense
+
+# 顯示該群組的所有 expense
 def obtain_expense(group_id):
     """
     根據 group id 查詢該 group 的所有 expenses，回傳所有 expenses
@@ -228,7 +231,7 @@ def obtain_expense(group_id):
 
     parameter:
     -group_id(int)：欲顯示支出的目標群組 ID
-    
+
     return:
     -group_expenses (a list of dict): 該 group 的所有 expenses
     """
@@ -239,7 +242,7 @@ def obtain_expense(group_id):
     try:
         response = requests.get(f"{BASE_URL}/groups/{group_id}")
         if response.status_code == 200:
-            return response.json()["expenses"]
+            return response.json()
         else:
             print(f"Error! Server returned status code: {response.status_code}")
             return None
@@ -249,7 +252,8 @@ def obtain_expense(group_id):
 # info = obtain_expense(1)
 # print(info)
 
-#取得 expense 的資訊
+
+# 取得 expense 的資訊 # 已修改
 def get_expense_info(expense_id):
     """
     根據 expense id 查詢一筆 expense，回傳 expense 的資料
@@ -264,7 +268,7 @@ def get_expense_info(expense_id):
     -original_participants (list of str)
     -orginial_note (str)
     """
-    # 無request body, 所以不用寫 headers, payload
+    # 無request body, 所以不用寫 payload
     headers = {
         "Content-Type": "application/json"
     }
@@ -272,14 +276,13 @@ def get_expense_info(expense_id):
         response = requests.get(f"{BASE_URL}/expenses/{expense_id}")
         if response.status_code == 200:
             data = response.json()
-            result = {
-                "original_item": data["name"],
-                "original_amount": data["amount"],
-                "original_payer": data["payer"]["name"],
-                "original_participants": [p["name"] for p in data["participants"]],
-                "original_note": data["note"]
-            }
-            return result
+            original_item = data["name"]
+            original_amount = int(data["amount"])
+            original_payer = data["payer"]["name"]
+            original_participants = [p["name"] for p in data["participants"]]
+            original_note = data["note"]
+
+            return original_item, original_amount, original_payer, original_participants, original_note
         else:
             print(f"Error! Server returned status code: {response.status_code}")
             return None
@@ -289,7 +292,8 @@ def get_expense_info(expense_id):
 # expense = get_expense_info(3)
 # print(expense)
 
-#取得 member 資訊
+
+# 取得 member 資訊 # 已修改, original_amount 轉為 int
 def get_members_info(group_id):
     """
     根據 group id 查詢群組名稱和成員名稱
@@ -309,10 +313,9 @@ def get_members_info(group_id):
         response = requests.get(f"{BASE_URL}/groups/{group_id}")
         if response.status_code == 200:
             data = response.json()
-            result = {
-                "group_name": data["name"],
-                "members_list": [member["name"] for member in data["members"]]}
-            return result
+            group_name = data["name"]
+            members_list = [member["name"] for member in data["members"]]
+            return group_name, members_list
         else:
             print(f"Error! Server returned status code: {response.status_code}")
             return None
@@ -322,37 +325,96 @@ def get_members_info(group_id):
 # infos = get_members_info(7)
 # print(infos)
 
-# """2. 建立群組（同時將建立者加入群組）"""
-# def add_group(group_name, creator_id):
-#     try:
-#         payload = {"name": group_name, "creator_id": creator_id}
-#         response = requests.post(f"{BASE_URL}/groups", json=payload, headers={"Content-Type": "application/json"})
-#         return response.status_code in [200, 201]
-#     except Exception as e:
-#         print("[add_group] failed:", e)
-#         return False
 
-# """ 3. 加入指定群組（需提供 group_id 與 user_id）"""
-# def join_group(group_id, user_id):
-#     try:
-#         payload = {"user_id": user_id}
-#         response = requests.post(f"{BASE_URL}/groups/{group_id}/join", json=payload, headers={"Content-Type": "application/json"})
-#         return response.status_code == 200
-#     except Exception as e:
-#         print("[join_group] failed:", e)
-#         return False
+# 離開群組 # 開發中，需等後端完成 route 的建立
+def leave_group(group_id, user_id):
+    """
+    使用者離開 group
+
+    parameters:
+    -user_id (int)
+    -group_id (int)
+
+    return:
+    -x
+    """
 
 
-# """ 5. 查詢某個群組的所有支出"""
-# def obtain_expense(group_id):
-#     try:
-#         response = requests.get(f"{BASE_URL}/groups/{group_id}/expenses")
-#         if response.status_code == 200:
-#             return response.json().get("all_expenses", [])
-#         return []
-#     except Exception as e:
-#         print("[obtain_expense] failed:", e)
-#         return []
+# 計算群組最終付款金額 # 新函數
+def get_balance_info(group_id):
+    """
+    根據 group id 查詢 group 內所有 members 在結算後，應收應付的金額
+
+    parameters:
+    -group_id (int)
+
+    return:
+    list of dict, each dict looks like
+    {"user_name": "Alice", "net_balance": -50}
+    """
+    # 無request body, 所以不用寫 payload
+    headers = {
+        "Content-Type": "application/json"
+    }
+    try:
+        response = requests.get(f"{BASE_URL}/groups/{group_id}/summary")
+        if response.status_code == 200:
+            data = response.json()
+            summary_list = [
+                {
+                    "user_name": entry["user"]["name"],
+                    "net_balance": entry["net_balance"]
+                }
+                for entry in data["summary"]
+            ]
+            return summary_list
+        else:
+            print(f"Error! Server returned status code: {response.status_code}")
+            return None
+    except requests.exceptions.RequestException as e:
+        print("Request failed:", e)
+        return None
+# summary = get_balance_info(8)
+# print(summary)
+
+
+# 找尋付款的最短路徑 # 新函數
+def get_settle_info(group_id):
+    """
+    根據 group id 查詢欲結清群組所有款項的最短付款路徑
+
+    parameters:
+    -group_id（int)
+
+    return:
+    -list of dict, each dict looks like
+    {"payer": "Alice", "receiver": "Bob", "amount": 50}
+    """
+    # 無request body, 所以不用寫 payload
+    headers = {
+        "Content-Type": "application/json"
+    }
+    try:
+        response = requests.get(f"{BASE_URL}/groups/{group_id}/settle")
+        if response.status_code == 200:
+            data = response.json()
+            settlements = [
+                {
+                    "payer": s["payer"]["name"],
+                    "receiver": s["receiver"]["name"],
+                    "amount": s["amount"]
+                }
+                for s in data["settlements"]
+            ]
+            return settlements
+        else:
+            print(f"Error! Server returned status code: {response.status_code}")
+            return None
+    except requests.exceptions.RequestException as e:
+        print("Request failed:", e)
+        return None
+# settle = get_settle_info(8)
+# print(settle)
 
 '''
 等到你徹底熟悉上面 function 的寫法就可以寫得更簡潔一點 以下是上面 function 的簡潔版:
