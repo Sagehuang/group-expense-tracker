@@ -17,7 +17,7 @@ def sign_in(name):
     """
     傳送 name 給後端，若已有該 user 則登入，否則自動創建 user 後登入，回傳 user_info dict
 
-    parameters:
+    parameter:
     - name (str): user name
 
     return:
@@ -37,7 +37,8 @@ def sign_in(name):
             headers=headers,
             json=payload
         )
-    # 根據收到的 response 做處理
+
+        # 根據收到的 response 做處理
         if response.status_code == 200:
             return response.json()["id"]
         else:
@@ -46,10 +47,12 @@ def sign_in(name):
     except requests.exceptions.RequestException as e:
         print("Request failed:", e)
         return None
-# chris = sign_in("Chris")
-# print(chris)
-# dog = sign_in("Dog")
-# print(dog)
+
+# test
+# user_id = sign_in("Alice")
+# print("user_id:", user_id)
+# user_id = sign_in("Jack")
+# print("user_id:", user_id)
 
 
 # 新增花費 # 已修改
@@ -185,15 +188,14 @@ def add_group(group_name):
 # 加入群組
 def join_group(group_id, user_id):
     """
-    根據 group id 將當前 user 加入該 group
+    根據 group id 將當前 user 加入該 group，成功加入則回傳 True，查無 group 則回傳 False
 
-    parameter:
-    -group_id (int)：欲加入的群組 ID
-    -user_id(int)：欲加入該 group_id 的 user(需不在該群組中)
+    parameters:
+    - group_id (int)：欲加入的群組 ID
+    - user_id (int)：欲加入該 group_id 的 user (需不在該群組中)
 
     return:
-    - join_success (bool): 是否成功加入 group，
-    若成功加入，回傳"True"
+    - join_success (bool): 是否成功加入 group
     """
     headers = {
         "Content-Type": "application/json"
@@ -201,12 +203,14 @@ def join_group(group_id, user_id):
     payload = {
         "user_id": user_id
         }
+
     try:
         response = requests.post(
             f"{BASE_URL}/groups/{group_id}/join",
             headers=headers,
             json=payload
         )
+
         if response.status_code == 200:
             return True
         else:
@@ -215,11 +219,10 @@ def join_group(group_id, user_id):
     except requests.exceptions.RequestException as e:
         print("Request failed:", e)
         return False
-# join = join_group(8, 4
-# )
-# print(join)
-# join_2 = join_group(8, 5)
-# print(join_2)
+
+# test
+# join_success = join_group(1, 4)
+# print("join_success:", join_success)
 
 
 # 顯示該群組的所有 expense
@@ -253,25 +256,21 @@ def obtain_expense(group_id):
 # print(info)
 
 
-# 取得 expense 的資訊 # 已修改
+# 取得 expense 的資訊
 def get_expense_info(expense_id):
     """
     根據 expense id 查詢一筆 expense，回傳 expense 的資料
 
     parameter:
-    -expense_id（int）
+    - expense_id (int)
 
     return:
-    -original_item (str)
-    -original_amount (int)
-    -original_payer (str)
-    -original_participants (list of str)
-    -orginial_note (str)
+    - original_item (str)
+    - original_amount (int)
+    - original_payer (str)
+    - original_participants (list of str)
+    - orginial_note (str)
     """
-    # 無request body, 所以不用寫 payload
-    headers = {
-        "Content-Type": "application/json"
-    }
     try:
         response = requests.get(f"{BASE_URL}/expenses/{expense_id}")
         if response.status_code == 200:
@@ -279,9 +278,8 @@ def get_expense_info(expense_id):
             original_item = data["name"]
             original_amount = int(data["amount"])
             original_payer = data["payer"]["name"]
-            original_participants = [p["name"] for p in data["participants"]]
+            original_participants = [user["name"] for user in data["participants"]]
             original_note = data["note"]
-
             return original_item, original_amount, original_payer, original_participants, original_note
         else:
             print(f"Error! Server returned status code: {response.status_code}")
@@ -289,26 +287,28 @@ def get_expense_info(expense_id):
     except requests.exceptions.RequestException as e:
         print("Request failed:", e)
         return None
-# expense = get_expense_info(3)
-# print(expense)
+
+# test
+# original_item, original_amount, original_payer, original_participants, original_note = get_expense_info(3)
+# print("original_item:", original_item)
+# print("original_amount:", original_amount)
+# print("original_payer:", original_payer)
+# print("original_participants:", original_participants)
+# print("original_note:", original_note)
 
 
-# 取得 member 資訊 # 已修改, original_amount 轉為 int
+# 取得 member 資訊
 def get_members_info(group_id):
     """
     根據 group id 查詢群組名稱和成員名稱
 
     parameter:
-    -group_id(int)
+    - group_id (int)
 
     return:
-    -group_name (str)
-    -members_list (list of str)
+    - group_name (str)
+    - members_list (list of str)
     """
-    # 無request body, 所以不用寫 payload
-    headers = {
-        "Content-Type": "application/json"
-    }
     try:
         response = requests.get(f"{BASE_URL}/groups/{group_id}")
         if response.status_code == 200:
@@ -322,8 +322,11 @@ def get_members_info(group_id):
     except requests.exceptions.RequestException as e:
         print("Request failed:", e)
         return None
-# infos = get_members_info(7)
-# print(infos)
+
+# test
+# group_name, members_list = get_members_info(2)
+# print("group_name:", group_name)
+# print("members_list:", members_list)
 
 
 # 離開群組 # 開發中，需等後端完成 route 的建立
@@ -340,81 +343,76 @@ def leave_group(group_id, user_id):
     """
 
 
-# 計算群組最終付款金額 # 新函數
+# 計算群組最終付款金額
 def get_balance_info(group_id):
     """
     根據 group id 查詢 group 內所有 members 在結算後，應收應付的金額
 
-    parameters:
-    -group_id (int)
+    parameter:
+    - group_id (int)
 
     return:
-    list of dict, each dict looks like
-    {"user_name": "Alice", "net_balance": -50}
+    - group_balance (list of dict): each dict looks like {"user_name": "Alice", "net_balance": -50}
     """
-    # 無request body, 所以不用寫 payload
-    headers = {
-        "Content-Type": "application/json"
-    }
     try:
         response = requests.get(f"{BASE_URL}/groups/{group_id}/summary")
         if response.status_code == 200:
             data = response.json()
-            summary_list = [
+            group_balance = [
                 {
                     "user_name": entry["user"]["name"],
-                    "net_balance": entry["net_balance"]
+                    "net_balance": int(entry["net_balance"])  # 將 float 轉成 int
                 }
                 for entry in data["summary"]
             ]
-            return summary_list
+            return group_balance
         else:
             print(f"Error! Server returned status code: {response.status_code}")
             return None
     except requests.exceptions.RequestException as e:
         print("Request failed:", e)
         return None
-# summary = get_balance_info(8)
-# print(summary)
+
+# test
+# group_balance = get_balance_info(2)
+# print("group_balance:", group_balance)
 
 
-# 找尋付款的最短路徑 # 新函數
+# 找尋付款的最短路徑
 def get_settle_info(group_id):
     """
     根據 group id 查詢欲結清群組所有款項的最短付款路徑
 
     parameters:
-    -group_id（int)
+    - group_id (int)
 
     return:
-    -list of dict, each dict looks like
-    {"payer": "Alice", "receiver": "Bob", "amount": 50}
+    - group_settlement (list of dict): each dict looks like {"payer": "Alice", "receiver": "Bob", "amount": 50}
     """
-    # 無request body, 所以不用寫 payload
-    headers = {
-        "Content-Type": "application/json"
-    }
     try:
         response = requests.get(f"{BASE_URL}/groups/{group_id}/settle")
         if response.status_code == 200:
             data = response.json()
-            settlements = [
+            group_settlement = [
                 {
                     "payer": s["payer"]["name"],
                     "receiver": s["receiver"]["name"],
-                    "amount": s["amount"]
+                    "amount": int(s["amount"])  # 將 float 轉成 int
                 }
                 for s in data["settlements"]
             ]
-            return settlements
+            return group_settlement
         else:
             print(f"Error! Server returned status code: {response.status_code}")
             return None
     except requests.exceptions.RequestException as e:
         print("Request failed:", e)
         return None
-# settle = get_settle_info(8)
-# print(settle)
+
+# test
+# group_settlement = get_settle_info(2)
+# print("group_settlement:", group_settlement)
+
 
 '''
 等到你徹底熟悉上面 function 的寫法就可以寫得更簡潔一點 以下是上面 function 的簡潔版:
