@@ -13,39 +13,39 @@ BASE_URL = "http://localhost:5001/api"  # 設定後端主機與 API 前綴
 
 
 # 登入
-# def sign_in(name):
-#     """
-#     傳送 name 給後端，若已有該 user 則登入，否則自動創建 user 後登入，回傳 user_info dict
+def sign_in(name):
+    """
+    傳送 name 給後端，若已有該 user 則登入，否則自動創建 user 後登入，回傳 user_info dict
 
-#     parameters:
-#     - name (str): user name
+    parameters:
+    - name (str): user name
 
-#     return:
-#     - user_info (dict): 連線成功, 回傳使用者資訊包含 user id, name, groups
-#     - None: 連線失敗
-#     """
-#     headers = {
-#         "Content-Type": "application/json"
-#     }
-#     payload = {
-#         "name": name
-#     }
+    return:
+    - user_info (dict): 連線成功, 回傳使用者資訊包含 user id, name, groups
+    - None: 連線失敗
+    """
+    headers = {
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "name": name
+    }
 
-#     try:
-#         response = requests.post(
-#             f"{BASE_URL}/users/signin",
-#             headers=headers,
-#             json=payload
-#         )
-#     # 根據收到的 response 做處理
-#         if response.status_code == 200:
-#             return response.json()["id"]
-#         else:
-#             print(f"Error! Server returned status code: {response.status_code}")
-#             return None
-#     except requests.exceptions.RequestException as e:
-#         print("Request failed:", e)
-#         return None
+    try:
+        response = requests.post(
+            f"{BASE_URL}/users/signin",
+            headers=headers,
+            json=payload
+        )
+    # 根據收到的 response 做處理
+        if response.status_code == 200:
+            return response.json()["id"]
+        else:
+            print(f"Error! Server returned status code: {response.status_code}")
+            return None
+    except requests.exceptions.RequestException as e:
+        print("Request failed:", e)
+        return None
 # chris = sign_in("Chris")
 # print(chris)
 # dog = sign_in("Dog")
