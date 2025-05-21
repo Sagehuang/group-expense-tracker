@@ -6,9 +6,10 @@ ctk.set_default_color_theme('blue')
 
 
 class AddGroup(ctk.CTkFrame):
-    def __init__(self, master, show_page_callback):
+    def __init__(self, master, show_page_callback, user_id):
         super().__init__(master)
         self.show_page = show_page_callback
+        self.user_id = user_id
 
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -77,7 +78,7 @@ class AddGroup(ctk.CTkFrame):
         group_name = self.group_name_entry.get().strip()
         if group_name:
             ## 呼叫API function：add_group()
-            # success = add_group(group_name, user_id)
+            # success = add_group(group_name, self.user_id)
 
             ## 驗證是否成功
             # print('送出資料:', expense_data)
@@ -94,7 +95,7 @@ class AddGroup(ctk.CTkFrame):
         else:
             self.result_label.configure(text='Please enter a Group Name.', text_color='red')
 
-        ### 要讓HomePage頁面上能出現新加入的Group，會需要跨頁面傳遞group_id
+        ### 成功新增後，資料庫中會新增新群組，並且回到 HomePage 時會再度呼叫 get_groups_info 函數，故可顯示已加入的群組
 
 
 if __name__ == '__main__':

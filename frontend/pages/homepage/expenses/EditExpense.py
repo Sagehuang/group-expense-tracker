@@ -9,8 +9,8 @@ ctk.set_default_color_theme('blue')
 
 
 # 【假資料】
-group_id = 1
-expense_id = 1
+# group_id = 1
+# expense_id = 1
 original_item = 'Food'
 original_amount = 300
 original_payer = 'Alice'
@@ -21,11 +21,13 @@ orginial_note = 'McDonald\'s'
 
 # 代入：group_id, expense_id
 class EditExpense(ctk.CTkFrame):
-    def __init__(self, master, show_page_callback):
+    def __init__(self, master, show_page_callback, group_id=None, expense_id=None):
         super().__init__(master)
         self.show_page = show_page_callback
+        self.group_id = group_id
+        self.expense_id = expense_id
 
-        # original_item, original_amount, original_payer, original_participants, orginial_note = get_expense_info(expense_id)
+        # original_item, original_amount, original_payer, original_participants, orginial_note = get_expense_info(self.expense_id)
 
         # 整體排版
         self.grid_rowconfigure(1, weight=1)
@@ -36,14 +38,9 @@ class EditExpense(ctk.CTkFrame):
         top_bar.grid(row=0, column=0, sticky='ew')
         top_bar.grid_columnconfigure(1, weight=1)
 
-        self.back_button = ctk.CTkButton(top_bar, text='Back',
-                                         command=self.on_navigate_back,
-                                         width=80)
-        self.title_label = ctk.CTkLabel(top_bar, text='Edit Expense',
-                                        font=ctk.CTkFont(size=18,
-                                                         weight='bold'))
-        self.logout_button = ctk.CTkButton(top_bar, text='Logout',
-                                           command=self.on_logout, width=80)
+        self.back_button = ctk.CTkButton(top_bar, text='Back', command=self.on_navigate_back, width=80)
+        self.title_label = ctk.CTkLabel(top_bar, text='Edit Expense', font=ctk.CTkFont(size=18, weight='bold'))
+        self.logout_button = ctk.CTkButton(top_bar, text='Logout', command=self.on_logout, width=80)
 
         self.back_button.grid(row=0, column=0, padx=10, pady=10, sticky='w')
         self.title_label.grid(row=0, column=1, padx=10, pady=10)
@@ -173,7 +170,7 @@ class EditExpense(ctk.CTkFrame):
             'payer': payer,
             'participants': participants,
             'note': note,
-            'group_id': group_id
+            'group_id': self.group_id
         }
 
         ## 呼叫API function

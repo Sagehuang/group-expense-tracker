@@ -43,14 +43,14 @@ class App(ctk.CTk):
     def init_pages(self):
         # 建立所有頁面的實例並存入self.pages字典，放進self.container
         self.pages['SignIn'] = SignIn(self.container, self.show_page)
-        self.pages['HomePage'] = HomePage(self.container, self.show_page)
-        self.pages['AddGroup'] = AddGroup(self.container, self.show_page)
-        self.pages['JoinGroup'] = JoinGroup(self.container, self.show_page)
-        self.pages['ViewGroup'] = ViewGroup(self.container, self.show_page)  # self.user_name, self.group_name
-        self.pages['AddExpense'] = AddExpense(self.container, self.show_page)
-        self.pages['EditExpense'] = EditExpense(self.container, self.show_page)
-        self.pages['ViewMembers'] = ViewMembers(self.container, self.show_page)
-        self.pages['SettleUp'] = SettleUp(self.container, self.show_page)
+        self.pages['HomePage'] = HomePage(self.container, self.show_page, self.pages['SignIn'].user_id)
+        self.pages['AddGroup'] = AddGroup(self.container, self.show_page, self.pages['SignIn'].user_id)
+        self.pages['JoinGroup'] = JoinGroup(self.container, self.show_page, self.pages['SignIn'].user_id)
+        self.pages['ViewGroup'] = ViewGroup(self.container, self.show_page, self.pages['HomePage'].clicked_group_id)
+        self.pages['AddExpense'] = AddExpense(self.container, self.show_page, self.pages['HomePage'].clicked_group_id)
+        self.pages['EditExpense'] = EditExpense(self.container, self.show_page, self.pages['HomePage'].clicked_group_id, self.pages['ViewGroup'].clicked_exp_id)
+        self.pages['ViewMembers'] = ViewMembers(self.container, self.show_page, self.pages['SignIn'].user_id, self.pages['HomePage'].clicked_group_id)
+        self.pages['SettleUp'] = SettleUp(self.container, self.show_page, self.pages['HomePage'].clicked_group_id)
 
         for page in self.pages.values():
             page.grid(row=0, column=0, sticky='nsew')
@@ -62,6 +62,9 @@ class App(ctk.CTk):
             page.grid_remove()
 
     def show_page(self, page_name):
+        # 再度初始化頁面 (因為會傳入新參數)
+        self.init_pages()
+
         # 隱藏所有頁面
         for page in self.pages.values():
             page.grid_remove()

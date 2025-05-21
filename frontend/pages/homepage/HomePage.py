@@ -5,9 +5,11 @@ ctk.set_default_color_theme('blue')
 
 
 class HomePage(ctk.CTkFrame):
-    def __init__(self, master, show_page_callback):
+    def __init__(self, master, show_page_callback, user_id=None):
         super().__init__(master)
         self.show_page = show_page_callback
+        self.user_id = user_id
+        self.clicked_group_id = None
 
         # grid 行列配置
         self.grid_rowconfigure(0, weight=0)  # 頂端列高度固定
@@ -34,11 +36,12 @@ class HomePage(ctk.CTkFrame):
         self.logout_button.grid(row=0, column=2, padx=10, pady=10, sticky='e')
 
         # 群組假資料
-        self.current_groups = [{'id': 901, 'name': 'Group A', 'members': [101, 102, 104]},
-                               {'id': 902, 'name': 'Group B', 'members': [101, 103, 104]},
-                               {'id': 903, 'name': 'Group C', 'members': [101, 109, 110]},
-                               {'id': 904, 'name': 'Group D', 'members': [101, 108, 123]}]
-        ### 要讓HomePage頁面上能出現所有加入的Group，會需要跨頁面傳遞user_id, list of group_id（使用者ID、該ID加入了哪些群組）
+        self.current_groups = [{'id': 1, 'name': 'Group A', 'members': [1, 2, 4]},
+                               {'id': 2, 'name': 'Group B', 'members': [1, 3, 4]},
+                               {'id': 3, 'name': 'Group C', 'members': [1, 9, 10]},
+                               {'id': 4, 'name': 'Group D', 'members': [1, 8, 23]}]
+        # 呼叫函數 get_groups_info(self.user_id)
+        ### 要讓HomePage頁面上能出現所有加入的Group，會需要跨頁面傳遞user_id
 
         # 主體捲動區
         scrollable = ctk.CTkScrollableFrame(self)
@@ -76,6 +79,7 @@ class HomePage(ctk.CTkFrame):
         self.show_page('SignIn')
 
     def check_group(self, group):
+        self.clicked_group_id = group['id']
         self.show_page('ViewGroup')
 
     def on_add_group(self):

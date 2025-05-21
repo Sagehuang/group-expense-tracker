@@ -11,11 +11,11 @@ group_name = '這是一個名字非常非常長的群組'
 
 
 class ViewGroup(ctk.CTkFrame):
-    def __init__(self, master, show_page_callback):  # user_name, group_name
+    def __init__(self, master, show_page_callback, group_id=None):
         super().__init__(master)
         self.show_page = show_page_callback
-        # self.user_name = user_name
-        # self.group_name = group_name
+        self.group_id = group_id
+        self.clicked_exp_id = None
 
         # self.group_name_display = group_name[:8] + '...' if len(group_name) > 10 else group_name # self
         self.group_name_display = group_name
@@ -45,33 +45,34 @@ class ViewGroup(ctk.CTkFrame):
         scrollable.grid(row=1, column=0, sticky='nsew', padx=10)
 
         # 群組內項目假資料
+        # 之後改成呼叫 obtain_expense(self.group_id)
         self.expenses = [
             {
                 'name': 'Dinner',
                 'amount': 200,
                 'note': 'Sushi',
                 'created_at': datetime.datetime.strptime('2025-05-13 18:30:00', '%Y-%m-%d %H:%M:%S'),
-                'payer': (2, 'Bob'),  # (user id, user_name)
-                'participants': [101, 102],
-                'group': 901  # group id
+                'payer': 'Bob',  # user_name
+                'participants': [1, 2],
+                'expense_id': 1  # expense id
             },
             {
                 'name': 'Really long name',
                 'amount': 1000,
                 'note': None,
                 'created_at': datetime.datetime.strptime('2025-05-14 19:00:00', '%Y-%m-%d %H:%M:%S'),
-                'payer': (1, 'Alice'),  # (user_id, user_name)
-                'participants': [101, 102],
-                'group': 901  # group id
+                'payer': 'Alice',  # user_name
+                'participants': [1, 2],
+                'expense_id': 2  # expense id
             },
             {
                 'name': 'Appliances',
                 'amount': 5000,
                 'note': None,
                 'created_at': datetime.datetime.strptime('2025-05-16 12:00:00', '%Y-%m-%d %H:%M:%S'),
-                'payer': (1, 'Alice'),  # (user id, user_name)
-                'participants': [101, 102],
-                'group': 901  # group id
+                'payer': 'Alice',  # user_name
+                'participants': [1, 2],
+                'expense_id': 3  # expense id
             },
         ]
 
@@ -94,7 +95,7 @@ class ViewGroup(ctk.CTkFrame):
                 edit_button_button = ctk.CTkButton(expense_frame, text='Edit', text_color='#FFFFFF', font=small_font,
                                                    width=60, border_width=1, border_color='#B0B0B0',  # '#F3F6F4'
                                                    fg_color='#B0B0B0',  # 'transparent'
-                                                   command=self.on_edit)  # command=lambda e=exp: self.on_edit(e)
+                                                   command=lambda e=exp: self.on_edit(e))  # command=self.on_edit
 
                 item_name_label.grid(row=0, column=0, sticky='w')
                 item_payer_label.grid(row=1, column=0, sticky='w')
@@ -139,7 +140,8 @@ class ViewGroup(ctk.CTkFrame):
     def on_settle_up(self):
         self.show_page('SettleUp')
 
-    def on_edit(self):
+    def on_edit(self, exp):
+        self.clicked_exp_id = exp['expense_id']
         self.show_page('EditExpense')
 
 

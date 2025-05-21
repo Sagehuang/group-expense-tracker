@@ -8,15 +8,16 @@ ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
 
 # 【假資料】
-group_id = 1
+# group_id = 1
 ## 要回傳加入的expense給後端，會需要跨頁面傳遞group_id
 
 
 # 代入：group_id
 class AddExpense(ctk.CTkFrame):
-    def __init__(self, master, show_page_callback):
+    def __init__(self, master, show_page_callback, group_id=None):
         super().__init__(master)
         self.show_page = show_page_callback
+        self.group_id = group_id
 
         # 整體排版
         self.grid_rowconfigure((0, 1), weight=1)
@@ -169,7 +170,7 @@ class AddExpense(ctk.CTkFrame):
             'payer': payer,
             'participants': participants,
             'note': note,
-            'group_id': group_id
+            'group_id': self.group_id
         }
 
         ## 呼叫API function

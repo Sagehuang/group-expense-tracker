@@ -8,19 +8,20 @@ ctk.set_default_color_theme('blue')
 
 
 # 【假資料】
-group_id = 1
+# group_id = 1
 balance_list = [{'user_name': 'Alice', 'net_balance': -500}, {'user_name': 'Bob', 'net_balance': 250}, {'user_name': 'Brian', 'net_balance': 250}]
 settle_list = [{'payer': 'Alice', 'receiver': 'Bob', 'amount': 250}, {'payer': 'Alice', 'receiver': 'Brian', 'amount': 250}]
 ## 要讓SettleUp頁面上能出現組員之間的balance、settle，會需要跨頁面傳遞group_id
 
 
 class SettleUp(ctk.CTkFrame):
-    def __init__(self, master, show_page_callback):
+    def __init__(self, master, show_page_callback, group_id):
         super().__init__(master)
         self.show_page = show_page_callback
+        self.group_id = group_id
 
-        # balance_list = get_balance_info(group_id)
-        # settle_list = get_settle_info(group_id)
+        # balance_list = get_balance_info(self.group_id)
+        # settle_list = get_settle_info(self.group_id)
 
         # 整體排版
         self.grid_rowconfigure(1, weight=1)

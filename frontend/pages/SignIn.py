@@ -9,6 +9,7 @@ class SignIn(ctk.CTkFrame):
     def __init__(self, master, show_page_callback):
         super().__init__(master)
         self.show_page = show_page_callback
+        self.user_id = None
 
         # 整體用 grid 分三行，上中下置中
         self.grid_rowconfigure(0, weight=1)
@@ -59,11 +60,11 @@ class SignIn(ctk.CTkFrame):
             self.result_label.configure(text='Please enter a name.')
             return
 
-        user_id = sign_in(name)
-        print(user_id)
+        self.user_id = sign_in(name)  # !!!
+        print(self.user_id)  # !!!
         ### 要取得user_id為跨頁面參數，以辨識當前使用者
 
-        if user_id:
+        if self.user_id:  # !!!
             self.result_label.configure(text=f'Welcome, {name}!', text_color='green')
             # 1秒後跳到HomePage
             self.after(1000, lambda: self.show_page('HomePage'))

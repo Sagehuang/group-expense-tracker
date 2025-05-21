@@ -7,20 +7,22 @@ ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
 
 # 【假資料】
-user_id = 1
+# user_id = 1
 user_name = 'Alice'
-group_id = 1
+# group_id = 1
 group_name = 'Group A'
 members_list = ['Alice', 'Bob', 'Charlie']
 ## 要讓ViewMembers頁面上能出現組員名單，會需要跨頁面傳遞group_id, user_id（群組ID、可能要退出群組的當前使用者的ID）
 
 
 class ViewMembers(ctk.CTkFrame):
-    def __init__(self, master, show_page_callback):
+    def __init__(self, master, show_page_callback, user_id, group_id):
         super().__init__(master)
         self.show_page = show_page_callback
+        self.user_id = user_id
+        self.group_id = group_id
 
-        # group_name, members_list = get_members_info(group_id)
+        # group_name, members_list = get_members_info(self.group_id)
 
         # 整體排版
         self.grid_rowconfigure(1, weight=1)  # 可捲動區
@@ -91,7 +93,7 @@ class ViewMembers(ctk.CTkFrame):
     def on_leave_group(self):
 
         ## 呼叫API function
-        # success = leave_group(user_id, group_id)
+        # success = leave_group(self.user_id, self.group_id)
 
         ## 驗證是否成功
         # print('送出資料:', expense_data)
