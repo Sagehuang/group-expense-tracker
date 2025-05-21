@@ -351,6 +351,29 @@ def leave_group(group_id, user_id):
     return:
     -x
     """
+    headers = {
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "user_id": user_id
+        }
+
+    try:
+        response = requests.post(
+            f"{BASE_URL}/groups/{group_id}/leave",
+            headers=headers,
+            json=payload
+        )
+        if response.status_code == 200:
+            return True
+        else:
+            print(f"Error! Server returned status code: {response.status_code}")
+            return False
+    except requests.exceptions.RequestException as e:
+        print("Request failed:", e)
+        return False
+# leave = leave_group(8, 6)
+# print(leave)
 
 
 # 計算群組最終付款金額
