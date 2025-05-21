@@ -53,17 +53,26 @@ def sign_in(name):
 # print("user_id:", user_id)
 # user_id = sign_in("Jack")
 # print("user_id:", user_id)
-
+# a = sign_in("Alice")
+# b = sign_in("Bob")
+# c = sign_in("Chris")
+# d = sign_in("Dog")
+# print(a, b, c, d)
 
 # 新增花費 # 已修改
 def add_expense(created_at, name, amount, payer, participants, note, group_id):
     from datetime import datetime
-
     """
     將新增的花費資訊傳入後端紀錄
 
     parameter:
-    -expense_data (dictionary)：加入的一筆支出
+    -created_at (Datetime): 創建時間
+    -name (str): expense 名稱
+    -amount (int): 金額
+    -payer (str): 付款人姓名
+    -participants (list of str): 收款人姓名
+    -note (str): 備註
+    -group_id (int): 此 group 的 id
 
     return:
     - x
@@ -90,7 +99,7 @@ def add_expense(created_at, name, amount, payer, participants, note, group_id):
         )
     # 根據收到的 response 做處理
         if response.status_code == 201:
-            return
+            return response.json()["id"]
         else:
             print(f"後端回傳錯誤狀態碼: {response.status_code}")
             print("回傳內容：", response.text)
@@ -98,37 +107,49 @@ def add_expense(created_at, name, amount, payer, participants, note, group_id):
         print("發送失敗，錯誤為：", e)
 
 # ex = add_expense(
-#         "Hotel",
-#         3002.0,
-#         "2-night stay",
-#          4,
+#         "2025-05-22T18:30:00",
+#         "Book",
+#         300.0,
+#         5,
 #         [4, 5],
-#          8,
-#         "2025-05-20T18:30:00"
+#         "",
+#         8
 #         )
 # print(ex)
 
 
 # 編輯花費 # 已修改
-def edit_expense(expense_id, expense_data):
+def edit_expense(expense_id, created_at, name, amount, payer, participant, note, group_id):
     """
     將修改的花費傳入後端
 
     parameter:
-    -expense_data (dictionary)：修改的一筆支出
+    -expense_id (int): 此筆 expense 的 id
+    -created_at (Datetime): 創建時間
+    -name (str): expense 名稱
+    -amount (int): 金額
+    -payer (str): 付款人姓名
+    -participants (list of str): 收款人姓名
+    -note (str): 備註
+    -group_id (int): 此 group 的 id
 
     return:
     - x
     """
+    payer_id = sign_in(payer)
+    participant_ids = []
+    for par in participant:
+        id = sign_in(par)
+        participant_ids.append(id)
     headers = {
         "Content-Type": "application/json"
     }
     payload = {
-        "name": "Hotel (Updated)",
-        "amount": 250.0,
-        "note": "Updated note",
-        "payer_id": 2,
-        "participant_ids": [1, 2]
+        "name": name,
+        "amount": amount,
+        "note": note,
+        "payer_id": payer_id,
+        "participant_ids": participant_ids
         }
 
     try:
@@ -138,21 +159,22 @@ def edit_expense(expense_id, expense_data):
             json=payload
         )
         if response.status_code == 200:
-            return
+            return 
         else:
             print(f"後端回傳錯誤狀態碼: {response.status_code}")
             print("回傳內容：", response.text)
     except requests.exceptions.RequestException as e:
         print("發送失敗，錯誤為：", e)
 
-# edit = edit_expense(4,
-#                     {
-#   "name": "Hotel (Updated)",
-#   "amount": 250.0,
-#   "note": "Updated note",
-#   "payer_id": 2,
-#   "participant_ids": [1, 2]
-# })
+# edit = edit_expense(17,
+#   "2025-05-22T18:50:00",                  
+#   "Book",
+#    1250.0, 
+#    "Dog",
+#    ["Chris", "Dog"],
+#    "",
+#    8
+# )
 # print(edit)
 
 
@@ -334,7 +356,7 @@ def get_members_info(group_id):
         return None
 
 # test
-# group_name, members_list = get_members_info(2)
+# group_name, members_list = get_members_info(8)
 # print("group_name:", group_name)
 # print("members_list:", members_list)
 
