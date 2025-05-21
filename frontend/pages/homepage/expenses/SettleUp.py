@@ -7,11 +7,11 @@ ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
 
 
-##【假資料】
+# 【假資料】
 group_id = 1
 balance_list = [{'user_name': 'Alice', 'net_balance': -500}, {'user_name': 'Bob', 'net_balance': 250}, {'user_name': 'Brian', 'net_balance': 250}]
 settle_list = [{'payer': 'Alice', 'receiver': 'Bob', 'amount': 250}, {'payer': 'Alice', 'receiver': 'Brian', 'amount': 250}]
-## 要讓SettleUp頁面上能出現組員之間的balance、settle，會需要跨頁面傳遞group_id
+# 要讓SettleUp頁面上能出現組員之間的balance、settle，會需要跨頁面傳遞group_id
 
 
 class SettleUp(ctk.CTkFrame):
@@ -43,11 +43,9 @@ class SettleUp(ctk.CTkFrame):
         self.title_label.grid(row=0, column=1, padx=10, pady=10)
         self.logout_button.grid(row=0, column=2, padx=10, pady=10, sticky='e')
 
-
         # 可捲動區
         scrollable = ctk.CTkScrollableFrame(self)
         scrollable.grid(row=1, column=0, sticky='nsew', padx=10)
-
 
         # 模擬群組內有成員
         if balance_list:
@@ -56,35 +54,33 @@ class SettleUp(ctk.CTkFrame):
             balance_frame.grid_columnconfigure(0, weight=1)
 
             # 遍歷members_balance_list
-            for index, balance_dict in enumerate(balance_list): 
+            for index, balance_dict in enumerate(balance_list):
                 # 組員
                 member_balance_label = ctk.CTkLabel(balance_frame, text=balance_dict['user_name'], font=mid_font)
-                member_balance_label.grid(row= index * 2, column=0, padx=20, sticky='w') # double space
-                
+                member_balance_label.grid(row=index * 2, column=0, padx=20, sticky='w')  # double space
+
                 # 金額
                 amount_balance = balance_dict['net_balance']
                 if amount_balance >= 0:
                     amount_balance_label = ctk.CTkLabel(balance_frame, text='+ NT$' + str(amount_balance), font=mid_font)
                 else:
                     amount_balance_label = ctk.CTkLabel(balance_frame, text='- NT$' + str(abs(amount_balance)), font=mid_font)
-                amount_balance_label.grid(row= index * 2, column=1, padx=20, sticky='e')
+                amount_balance_label.grid(row=index * 2, column=1, padx=20, sticky='e')
 
                 # 加一條黑色橫線
                 line_frame = ctk.CTkFrame(balance_frame, height=1, fg_color='black')
-                line_frame.grid(row=1 + index * 2, column=0, columnspan=2, padx=20, sticky='ew') # double space
+                line_frame.grid(row=1 + index * 2, column=0, columnspan=2, padx=20, sticky='ew')  # double space
 
         else:
             no_members_label = ctk.CTkLabel(scrollable, text='There are no members in this group.', font=small_font)
             no_members_label.pack(pady=20)
 
-
         # 雙線分隔（frame）
         separator1 = ctk.CTkFrame(scrollable, height=1, fg_color='black')
-        separator1.pack(fill='x', pady=(25, 2)) # 25, 2
+        separator1.pack(fill='x', pady=(25, 2))  # 25, 2
 
         separator2 = ctk.CTkFrame(scrollable, height=1, fg_color='black')
-        separator2.pack(fill='x', pady=(0, 0)) # 0, 10
-
+        separator2.pack(fill='x', pady=(0, 0))  # 0, 10
 
         # 模擬群組內有成員
         if settle_list:
@@ -94,19 +90,19 @@ class SettleUp(ctk.CTkFrame):
 
             # 遍歷members_settle_list
             for index, settle_dict in enumerate(settle_list):
-            
+
                 # 組員
-                member_settle_label = ctk.CTkLabel(settle_frame, text= f'{settle_dict['payer']}   ⥤   {settle_dict['receiver']}', font=mid_font)
-                member_settle_label.grid(row= index * 2, column=0, padx=20, sticky='w') # double space
-                
+                member_settle_label = ctk.CTkLabel(settle_frame, text=f"{settle_dict['payer']}   ⥤   {settle_dict['receiver']}", font=mid_font)
+                member_settle_label.grid(row=index * 2, column=0, padx=20, sticky='w')  # double space
+
                 # 金額
                 amount_settle = settle_dict['amount']
                 amount_settle_label = ctk.CTkLabel(settle_frame, text='NT$' + str(amount_settle), font=mid_font)
-                amount_settle_label.grid(row= index * 2, column=1, padx=20, sticky='e')
+                amount_settle_label.grid(row=index * 2, column=1, padx=20, sticky='e')
 
                 # 加一條黑色橫線
                 line_frame = ctk.CTkFrame(settle_frame, height=1, fg_color='black')
-                line_frame.grid(row=1 + index * 2, column=0, columnspan=2, padx=20, sticky='ew') # double space
+                line_frame.grid(row=1 + index * 2, column=0, columnspan=2, padx=20, sticky='ew')  # double space
 
     # 頁面切換
     def on_navigate_back(self):
