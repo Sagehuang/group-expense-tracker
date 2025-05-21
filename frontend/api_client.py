@@ -257,37 +257,6 @@ def join_group(group_id, user_id):
 # print("join_success:", join_success)
 
 
-# 顯示該群組的所有 expense
-def obtain_expense(group_id):
-    """
-    根據 group id 查詢該 group 的所有 expenses，回傳所有 expenses
-
-    利用後端的「查看群組詳情」
-
-    parameter:
-    -group_id(int)：欲顯示支出的目標群組 ID
-
-    return:
-    -group_expenses (a list of dict): 該 group 的所有 expenses
-    """
-    # 無request body, 所以不用寫 headers, payload
-    headers = {
-        "Content-Type": "application/json"
-    }
-    try:
-        response = requests.get(f"{BASE_URL}/groups/{group_id}")
-        if response.status_code == 200:
-            return response.json()
-        else:
-            print(f"Error! Server returned status code: {response.status_code}")
-            return None
-    except requests.exceptions.RequestException as e:
-        print("Request failed:", e)
-        return None
-# info = obtain_expense(1)
-# print(info)
-
-
 # 取得 expense 的資訊
 def get_expense_info(expense_id):
     """
@@ -312,7 +281,8 @@ def get_expense_info(expense_id):
             original_payer = data["payer"]["name"]
             original_participants = [user["name"] for user in data["participants"]]
             original_note = data["note"]
-            return original_item, original_amount, original_payer, original_participants, original_note
+            original_time = data["created_at"]
+            return original_item, original_amount, original_payer, original_participants, original_note, original_time
         else:
             print(f"Error! Server returned status code: {response.status_code}")
             return None
@@ -327,6 +297,66 @@ def get_expense_info(expense_id):
 # print("original_payer:", original_payer)
 # print("original_participants:", original_participants)
 # print("original_note:", original_note)
+
+
+# 用來幫助 obtain_expense 回傳成 dict 的函數
+
+    
+
+# 顯示該群組的所有 expense
+def obtain_expense(group_id):
+    """
+    根據 group id 查詢該 group 的所有 expenses，回傳所有 expenses
+
+    利用後端的「查看群組詳情」
+
+    parameter:
+    -group_id(int)：欲顯示支出的目標群組 ID
+
+    return:
+    -{
+        "name": "dinner" (str)
+        "amount": 200 （int)
+        "note": "sushi" (str)
+        "created_at": 2025-05-13 18:30:00 (Datetime object)
+        "payer": "Alice" (str)
+        "expense_id": (int)
+        }
+    """
+    # 無request body, 所以不用寫 headers, payload
+    headers = {
+        "Content-Type": "application/json"
+    }
+    expense_dict_list = []
+    try:
+        response = requests.get(f"{BASE_URL}/groups/{group_id}")
+        if response.status_code == 200:
+            data = response.json()
+            expense_ids = [expense["id"] for expense in data["expenses"]]
+            for exp_id in expense_ids:
+                try:
+                    original_item, original_amount, original_payer, original_participants, original_note, original_time = get_expense_info(exp_id)
+                    expense_dict = {
+                        "name": original_item,
+                        "amount": original_amount,
+                        "note": original_note,
+                        "created_at": original_time,  # 這裡假設已經是 datetime 物件（不是就要轉）
+                        "payer": original_payer,
+                        "expense_id": exp_id
+                    }
+                    expense_dict_list.append(expense_dict)
+                except Exception as e:
+                    print(f"Error processing expense_id {exp_id}: {e}")
+            return expense_dict_list
+        else:
+            print(f"Error! Server returned status code: {response.status_code}")
+            return None
+    except requests.exceptions.RequestException as e:
+        print("Request failed:", e)
+        return None
+
+# info = obtain_expense(8)
+# print(info)
 
 
 # 取得 member 資訊
@@ -361,7 +391,7 @@ def get_members_info(group_id):
 # print("members_list:", members_list)
 
 
-# 離開群組 # 開發中，需等後端完成 route 的建立
+# 離開群組 
 def leave_group(group_id, user_id):
     """
     使用者離開 group
