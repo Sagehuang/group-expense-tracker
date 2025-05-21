@@ -59,6 +59,7 @@ def sign_in(name):
 # d = sign_in("Dog")
 # print(a, b, c, d)
 
+
 # 新增花費 # 已修改
 def add_expense(created_at, name, amount, payer, participants, note, group_id):
     from datetime import datetime
@@ -87,8 +88,8 @@ def add_expense(created_at, name, amount, payer, participants, note, group_id):
         "note": note,
         "payer_id": payer,
         "participant_ids": participants,
-        "group_id": group_id, 
-        "created_at": created_at,
+        "group_id": group_id,
+        "created_at": created_at
     }
 
     try:
@@ -159,7 +160,7 @@ def edit_expense(expense_id, created_at, name, amount, payer, participant, note,
             json=payload
         )
         if response.status_code == 200:
-            return 
+            return
         else:
             print(f"後端回傳錯誤狀態碼: {response.status_code}")
             print("回傳內容：", response.text)
@@ -167,9 +168,9 @@ def edit_expense(expense_id, created_at, name, amount, payer, participant, note,
         print("發送失敗，錯誤為：", e)
 
 # edit = edit_expense(17,
-#   "2025-05-22T18:50:00",                  
+#   "2025-05-22T18:50:00",
 #   "Book",
-#    1250.0, 
+#    1250.0,
 #    "Dog",
 #    ["Chris", "Dog"],
 #    "",
@@ -299,10 +300,6 @@ def get_expense_info(expense_id):
 # print("original_note:", original_note)
 
 
-# 用來幫助 obtain_expense 回傳成 dict 的函數
-
-    
-
 # 顯示該群組的所有 expense
 def obtain_expense(group_id):
     """
@@ -391,7 +388,7 @@ def get_members_info(group_id):
 # print("members_list:", members_list)
 
 
-# 離開群組 
+# 離開群組
 def leave_group(group_id, user_id):
     """
     使用者離開 group
