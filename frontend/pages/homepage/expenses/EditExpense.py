@@ -8,7 +8,7 @@ ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
 
 
-##【假資料】
+# 【假資料】
 group_id = 1
 expense_id = 1
 original_item = 'Food'
@@ -24,7 +24,7 @@ class EditExpense(ctk.CTkFrame):
     def __init__(self, master, show_page_callback):
         super().__init__(master)
         self.show_page = show_page_callback
-        
+
         # original_item, original_amount, original_payer, original_participants, orginial_note = get_expense_info(expense_id)
 
         # 整體排版
@@ -49,13 +49,11 @@ class EditExpense(ctk.CTkFrame):
         self.title_label.grid(row=0, column=1, padx=10, pady=10)
         self.logout_button.grid(row=0, column=2, padx=10, pady=10, sticky='e')
 
-
         # 2rd frame（主要容器）: Item, Amount, Payer, Participants, Note, Edit button
         bottom_frame = ctk.CTkFrame(self, fg_color='transparent')
         bottom_frame.grid(row=1, column=0, pady=20, sticky='n')
         bottom_frame.grid_columnconfigure((0, 1), weight=1)
         bottom_frame.grid_rowconfigure((1, 2, 3, 4, 5, 6, 7), weight=1)
-
 
         # 3rd frame（2nd frame的子容器）: Date, Time
         top_date_time_frame = ctk.CTkFrame(bottom_frame)
@@ -75,7 +73,6 @@ class EditExpense(ctk.CTkFrame):
         self.time_label = ctk.CTkLabel(top_date_time_frame, text=f"Time: {time_str}")
         self.time_label.grid(row=0, column=1, padx=10, pady=5, sticky='w')  # 靠左對齊
 
-
         # 1st row：Item
         self.item_label = ctk.CTkLabel(bottom_frame, text='Item', anchor='w')
         self.item_label.grid(row=1, column=0, padx=(10, 5), pady=10, sticky='w')
@@ -84,14 +81,12 @@ class EditExpense(ctk.CTkFrame):
         self.item_entry.grid(row=1, column=1, padx=(5, 10), pady=10, sticky='ew')
         self.item_entry.insert(0, original_item)
 
-
         # 2nd row：Amount
         self.amount_label = ctk.CTkLabel(bottom_frame, text='Amount', anchor='w')
         self.amount_label.grid(row=2, column=0, padx=(10, 5), pady=10, sticky='w')
 
-
         # 4th frame（放NT$ + entry）
-        amount_frame = ctk.CTkFrame(bottom_frame, fg_color='transparent') 
+        amount_frame = ctk.CTkFrame(bottom_frame, fg_color='transparent')
         amount_frame.grid(row=2, column=1, columnspan=2, padx=(5, 10), pady=10, sticky='w')
 
         self.amount_prefix_label = ctk.CTkLabel(amount_frame, text='NT$', anchor='w')
@@ -101,7 +96,6 @@ class EditExpense(ctk.CTkFrame):
         self.amount_entry.pack(side='left')
         self.amount_entry.insert(0, original_amount)
 
-
         # 3rd row：Payer
         self.payer_label = ctk.CTkLabel(bottom_frame, text='Payer', anchor='w')
         self.payer_label.grid(row=3, column=0, padx=(10, 5), pady=10, sticky='w')
@@ -109,7 +103,6 @@ class EditExpense(ctk.CTkFrame):
         self.payer_entry = ctk.CTkEntry(bottom_frame)
         self.payer_entry.grid(row=3, column=1, padx=(5, 10), pady=10, sticky='ew')
         self.payer_entry.insert(0, original_payer)
-
 
         # 4th row：Participants
         self.participants_label = ctk.CTkLabel(bottom_frame, text='Participants', anchor='w')
@@ -119,7 +112,6 @@ class EditExpense(ctk.CTkFrame):
         self.participants_entry.grid(row=4, column=1, padx=(5, 10), pady=10, sticky='ew')
         self.participants_entry.insert(0, ', '.join(original_participants))
 
-
         # 5th row：Note
         self.note_label = ctk.CTkLabel(bottom_frame, text='Note', anchor='w')
         self.note_label.grid(row=5, column=0, padx=(10, 5), pady=10, sticky='w')
@@ -128,11 +120,9 @@ class EditExpense(ctk.CTkFrame):
         self.note_entry.grid(row=5, column=1, padx=(5, 10), pady=10, sticky='ew')
         self.note_entry.insert(0, orginial_note)
 
-
         # 6th row：Edit button
         self.edit_group_button = ctk.CTkButton(bottom_frame, text='Edit', command=self.on_edit)
         self.edit_group_button.grid(row=6, column=0, columnspan=2, pady=20)
-
 
         # 7th row: result
         self.result_label = ctk.CTkLabel(bottom_frame, text='', text_color='red')
@@ -147,7 +137,7 @@ class EditExpense(ctk.CTkFrame):
 
     # EDIT EXPENSE
     def on_edit(self):
-        
+
         # collect data
         item = self.item_entry.get().strip()
 
@@ -169,7 +159,7 @@ class EditExpense(ctk.CTkFrame):
             return
         if not amount_str.isdigit():
             self.result_label.configure(text='Amount must contain numbers.', text_color='red')
-            return 
+            return
         amount = int(amount_str)
         if amount <= 0:
             self.result_label.configure(text='Amount must be a valid positive number.', text_color='red')
@@ -178,13 +168,13 @@ class EditExpense(ctk.CTkFrame):
         # 回傳資料（依後端API形式）
         expense_data = {
             'created_at': datetime.now(),
-            'name': item,                   
+            'name': item,
             'amount': amount,
-            'payer': payer,           
+            'payer': payer,
             'participants': participants,
             'note': note,
-            'group_id': group_id            
-        }  
+            'group_id': group_id
+        }
 
         ## 呼叫API function
         # success = api_edit_expense(expense_data)

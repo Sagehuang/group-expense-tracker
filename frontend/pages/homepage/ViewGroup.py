@@ -11,7 +11,7 @@ group_name = '這是一個名字非常非常長的群組'
 
 
 class ViewGroup(ctk.CTkFrame):
-    def __init__(self, master, show_page_callback): # user_name, group_name
+    def __init__(self, master, show_page_callback):  # user_name, group_name
         super().__init__(master)
         self.show_page = show_page_callback
         # self.user_name = user_name
@@ -89,12 +89,12 @@ class ViewGroup(ctk.CTkFrame):
                 item_amount = exp['amount']
 
                 item_name_label = ctk.CTkLabel(expense_frame, text=item_name, font=mid_font)
-                item_payer_label = ctk.CTkLabel(expense_frame, text=f'Paid by {item_payer}', font=small_font) # text=item_payer + ' 先付'
+                item_payer_label = ctk.CTkLabel(expense_frame, text=f'Paid by {item_payer}', font=small_font)  # text=item_payer + ' 先付'
                 item_amount_label = ctk.CTkLabel(expense_frame, text=f'NT$ {item_amount}', font=mid_font)
-                edit_button_button = ctk.CTkButton(expense_frame, text='Edit', text_color='#FFFFFF', font=small_font, 
-                                                                  width=60, border_width=1, border_color='#B0B0B0', # '#F3F6F4'
-                                                                  fg_color='#B0B0B0', # 'transparent'
-                                                                  command=self.on_edit) # command=lambda e=exp: self.on_edit(e)
+                edit_button_button = ctk.CTkButton(expense_frame, text='Edit', text_color='#FFFFFF', font=small_font,
+                                                   width=60, border_width=1, border_color='#B0B0B0',  # '#F3F6F4'
+                                                   fg_color='#B0B0B0',  # 'transparent'
+                                                   command=self.on_edit)  # command=lambda e=exp: self.on_edit(e)
 
                 item_name_label.grid(row=0, column=0, sticky='w')
                 item_payer_label.grid(row=1, column=0, sticky='w')

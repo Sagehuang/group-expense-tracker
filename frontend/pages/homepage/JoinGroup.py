@@ -47,7 +47,7 @@ class JoinGroup(ctk.CTkFrame):
 
         # 固定寬度的container_frame，讓label, entry對齊
         container_frame = ctk.CTkFrame(self.input_frame, fg_color='transparent', width=200)
-        container_frame.grid(row=0, column=0)  
+        container_frame.grid(row=0, column=0)
         container_frame.grid_columnconfigure(0, weight=1)
 
         # Label 和 Entry 都放在這個固定寬度的區塊中
@@ -56,7 +56,6 @@ class JoinGroup(ctk.CTkFrame):
 
         self.group_name_entry = ctk.CTkEntry(container_frame, width=200)
         self.group_name_entry.grid(row=1, column=0, sticky='w', pady=(0, 10))  # sticky='w' 對齊左邊
-
 
         # Add button
         self.add_button = ctk.CTkButton(main_frame, width=50, text='Join', font=small_font, command=self.add_new_group)
@@ -96,7 +95,7 @@ class JoinGroup(ctk.CTkFrame):
         else:
             self.result_label.configure(text='Please enter a Group ID.', text_color='red')
 
-         ### 要讓HomePage頁面上能出現新加入的Group，會需要跨頁面傳遞group_id
+        ### 要讓HomePage頁面上能出現新加入的Group，會需要跨頁面傳遞group_id
 
 
 if __name__ == '__main__':

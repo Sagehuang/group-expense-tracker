@@ -6,7 +6,7 @@ import customtkinter as ctk
 ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
 
-##【假資料】
+# 【假資料】
 user_id = 1
 user_name = 'Alice'
 group_id = 1
@@ -44,7 +44,7 @@ class ViewMembers(ctk.CTkFrame):
         self.logout_button.grid(row=0, column=2, padx=10, pady=10, sticky='e')
 
         # 可捲動區
-        self.scrollable = ctk.CTkScrollableFrame(self)  
+        self.scrollable = ctk.CTkScrollableFrame(self)
         self.scrollable.grid(row=1, column=0, sticky='nsew', padx=10)
 
         # 成員資訊（靜態顯示，不會更新）
@@ -58,7 +58,7 @@ class ViewMembers(ctk.CTkFrame):
         group_id_label.grid(row=1, column=0, padx=20)
 
         if members_list:
-            for index, member in enumerate(members_list): 
+            for index, member in enumerate(members_list):
                 member_label = ctk.CTkLabel(members_frame, text=member, font=self.mid_font)
                 member_label.grid(row=2 + index * 2, column=0, padx=20, sticky='w')
 
@@ -88,9 +88,9 @@ class ViewMembers(ctk.CTkFrame):
         self.show_page('SignIn')
 
     # LEAVE GROUP
-    def on_leave_group(self): 
+    def on_leave_group(self):
 
-        # 呼叫API function
+        ## 呼叫API function
         # success = leave_group(user_id, group_id)
 
         ## 驗證是否成功
@@ -105,7 +105,7 @@ class ViewMembers(ctk.CTkFrame):
             self.after(1000, lambda: self.show_page('HomePage'))
         else:
             self.result_label.configure(text='Failed to leave group.', text_color='red')
-        return 
+        return
 
 
 if __name__ == '__main__':

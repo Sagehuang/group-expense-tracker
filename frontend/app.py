@@ -19,7 +19,7 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
         self.geometry('400x640')
-        # self.minsize(400, 640) 
+        # self.minsize(400, 640)
         self.title('Group Expense Tracker')
 
         self.grid_rowconfigure(0, weight=1)
@@ -46,7 +46,7 @@ class App(ctk.CTk):
         self.pages['HomePage'] = HomePage(self.container, self.show_page)
         self.pages['AddGroup'] = AddGroup(self.container, self.show_page)
         self.pages['JoinGroup'] = JoinGroup(self.container, self.show_page)
-        self.pages['ViewGroup'] = ViewGroup(self.container, self.show_page) # self.user_name, self.group_name
+        self.pages['ViewGroup'] = ViewGroup(self.container, self.show_page)  # self.user_name, self.group_name
         self.pages['AddExpense'] = AddExpense(self.container, self.show_page)
         self.pages['EditExpense'] = EditExpense(self.container, self.show_page)
         self.pages['ViewMembers'] = ViewMembers(self.container, self.show_page)
@@ -56,11 +56,10 @@ class App(ctk.CTk):
             page.grid(row=0, column=0, sticky='nsew')
             page.grid_remove()
 
-
         # 預先隱藏所有頁面
         for page in self.pages.values():
             page.grid(row=0, column=0, sticky='nsew')
-            page.grid_remove()  
+            page.grid_remove()
 
     def show_page(self, page_name):
         # 隱藏所有頁面

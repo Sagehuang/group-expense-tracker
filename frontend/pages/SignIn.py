@@ -45,7 +45,6 @@ class SignIn(ctk.CTkFrame):
         self.name_entry = ctk.CTkEntry(container_frame, width=200)
         self.name_entry.grid(row=1, column=0, sticky='w', pady=(0, 20))  # sticky='w' 對齊左邊
 
-
         # Sign In button
         self.sign_in_button = ctk.CTkButton(main_frame, width=75, text='Sign In', font=small_font, command=self.handle_sign_in)
         self.sign_in_button.grid(row=2, column=0, pady=(0, 10))
@@ -74,7 +73,6 @@ class SignIn(ctk.CTkFrame):
     def reset_fields(self):
         self.name_entry.delete(0, 'end')
         self.result_label.configure(text='')
-
 
 
 if __name__ == '__main__':
