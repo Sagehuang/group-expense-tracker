@@ -15,13 +15,13 @@ settle_list = [{'payer': 'Alice', 'receiver': 'Bob', 'amount': 250}, {'payer': '
 
 
 class SettleUp(ctk.CTkFrame):
-    def __init__(self, master, show_page_callback, group_id):
+    def __init__(self, master, show_page_callback, controller):
         super().__init__(master)
         self.show_page = show_page_callback
-        self.group_id = group_id
+        self.controller = controller
 
-        # balance_list = get_balance_info(self.group_id)
-        # settle_list = get_settle_info(self.group_id)
+        # balance_list = get_balance_info(self.controller.group_id)
+        # settle_list = get_settle_info(self.controller.group_id)
 
         # 整體排版
         self.grid_rowconfigure(1, weight=1)

@@ -16,13 +16,12 @@ members_list = ['Alice', 'Bob', 'Charlie']
 
 
 class ViewMembers(ctk.CTkFrame):
-    def __init__(self, master, show_page_callback, user_id, group_id):
+    def __init__(self, master, show_page_callback, controller):
         super().__init__(master)
         self.show_page = show_page_callback
-        self.user_id = user_id
-        self.group_id = group_id
+        self.controller = controller
 
-        # group_name, members_list = get_members_info(self.group_id)
+        # group_name, members_list = get_members_info(self.controller.group_id)
 
         # 整體排版
         self.grid_rowconfigure(1, weight=1)  # 可捲動區
@@ -55,7 +54,7 @@ class ViewMembers(ctk.CTkFrame):
         members_frame.grid_columnconfigure(0, weight=1)
 
         group_name_label = ctk.CTkLabel(members_frame, text=f'Group: {group_name}', font=self.mid_font)
-        group_id_label = ctk.CTkLabel(members_frame, text=f'ID: {group_id}', font=self.small_font)
+        group_id_label = ctk.CTkLabel(members_frame, text=f'ID: {self.controller.clicked_group_id}', font=self.small_font)
         group_name_label.grid(row=0, column=0, padx=20)
         group_id_label.grid(row=1, column=0, padx=20)
 
@@ -93,7 +92,7 @@ class ViewMembers(ctk.CTkFrame):
     def on_leave_group(self):
 
         ## 呼叫API function
-        # success = leave_group(self.user_id, self.group_id)
+        # success = leave_group(self.controller.user_id, self.controller.group_id)
 
         ## 驗證是否成功
         # print('送出資料:', expense_data)

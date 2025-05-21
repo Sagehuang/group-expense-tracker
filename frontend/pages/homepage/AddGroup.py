@@ -6,10 +6,10 @@ ctk.set_default_color_theme('blue')
 
 
 class AddGroup(ctk.CTkFrame):
-    def __init__(self, master, show_page_callback, user_id):
+    def __init__(self, master, show_page_callback, controller):
         super().__init__(master)
         self.show_page = show_page_callback
-        self.user_id = user_id
+        self.controller = controller
 
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -78,7 +78,7 @@ class AddGroup(ctk.CTkFrame):
         group_name = self.group_name_entry.get().strip()
         if group_name:
             ## 呼叫API function：add_group()
-            # success = add_group(group_name, self.user_id)
+            # success = add_group(group_name, self.controller.user_id)
 
             ## 驗證是否成功
             # print('送出資料:', expense_data)

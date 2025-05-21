@@ -18,6 +18,12 @@ ctk.set_default_color_theme('blue')
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
+
+        # 跨頁面紀錄 user_id, clicked_group_id, clicked_expense_id
+        self.user_id = None
+        self.clicked_group_id = None
+        self.clicked_expense_id = None
+
         self.geometry('400x640')
         # self.minsize(400, 640)
         self.title('Group Expense Tracker')
@@ -41,16 +47,16 @@ class App(ctk.CTk):
         self.show_page('SignIn')
 
     def init_pages(self):
-        # 建立所有頁面的實例並存入self.pages字典，放進self.container
-        self.pages['SignIn'] = SignIn(self.container, self.show_page)
-        self.pages['HomePage'] = HomePage(self.container, self.show_page, self.pages['SignIn'].user_id)
-        self.pages['AddGroup'] = AddGroup(self.container, self.show_page, self.pages['SignIn'].user_id)
-        self.pages['JoinGroup'] = JoinGroup(self.container, self.show_page, self.pages['SignIn'].user_id)
-        self.pages['ViewGroup'] = ViewGroup(self.container, self.show_page, self.pages['HomePage'].clicked_group_id)
-        self.pages['AddExpense'] = AddExpense(self.container, self.show_page, self.pages['HomePage'].clicked_group_id)
-        self.pages['EditExpense'] = EditExpense(self.container, self.show_page, self.pages['HomePage'].clicked_group_id, self.pages['ViewGroup'].clicked_exp_id)
-        self.pages['ViewMembers'] = ViewMembers(self.container, self.show_page, self.pages['SignIn'].user_id, self.pages['HomePage'].clicked_group_id)
-        self.pages['SettleUp'] = SettleUp(self.container, self.show_page, self.pages['HomePage'].clicked_group_id)
+        # 建立所有頁面的實例並存入self.pages字典，放進self.container，傳入 app object 讓每個 page 都可以 access user_id, clicked_group_id, clicked_expense_id
+        self.pages['SignIn'] = SignIn(self.container, self.show_page, self)
+        self.pages['HomePage'] = HomePage(self.container, self.show_page, self)
+        self.pages['AddGroup'] = AddGroup(self.container, self.show_page, self)
+        self.pages['JoinGroup'] = JoinGroup(self.container, self.show_page, self)
+        self.pages['ViewGroup'] = ViewGroup(self.container, self.show_page, self)
+        self.pages['AddExpense'] = AddExpense(self.container, self.show_page, self)
+        self.pages['EditExpense'] = EditExpense(self.container, self.show_page, self)
+        self.pages['ViewMembers'] = ViewMembers(self.container, self.show_page, self)
+        self.pages['SettleUp'] = SettleUp(self.container, self.show_page, self)
 
         for page in self.pages.values():
             page.grid(row=0, column=0, sticky='nsew')
@@ -62,9 +68,6 @@ class App(ctk.CTk):
             page.grid_remove()
 
     def show_page(self, page_name):
-        # 再度初始化頁面 (因為會傳入新參數)
-        self.init_pages()
-
         # 隱藏所有頁面
         for page in self.pages.values():
             page.grid_remove()

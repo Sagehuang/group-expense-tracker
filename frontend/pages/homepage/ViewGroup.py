@@ -11,11 +11,10 @@ group_name = '這是一個名字非常非常長的群組'
 
 
 class ViewGroup(ctk.CTkFrame):
-    def __init__(self, master, show_page_callback, group_id=None):
+    def __init__(self, master, show_page_callback, controller):
         super().__init__(master)
         self.show_page = show_page_callback
-        self.group_id = group_id
-        self.clicked_exp_id = None
+        self.controller = controller
 
         # self.group_name_display = group_name[:8] + '...' if len(group_name) > 10 else group_name # self
         self.group_name_display = group_name
@@ -45,7 +44,7 @@ class ViewGroup(ctk.CTkFrame):
         scrollable.grid(row=1, column=0, sticky='nsew', padx=10)
 
         # 群組內項目假資料
-        # 之後改成呼叫 obtain_expense(self.group_id)
+        # 之後改成呼叫 obtain_expense(self.controller.group_id)
         self.expenses = [
             {
                 'name': 'Dinner',
@@ -140,8 +139,8 @@ class ViewGroup(ctk.CTkFrame):
     def on_settle_up(self):
         self.show_page('SettleUp')
 
-    def on_edit(self, exp):
-        self.clicked_exp_id = exp['expense_id']
+    def on_edit(self, expense):
+        self.controller.clicked_expense_id = expense['expense_id']
         self.show_page('EditExpense')
 
 

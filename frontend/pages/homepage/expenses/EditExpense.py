@@ -21,13 +21,12 @@ orginial_note = 'McDonald\'s'
 
 # 代入：group_id, expense_id
 class EditExpense(ctk.CTkFrame):
-    def __init__(self, master, show_page_callback, group_id=None, expense_id=None):
+    def __init__(self, master, show_page_callback, controller):
         super().__init__(master)
         self.show_page = show_page_callback
-        self.group_id = group_id
-        self.expense_id = expense_id
+        self.controller = controller
 
-        # original_item, original_amount, original_payer, original_participants, orginial_note = get_expense_info(self.expense_id)
+        # original_item, original_amount, original_payer, original_participants, orginial_note = get_expense_info(self.controller.expense_id)
 
         # 整體排版
         self.grid_rowconfigure(1, weight=1)
@@ -170,7 +169,7 @@ class EditExpense(ctk.CTkFrame):
             'payer': payer,
             'participants': participants,
             'note': note,
-            'group_id': self.group_id
+            'group_id': self.controller.group_id
         }
 
         ## 呼叫API function

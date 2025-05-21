@@ -14,10 +14,10 @@ ctk.set_default_color_theme('blue')
 
 # 代入：group_id
 class AddExpense(ctk.CTkFrame):
-    def __init__(self, master, show_page_callback, group_id=None):
+    def __init__(self, master, show_page_callback, controller):
         super().__init__(master)
         self.show_page = show_page_callback
-        self.group_id = group_id
+        self.controller = controller
 
         # 整體排版
         self.grid_rowconfigure((0, 1), weight=1)
@@ -170,7 +170,7 @@ class AddExpense(ctk.CTkFrame):
             'payer': payer,
             'participants': participants,
             'note': note,
-            'group_id': self.group_id
+            'group_id': self.controller.group_id
         }
 
         ## 呼叫API function
