@@ -56,7 +56,9 @@ def sign_in(name):
 
 
 # 新增花費 # 已修改
-def add_expense(expense_data):
+def add_expense(created_at, name, amount, payer, participants, note, group_id):
+    from datetime import datetime
+
     """
     將新增的花費資訊傳入後端紀錄
 
@@ -70,7 +72,16 @@ def add_expense(expense_data):
         "Content-Type": "application/json"
     }
 
-    payload = expense_data
+    payload = {
+        "name": name,
+        "amount": amount,
+        "note": note,
+        "payer_id": payer,
+        "participant_ids": participants,
+        "group_id": group_id, 
+        "created_at": created_at,
+    }
+
     try:
         response = requests.post(
             f"{BASE_URL}/expenses",
@@ -86,15 +97,15 @@ def add_expense(expense_data):
     except requests.exceptions.RequestException as e:
         print("發送失敗，錯誤為：", e)
 
-# ex = add_expense({
-#         "name": "Hotel",
-#         "amount": 3002.0,
-#         "note": "2-night stay",
-#         "payer_id": 4,
-#         "participant_ids": [4, 5],
-#         "group_id": 8,
-#         "created_at": "2025-05-20T18:30:00",
-#         })
+# ex = add_expense(
+#         "Hotel",
+#         3002.0,
+#         "2-night stay",
+#          4,
+#         [4, 5],
+#          8,
+#         "2025-05-20T18:30:00"
+#         )
 # print(ex)
 
 
@@ -146,7 +157,7 @@ def edit_expense(expense_id, expense_data):
 
 
 # 新增群組 # 已修改
-def add_group(group_name):
+def add_group(group_name, user_id):
     """
     以 group name 創建一個新的 group，並新增 user 於該群組
 
@@ -160,8 +171,8 @@ def add_group(group_name):
         "Content-Type": "application/json"
     }
     payload = {
-        "name": "Trip to Japan",
-        "creator_id": 1   # 使用者_ID
+        "name": group_name,
+        "creator_id": user_id  # 使用者_ID
         }
 
     try:
@@ -177,10 +188,9 @@ def add_group(group_name):
             print("回傳內容：", response.text)
     except requests.exceptions.RequestException as e:
         print("發送失敗，錯誤為：", e)
-# new = add_group({
-#   "name": "Trip to Japan",
-#   "creator_id": 2   #使用者_ID
-# }
+# new = add_group(
+#   "Trip to Japan",
+#   2   #使用者_ID
 # )
 # print(new)
 
