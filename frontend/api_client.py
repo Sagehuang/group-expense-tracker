@@ -95,7 +95,7 @@ def add_expense(created_at, name, amount, payer, participants, note, group_id):
             headers=headers,
             json=payload
         )
-        
+
         # 根據收到的 response 做處理
         if response.status_code == 201:
             return None
@@ -222,7 +222,7 @@ def join_group(group_id, user_id):
     }
     payload = {
         "user_id": user_id
-        }
+    }
 
     try:
         response = requests.post(
@@ -245,6 +245,8 @@ def join_group(group_id, user_id):
 # print("join_success:", join_success)
 
 # 取得 group 資訊
+
+
 def get_groups_info(user_id):
     """
     根據 user_id 查詢該 user 的所有 groups，回傳所有 groups 的 group id 和 group name
@@ -434,7 +436,7 @@ def leave_group(user_id, group_id):
     }
     payload = {
         "user_id": user_id
-        }
+    }
 
     try:
         response = requests.post(

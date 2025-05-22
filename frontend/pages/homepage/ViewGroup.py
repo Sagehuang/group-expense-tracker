@@ -1,5 +1,5 @@
 import customtkinter as ctk
-import datetime
+from datetime import datetime
 
 
 ctk.set_appearance_mode('System')
@@ -7,7 +7,7 @@ ctk.set_default_color_theme('blue')
 
 # 【假資料】
 group_name = '這是一個名字非常非常長的群組'
-## 要讓ViewGroup頁面上能出現組內所有expense的資訊，會需要跨頁面傳遞group_id, list of expense_id（群組ID、該ID有哪些expense）
+# # 要讓ViewGroup頁面上能出現組內所有expense的資訊，會需要跨頁面傳遞group_id, list of expense_id（群組ID、該ID有哪些expense）
 
 
 class ViewGroup(ctk.CTkFrame):
@@ -43,8 +43,9 @@ class ViewGroup(ctk.CTkFrame):
         scrollable = ctk.CTkScrollableFrame(self)
         scrollable.grid(row=1, column=0, sticky='nsew', padx=10)
 
+        self.expenses = obtain_expense(self.controller.clicked_group_id)  # !!!
         # 群組內項目假資料
-        # 之後改成呼叫 obtain_expense(self.controller.group_id)
+        '''
         self.expenses = [
             {
                 'name': 'Dinner',
@@ -74,6 +75,7 @@ class ViewGroup(ctk.CTkFrame):
                 'expense_id': 3  # expense id
             },
         ]
+        '''
 
         if self.expenses:
             for exp in self.expenses:
@@ -85,16 +87,16 @@ class ViewGroup(ctk.CTkFrame):
 
                 # item_name = exp['name'][:8] + '...' if len(exp['name']) > 10 else exp['name']
                 item_name = exp['name']
-                item_payer = exp['payer'][1]
+                item_payer = exp['payer']
                 item_amount = exp['amount']
 
                 item_name_label = ctk.CTkLabel(expense_frame, text=item_name, font=mid_font)
-                item_payer_label = ctk.CTkLabel(expense_frame, text=f'Paid by {item_payer}', font=small_font)  # text=item_payer + ' 先付'
+                item_payer_label = ctk.CTkLabel(expense_frame, text=f'Paid by {item_payer}', font=small_font)
                 item_amount_label = ctk.CTkLabel(expense_frame, text=f'NT$ {item_amount}', font=mid_font)
                 edit_button_button = ctk.CTkButton(expense_frame, text='Edit', text_color='#FFFFFF', font=small_font,
-                                                   width=60, border_width=1, border_color='#B0B0B0',  # '#F3F6F4'
-                                                   fg_color='#B0B0B0',  # 'transparent'
-                                                   command=lambda e=exp: self.on_edit(e))  # command=self.on_edit
+                                                   width=60, border_width=1, border_color='#B0B0B0',
+                                                   fg_color='#B0B0B0',
+                                                   command=lambda e=exp: self.on_edit(e))
 
                 item_name_label.grid(row=0, column=0, sticky='w')
                 item_payer_label.grid(row=1, column=0, sticky='w')

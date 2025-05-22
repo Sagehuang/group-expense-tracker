@@ -61,11 +61,13 @@ class SignIn(ctk.CTkFrame):
             self.result_label.configure(text='Please enter a name.')
             return
 
-        self.controller.user_id = sign_in(name)  # !!!
-        print(self.controller.user_id)  # !!!
-        ### 要取得user_id為跨頁面參數，以辨識當前使用者
+        try:  # !!!
+            self.controller.user_id = sign_in(name)
+            print(f'User ID {self.controller.user_id} logging in...')
+        except Exception as error:
+            print(error)
 
-        if self.controller.user_id:  # !!!
+        if self.controller.user_id:
             self.result_label.configure(text=f'Welcome, {name}!', text_color='green')
             # 1秒後跳到HomePage
             self.after(1000, lambda: self.show_page('HomePage'))

@@ -77,15 +77,12 @@ class JoinGroup(ctk.CTkFrame):
     def add_new_group(self):
         group_id = self.group_name_entry.get().strip()
         if group_id:
-            ## 呼叫API function：join_group()
-            # success = join_group(group_id, self.controller.user_id)
-
-            ## 驗證是否成功
-            # print('送出資料:', expense_data)
-            # print('API 回傳:', success)
+            # # 呼叫API function：join_group()
+            success = join_group(group_id, self.controller.user_id)  # !!!
+            print('API 回傳:', success)
 
             # 假設成功
-            success = True
+            # success = True
             if success:
                 self.result_label.configure(text='Group joined successfully.', text_color='green')
                 # 1秒後回到HomePage
@@ -96,7 +93,7 @@ class JoinGroup(ctk.CTkFrame):
         else:
             self.result_label.configure(text='Please enter a Group ID.', text_color='red')
 
-        ### 成功加入後，資料庫中會新增新群組，並且回到 HomePage 時會再度呼叫 get_groups_info 函數，故可顯示已加入的群組
+        # # # 成功加入後，資料庫中會新增新群組，並且回到 HomePage 時會再度呼叫 get_groups_info 函數，故可顯示已加入的群組
 
 
 if __name__ == '__main__':

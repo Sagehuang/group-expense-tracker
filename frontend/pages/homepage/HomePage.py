@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from api_client import get_groups_info
 
 ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
@@ -35,12 +36,18 @@ class HomePage(ctk.CTkFrame):
         self.logout_button.grid(row=0, column=2, padx=10, pady=10, sticky='e')
 
         # 群組假資料
+        '''
         self.current_groups = [{'id': 1, 'name': 'Group A', 'members': [1, 2, 4]},
                                {'id': 2, 'name': 'Group B', 'members': [1, 3, 4]},
                                {'id': 3, 'name': 'Group C', 'members': [1, 9, 10]},
                                {'id': 4, 'name': 'Group D', 'members': [1, 8, 23]}]
-        # 呼叫函數 get_groups_info(self.controller.uesr_id)
-        ### 要讓HomePage頁面上能出現所有加入的Group，會需要跨頁面傳遞user_id
+        '''
+
+        try:  # !!!
+            self.current_groups = get_groups_info(self.controller.user_id)
+            print(f'API 回傳：{self.current_groups}')
+        except Exception as error:
+            print(f'API 發生錯誤：{error}')
 
         # 主體捲動區
         scrollable = ctk.CTkScrollableFrame(self)
@@ -55,7 +62,7 @@ class HomePage(ctk.CTkFrame):
                                              command=lambda g=group: self.check_group(g))
                 group_button.pack(fill='x', padx=5, pady=5)
         else:
-            no_group_label = ctk.CTkLabel(scrollable, text='Add or Join a group!', font=small_font)
+            no_group_label = ctk.CTkLabel(scrollable, text='You are not in any group for now. :(\nWhy not try adding or joining a group?', font=small_font)
             no_group_label.pack(pady=20)
 
         # 底部按鈕
@@ -78,7 +85,8 @@ class HomePage(ctk.CTkFrame):
         self.show_page('SignIn')
 
     def check_group(self, group):
-        self.controller.clicked_group_id = group['id']
+        self.controller.clicked_group_id = group['group_id']
+        print('Checking the group with ID {self.controller.clicked_group_id}...')
         self.show_page('ViewGroup')
 
     def on_add_group(self):

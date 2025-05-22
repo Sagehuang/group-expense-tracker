@@ -77,25 +77,26 @@ class AddGroup(ctk.CTkFrame):
     def add_new_group(self):
         group_name = self.group_name_entry.get().strip()
         if group_name:
-            ## 呼叫API function：add_group()
+            # # 呼叫API function：add_group()
             # success = add_group(group_name, self.controller.user_id)
 
-            ## 驗證是否成功
+            # # 驗證是否成功
             # print('送出資料:', expense_data)
             # print('API 回傳:', success)
 
-            # 假設成功
-            success = True
-            if success:
+            try:  # !!!
+                new_group = add_group(group_name, self.controller.user_id)
                 self.result_label.configure(text='Group added successfully.', text_color='green')
+                print('API 回傳:', new_group)
                 # 1秒後回到HomePage
                 self.after(1000, lambda: self.on_navigate_home())
-            else:
+            except Exception as error:
                 self.result_label.configure(text='Failed to add group.', text_color='red')
+                print(error)
         else:
             self.result_label.configure(text='Please enter a Group Name.', text_color='red')
 
-        ### 成功新增後，資料庫中會新增新群組，並且回到 HomePage 時會再度呼叫 get_groups_info 函數，故可顯示已加入的群組
+        # # # 成功新增後，資料庫中會新增新群組，並且回到 HomePage 時會再度呼叫 get_groups_info 函數，故可顯示已加入的群組
 
 
 if __name__ == '__main__':
