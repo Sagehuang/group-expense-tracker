@@ -56,9 +56,9 @@ class HomePage(ctk.CTkFrame):
 
         if self.current_groups:
             for group in self.current_groups:
-                group_button = ctk.CTkButton(scrollable, text=group['name'], text_color='#FFFFFF', font=small_font,
-                                             border_width=1, border_color='#B0B0B0',  # '#F3F6F4'
-                                             fg_color='#B0B0B0',  # 'transparent'
+                group_button = ctk.CTkButton(scrollable, text=group['group_name'], text_color='#FFFFFF', font=small_font,
+                                             border_width=1, border_color='#B0B0B0',
+                                             fg_color='#B0B0B0',
                                              command=lambda g=group: self.check_group(g))
                 group_button.pack(fill='x', padx=5, pady=5)
         else:
