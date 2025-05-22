@@ -9,8 +9,8 @@ ctk.set_default_color_theme('blue')
 
 # 【假資料】
 # group_id = 1
-balance_list = [{'user_name': 'Alice', 'net_balance': -500}, {'user_name': 'Bob', 'net_balance': 250}, {'user_name': 'Brian', 'net_balance': 250}]
-settle_list = [{'payer': 'Alice', 'receiver': 'Bob', 'amount': 250}, {'payer': 'Alice', 'receiver': 'Brian', 'amount': 250}]
+# group_balance = [{'user_name': 'Alice', 'net_balance': -500}, {'user_name': 'Bob', 'net_balance': 250}, {'user_name': 'Brian', 'net_balance': 250}]
+# group_settlement = [{'payer': 'Alice', 'receiver': 'Bob', 'amount': 250}, {'payer': 'Alice', 'receiver': 'Brian', 'amount': 250}]
 ## 要讓SettleUp頁面上能出現組員之間的balance、settle，會需要跨頁面傳遞group_id
 
 
@@ -20,8 +20,8 @@ class SettleUp(ctk.CTkFrame):
         self.show_page = show_page_callback
         self.controller = controller
 
-        # balance_list = get_balance_info(self.controller.group_id)
-        # settle_list = get_settle_info(self.controller.group_id)
+        group_balance = get_balance_info(self.controller.group_id)
+        group_settlement = get_settle_info(self.controller.group_id)
 
         # 整體排版
         self.grid_rowconfigure(1, weight=1)
@@ -49,13 +49,13 @@ class SettleUp(ctk.CTkFrame):
         scrollable.grid(row=1, column=0, sticky='nsew', padx=10)
 
         # 模擬群組內有成員
-        if balance_list:
+        if group_balance:
             balance_frame = ctk.CTkFrame(scrollable, fg_color='transparent')
             balance_frame.pack(padx=10, pady=10, fill='x')
             balance_frame.grid_columnconfigure(0, weight=1)
 
-            # 遍歷members_balance_list
-            for index, balance_dict in enumerate(balance_list):
+            # 遍歷group_balance
+            for index, balance_dict in enumerate(group_balance):
                 # 組員
                 member_balance_label = ctk.CTkLabel(balance_frame, text=balance_dict['user_name'], font=mid_font)
                 member_balance_label.grid(row=index * 2, column=0, padx=20, sticky='w')  # double space
@@ -84,13 +84,13 @@ class SettleUp(ctk.CTkFrame):
         separator2.pack(fill='x', pady=(0, 0))  # 0, 10
 
         # 模擬群組內有成員
-        if settle_list:
+        if group_settlement:
             settle_frame = ctk.CTkFrame(scrollable, fg_color='transparent')
             settle_frame.pack(padx=10, pady=5, fill='x')
             settle_frame.grid_columnconfigure(0, weight=1)
 
-            # 遍歷members_settle_list
-            for index, settle_dict in enumerate(settle_list):
+            # 遍歷group_settlement
+            for index, settle_dict in enumerate(group_settlement):
 
                 # 組員
                 member_settle_label = ctk.CTkLabel(settle_frame, text=f"{settle_dict['payer']}   ⥤   {settle_dict['receiver']}", font=mid_font)

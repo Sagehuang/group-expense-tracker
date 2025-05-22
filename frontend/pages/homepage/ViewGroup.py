@@ -136,6 +136,7 @@ class ViewGroup(ctk.CTkFrame):
         self.show_page('ViewMembers')
 
     def on_plus(self):
+        print('Switching to AddExpense')
         self.show_page('AddExpense')
 
     def on_settle_up(self):
