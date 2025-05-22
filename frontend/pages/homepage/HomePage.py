@@ -83,9 +83,9 @@ class HomePage(ctk.CTkFrame):
         self.show_page('SignIn')
 
     def check_group(self, group):
-        print('Checking the group with ID {self.controller.clicked_group_id}...')
         self.controller.clicked_group_id = group['group_id']
         self.show_page('ViewGroup')
+        print('Checking the group with ID {self.controller.clicked_group_id}...')
 
     def on_add_group(self):
         self.show_page('AddGroup')
