@@ -1,6 +1,6 @@
 import customtkinter as ctk
-# from api_client import get_members_info
-# from api_client import leave_group
+from api_client import get_members_info
+from api_client import leave_group
 
 
 ctk.set_appearance_mode('System')
@@ -8,10 +8,10 @@ ctk.set_default_color_theme('blue')
 
 # 【假資料】
 # user_id = 1
-user_name = 'Alice'
+# user_name = 'Alice'
 # group_id = 1
-group_name = 'Group A'
-members_list = ['Alice', 'Bob', 'Charlie']
+# group_name = 'Group A'
+# members_list = ['Alice', 'Bob', 'Charlie']
 ## 要讓ViewMembers頁面上能出現組員名單，會需要跨頁面傳遞group_id, user_id（群組ID、可能要退出群組的當前使用者的ID）
 
 
@@ -21,7 +21,7 @@ class ViewMembers(ctk.CTkFrame):
         self.show_page = show_page_callback
         self.controller = controller
 
-        # group_name, members_list = get_members_info(self.controller.group_id)
+        group_name, members_list = get_members_info(self.controller.group_id)
 
         # 整體排版
         self.grid_rowconfigure(1, weight=1)  # 可捲動區
@@ -91,15 +91,14 @@ class ViewMembers(ctk.CTkFrame):
     # LEAVE GROUP
     def on_leave_group(self):
 
-        ## 呼叫API function
-        # success = leave_group(self.controller.user_id, self.controller.group_id)
-
-        ## 驗證是否成功
-        # print('送出資料:', expense_data)
-        # print('API 回傳:', success)
-
-        # 假設成功
+        # 呼叫API function
+        leave_group(self.controller.user_id, self.controller.group_id)
         success = True
+            print('API 呼叫成功')
+        except Exception as error:
+            print('API 發生錯誤:', error)
+            success = False
+
         if success:
             self.result_label.configure(text='Left group.', text_color='green')
             # 1秒後回到HomePage

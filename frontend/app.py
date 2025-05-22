@@ -68,6 +68,9 @@ class App(ctk.CTk):
             page.grid_remove()
 
     def show_page(self, page_name):
+        #！！！
+        print(f"Trying to show page: {page_name}")   # 新增
+
         # 隱藏所有頁面
         for page in self.pages.values():
             page.grid_remove()

@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from datetime import datetime
-# from api_client import add_expense as api_add_expense
-# from api_client import name_to_id
+from api_client import add_expense as api_add_expense
+
 
 
 ctk.set_appearance_mode('System')
@@ -110,7 +110,9 @@ class AddExpense(ctk.CTkFrame):
         self.note_entry.grid(row=5, column=1, padx=(5, 10), pady=10, sticky='ew')
 
         # 6th row：Add button
-        self.add_group_button = ctk.CTkButton(bottom_frame, text='Add', command=self.on_add)
+        # self.add_group_button = ctk.CTkButton(bottom_frame, text='Add', command=self.on_add)
+        self.add_group_button = ctk.CTkButton(bottom_frame, text='Add')
+        self.add_group_button.bind("<Button-1>", lambda e: print("Button clicked!"))
         self.add_group_button.grid(row=6, column=0, columnspan=2, pady=20)
 
         # 7th row: result
@@ -118,6 +120,8 @@ class AddExpense(ctk.CTkFrame):
         self.result_label.grid(row=7, column=0, columnspan=2, pady=(5, 0))
 
     def reset_fields(self):
+        #!!!
+        print('Reset fields called in AddExpense')
         self.item_entry.delete(0, 'end')
         self.amount_entry.delete(0, 'end')
         self.payer_entry.delete(0, 'end')
@@ -134,9 +138,13 @@ class AddExpense(ctk.CTkFrame):
 
     # ADD EXPENSE
     def on_add(self):
+        print("Add button clicked")
+        print("Current controller:", self.controller)  # 檢查是否為 None 或有效對象
+        print("Clicked group_id:", getattr(self.controller, "clicked_group_id", "未設定"))
+        return
 
         # collect data
-        item = self.item_entry.get().strip()
+        name = self.item_entry.get().strip()
 
         amount_str = self.amount_entry.get().strip().replace(',', '')
 
@@ -151,7 +159,7 @@ class AddExpense(ctk.CTkFrame):
 
         note = self.note_entry.get().strip()
 
-        if not item or not amount_str or not payer or not participants_raw:
+        if not name or not amount_str or not payer or not participants_raw:
             self.result_label.configure(text='Please fill in all fields.', text_color='red')
             return
         if not amount_str.isdigit():
@@ -163,25 +171,19 @@ class AddExpense(ctk.CTkFrame):
             return
 
         # 回傳資料（依後端API形式）
-        expense_data = {
-            'created_at': datetime.now(),
-            'name': item,
-            'amount': amount,
-            'payer': payer,
-            'participants': participants,
-            'note': note,
-            'group_id': self.controller.group_id
-        }
+        created_at = datetime.now()
+        group_id = self.controller.group_id
 
-        ## 呼叫API function
-        # success = api_add_expense(expense_data)
 
-        ## 驗證是否成功
-        # print('送出資料:', expense_data)
-        # print('API 回傳:', success)
+        # 呼叫API function
+        try:
+            api_add_expense(created_at, name, amount, payer, participants, note, group_id)
+            success = True
+            print('API 呼叫成功')
+        except Exception as error:
+            print('API 發生錯誤:', error)
+            success = False
 
-        # 假設成功
-        success = True
         if success:
             self.result_label.configure(text='Expense added successfully.', text_color='green')
             # 1秒後清空欄位，讓使用者加入新的一筆expense
