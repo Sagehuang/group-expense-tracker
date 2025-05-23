@@ -19,40 +19,41 @@ class SignIn(ctk.CTkFrame):
         self.grid_columnconfigure(0, weight=1)
 
         # 主體框架，放標題與輸入元件
-        main_frame = ctk.CTkFrame(self, fg_color='transparent')
-        main_frame.grid(row=1, column=0, sticky='nsew')
-        main_frame.grid_columnconfigure(0, weight=1)
+        self.main_frame = ctk.CTkFrame(self, fg_color='transparent')
+        self.main_frame.grid(row=1, column=0, sticky='nsew')
+        self.main_frame.grid_columnconfigure(0, weight=1)
 
-        font_title = ctk.CTkFont(family='Gotham', size=24, weight='bold')
-        small_font = ctk.CTkFont(family='Gotham', size=12)
+        # Pre-defined fonts
+        self.font_title = ctk.CTkFont(family='Gotham', size=24, weight='bold')
+        self.small_font = ctk.CTkFont(family='Gotham', size=12)
 
         # 標題
-        self.title_label = ctk.CTkLabel(main_frame, text='Group Expense Tracker', font=font_title)
+        self.title_label = ctk.CTkLabel(self.main_frame, text='Group Expense Tracker', font=self.font_title)
         self.title_label.grid(row=0, column=0, pady=(0, 20), sticky='ew')
 
-        # 放label, entry的內部框架
-        self.input_frame = ctk.CTkFrame(main_frame, fg_color='transparent')
+        # 放 label, entry 的內部框架
+        self.input_frame = ctk.CTkFrame(self.main_frame, fg_color='transparent')
         self.input_frame.grid(row=1, column=0, pady=10)
         self.input_frame.grid_columnconfigure(0, weight=1)
 
-        # 固定寬度的container_frame，讓label, entry對齊
-        container_frame = ctk.CTkFrame(self.input_frame, fg_color='transparent', width=200)
-        container_frame.grid(row=0, column=0)  # 不加 sticky，預設置中
-        container_frame.grid_columnconfigure(0, weight=1)
+        # 固定寬度的 container_frame，讓 label, entry 對齊
+        self.container_frame = ctk.CTkFrame(self.input_frame, fg_color='transparent', width=200)
+        self.container_frame.grid(row=0, column=0)  # 不加 sticky，預設置中
+        self.container_frame.grid_columnconfigure(0, weight=1)
 
         # Label 和 Entry 都放在這個固定寬度的區塊中
-        self.name_label = ctk.CTkLabel(container_frame, text='Name', font=small_font, anchor='w')
-        self.name_label.grid(row=0, column=0, sticky='w', pady=(0, 2))
+        self.name_label = ctk.CTkLabel(self.container_frame, text='Name', font=self.small_font, anchor='w')
+        self.name_entry = ctk.CTkEntry(self.container_frame, width=200)
 
-        self.name_entry = ctk.CTkEntry(container_frame, width=200)
+        self.name_label.grid(row=0, column=0, sticky='w', pady=(0, 2))
         self.name_entry.grid(row=1, column=0, sticky='w', pady=(0, 20))  # sticky='w' 對齊左邊
 
         # Sign In button
-        self.sign_in_button = ctk.CTkButton(main_frame, width=75, text='Sign In', font=small_font, command=self.handle_sign_in)
+        self.sign_in_button = ctk.CTkButton(self.main_frame, width=75, text='Sign In', font=self.small_font, command=self.handle_sign_in)
         self.sign_in_button.grid(row=2, column=0, pady=(0, 10))
 
         # 結果文字
-        self.result_label = ctk.CTkLabel(main_frame, width=200, text='', font=small_font)
+        self.result_label = ctk.CTkLabel(self.main_frame, width=200, text='', font=self.small_font)
         self.result_label.grid(row=3, column=0, pady=(0, 10))
 
     def handle_sign_in(self):

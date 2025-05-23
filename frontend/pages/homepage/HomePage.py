@@ -59,6 +59,9 @@ class HomePage(ctk.CTkFrame):
 
     # 從後端抓取資料；須在 app.py 中呼叫頁面時先行叫出此 method
     def load_groups(self):  # !!!
+        for widget in self.scrollable.winfo_children():
+            widget.destroy()
+
         try:
             self.current_groups = get_groups_info(self.controller.user_id)
             print(f'API 回傳：{self.current_groups}')
@@ -67,13 +70,14 @@ class HomePage(ctk.CTkFrame):
 
         if self.current_groups:
             for group in self.current_groups:
-                group_button = ctk.CTkButton(self.scrollable, text=group['group_name'], text_color='#FFFFFF', font=self.small_font,
+                group_button = ctk.CTkButton(self.scrollable, text=group['name'], text_color='#FFFFFF', font=self.small_font,
                                              border_width=1, border_color='#B0B0B0', fg_color='#B0B0B0',
                                              command=lambda g=group: self.check_group(g))
                 group_button.pack(fill='x', padx=5, pady=5)
         else:
             self.no_group_label = ctk.CTkLabel(self.scrollable, text='You are not in any group for now. :(\nWhy not try adding or joining a group?', font=self.small_font)
             self.no_group_label.pack(pady=20)
+        return
 
     # 頁面切換
     def on_navigate_home(self):
@@ -83,7 +87,7 @@ class HomePage(ctk.CTkFrame):
         self.show_page('SignIn')
 
     def check_group(self, group):
-        self.controller.clicked_group_id = group['group_id']
+        self.controller.clicked_group_id = group['id']
         self.show_page('ViewGroup')
         print(f'Checking the group with ID {self.controller.clicked_group_id}...')
 

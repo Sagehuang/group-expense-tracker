@@ -1,5 +1,5 @@
 import customtkinter as ctk
-
+from api_client import add_group
 
 ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
@@ -11,59 +11,61 @@ class AddGroup(ctk.CTkFrame):
         self.show_page = show_page_callback
         self.controller = controller
 
+        # 版面配置
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        font_top_bar = ctk.CTkFont(family='Gotham', size=20, weight='bold')
-        small_font = ctk.CTkFont(family='Gotham', size=12)
+        # Pre-defined fonts
+        self.font_title = ctk.CTkFont(family='Gotham', size=24, weight='bold')
+        self.font_top_bar = ctk.CTkFont(family='Gotham', size=20, weight='bold')
+        self.small_font = ctk.CTkFont(family='Gotham', size=12)
 
-        top_bar = ctk.CTkFrame(self, fg_color='#F3F6F4')
-        top_bar.grid(row=0, column=0, sticky='ew')
-        top_bar.grid_columnconfigure(1, weight=1)
+        # 頂端列設置
+        self.top_bar = ctk.CTkFrame(self, fg_color='#F3F6F4')
+        self.top_bar.grid(row=0, column=0, sticky='ew')
+        self.top_bar.grid_columnconfigure(1, weight=1)
 
-        self.home_button = ctk.CTkButton(top_bar, text='Home', font=small_font, command=self.on_navigate_home, width=80)
-        self.title_label = ctk.CTkLabel(top_bar, text='Add Group', text_color='black', font=font_top_bar)
-        self.logout_button = ctk.CTkButton(top_bar, text='Logout', font=small_font, command=self.on_logout, width=80)
+        # 設定頂端列的物件
+        self.home_button = ctk.CTkButton(self.top_bar, text='Home', font=self.small_font, command=self.on_navigate_home, width=80)
+        self.title_label = ctk.CTkLabel(self.top_bar, text='Add Group', text_color='black', font=self.font_top_bar)
+        self.logout_button = ctk.CTkButton(self.top_bar, text='Logout', font=self.small_font, command=self.on_logout, width=80)
 
+        # 將物件放入頂端列
         self.logout_button.grid(row=0, column=2, padx=10, pady=10, sticky='e')
         self.home_button.grid(row=0, column=0, padx=10, pady=10, sticky='w')
         self.title_label.grid(row=0, column=1, padx=10, pady=10)
 
         # 主體框架，放標題與輸入元件
-        main_frame = ctk.CTkFrame(self, fg_color='transparent')
-        main_frame.grid(row=1, column=0, padx=10, sticky='nsew')
-        main_frame.grid_columnconfigure(0, weight=1)
-
-        font_title = ctk.CTkFont(family='Gotham', size=24, weight='bold')
-        small_font = ctk.CTkFont(family='Gotham', size=12)
+        self.main_frame = ctk.CTkFrame(self, fg_color='transparent')
+        self.main_frame.grid(row=1, column=0, padx=10, sticky='nsew')
+        self.main_frame.grid_columnconfigure(0, weight=1)
 
         # spacer，排版用
-        self.spacer = ctk.CTkLabel(main_frame, text='', font=font_title)
+        self.spacer = ctk.CTkLabel(self.main_frame, text='', font=self.font_title)
         self.spacer.grid(row=0, column=0, pady=(0, 20), sticky='ew')
 
-        # 放label, entry的內部框架
-        self.input_frame = ctk.CTkFrame(main_frame, fg_color='transparent')
+        # 放 label, entry 的內部框架
+        self.input_frame = ctk.CTkFrame(self.main_frame, fg_color='transparent')
         self.input_frame.grid(row=1, column=0, pady=10)
         self.input_frame.grid_columnconfigure(0, weight=1)
 
-        # 固定寬度的container_frame，讓label, entry對齊
-        container_frame = ctk.CTkFrame(self.input_frame, fg_color='transparent', width=200)
-        container_frame.grid(row=0, column=0)
-        container_frame.grid_columnconfigure(0, weight=1)
+        # 固定寬度的 container_frame，讓 label, entry 對齊
+        self.container_frame = ctk.CTkFrame(self.input_frame, fg_color='transparent', width=200)
+        self.container_frame.grid(row=0, column=0)
+        self.container_frame.grid_columnconfigure(0, weight=1)
 
         # Label 和 Entry 都放在這個固定寬度的區塊中
-        self.group_name_label = ctk.CTkLabel(container_frame, text='Group Name', font=small_font, anchor='w')
+        self.group_name_label = ctk.CTkLabel(self.container_frame, text='Group Name', font=self.small_font, anchor='w')
+        self.group_name_entry = ctk.CTkEntry(self.container_frame, width=200)
         self.group_name_label.grid(row=0, column=0, sticky='w', pady=(0, 2))
-
-        self.group_name_entry = ctk.CTkEntry(container_frame, width=200)
         self.group_name_entry.grid(row=1, column=0, sticky='w', pady=(0, 10))  # sticky='w' 對齊左邊
 
         # Add button
-        self.add_button = ctk.CTkButton(main_frame, width=50, text='Add', font=small_font, command=self.add_new_group)
+        self.add_button = ctk.CTkButton(self.main_frame, width=50, text='Add', font=self.small_font, command=self.add_new_group)
         self.add_button.grid(row=2, column=0, pady=(0, 10))
 
         # 結果文字
-        self.result_label = ctk.CTkLabel(main_frame, width=200, text='', font=small_font)
+        self.result_label = ctk.CTkLabel(self.main_frame, width=200, text='', font=self.small_font)
         self.result_label.grid(row=3, column=0, pady=(0, 10))
 
     # 頁面切換
@@ -77,13 +79,6 @@ class AddGroup(ctk.CTkFrame):
     def add_new_group(self):
         group_name = self.group_name_entry.get().strip()
         if group_name:
-            # # 呼叫API function：add_group()
-            # success = add_group(group_name, self.controller.user_id)
-
-            # # 驗證是否成功
-            # print('送出資料:', expense_data)
-            # print('API 回傳:', success)
-
             try:  # !!!
                 new_group = add_group(group_name, self.controller.user_id)
                 self.result_label.configure(text='Group added successfully.', text_color='green')
@@ -95,8 +90,6 @@ class AddGroup(ctk.CTkFrame):
                 print(error)
         else:
             self.result_label.configure(text='Please enter a Group Name.', text_color='red')
-
-        # # # 成功新增後，資料庫中會新增新群組，並且回到 HomePage 時會再度呼叫 get_groups_info 函數，故可顯示已加入的群組
 
 
 if __name__ == '__main__':
