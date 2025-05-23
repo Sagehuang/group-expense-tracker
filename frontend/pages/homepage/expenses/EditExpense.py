@@ -134,7 +134,11 @@ class EditExpense(ctk.CTkFrame):
         self.participants_entry.insert(0, ', '.join(original_participants))
 
         self.note_entry.delete(0, 'end')
-        self.note_entry.insert(0, originial_note)
+        # original_note 可能是 str 也可能是 None
+        if original_note:
+            self.note_entry.insert(0, original_note)  # str 的情況沒問題
+        else:
+            self.note_entry.insert(0, '')  # 若為 None 時欄位要填入空字串
 
 
     # 頁面切換
@@ -182,15 +186,17 @@ class EditExpense(ctk.CTkFrame):
         try:
             api_edit_expense(self.controller.clicked_expense_id, name, amount, payer, participants, note)
             success = True
-            print('API 呼叫成功')
+            print('edit_expense API 呼叫成功')
         except Exception as error:
-            print('API 發生錯誤:', error)
+            print('edit_expense API 發生錯誤:', error)
             success = False
 
         if success:
             self.result_label.configure(text='Expense edited successfully.', text_color='green')
-            # 1秒後清空欄位，讓使用者加入新的一筆expense
-            self.after(1000, lambda: self.reset_fields())
+            # 1秒後回到ViewGroup並清空結果文字與文字框
+            self.after(1000, lambda: self.on_navigate_back())
+            self.after(1000, lambda: self.result_label.configure(text=''))
+            # self.after(1000, lambda: self.reset_fields())  # load 時會 delete 這時應該不用 reset
         else:
             self.result_label.configure(text='Failed to edit expense.', text_color='red')
 

@@ -64,9 +64,9 @@ class HomePage(ctk.CTkFrame):
 
         try:
             self.current_groups = get_groups_info(self.controller.user_id)
-            print(f'API 回傳：{self.current_groups}')
+            print(f'get_groups_info API 回傳: {self.current_groups}')
         except Exception as error:
-            print(f'API 發生錯誤：{error}')
+            print(f'get_groups_info API 發生錯誤: {error}')
 
         if self.current_groups:
             for group in self.current_groups:

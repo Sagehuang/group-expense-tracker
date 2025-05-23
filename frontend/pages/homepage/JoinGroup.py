@@ -82,7 +82,7 @@ class JoinGroup(ctk.CTkFrame):
         group_id = self.group_name_entry.get().strip()
         if group_id:  # !!!
             success = join_group(group_id, self.controller.user_id)
-            print('API 回傳:', success)
+            print('join_group API 回傳:', success)
             if success:
                 self.result_label.configure(text='Group joined successfully.', text_color='green')
                 # 1秒後回到HomePage並清空結果文字與文字框

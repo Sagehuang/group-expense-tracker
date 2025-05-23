@@ -88,14 +88,14 @@ class App(ctk.CTk):
             # ViewMembers attribute: load_members
             if page_name == 'ViewMembers' and hasattr(page, 'load_members'):
                 page.load_members()
+            
+            # SettleUp attribute: load_balance
+            if page_name == 'SettleUp' and hasattr(page, 'load_balance'):
+                page.load_balance()
 
             # SettleUp attribute: load_settle
             if page_name == 'SettleUp' and hasattr(page, 'load_settle'):
                 page.load_settle()
-
-            # SettleUp attribute: load_balance
-            if page_name == 'SettleUp' and hasattr(page, 'load_balance'):
-                page.load_balance()
 
 
             # 清空重置

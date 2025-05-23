@@ -1,13 +1,13 @@
 import customtkinter as ctk
 from datetime import datetime
-from api_client import obtain_expense
+from api_client import obtain_group_name, obtain_expense
 
 
 ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
 
 # 【假資料】
-group_name = '這是一個名字非常非常長的群組'
+# group_name = '這是一個名字非常非常長的群組'
 # # 要讓ViewGroup頁面上能出現組內所有expense的資訊，會需要跨頁面傳遞group_id, list of expense_id（群組ID、該ID有哪些expense）
 
 
@@ -17,7 +17,7 @@ class ViewGroup(ctk.CTkFrame):
         self.show_page = show_page_callback
         self.controller = controller
 
-        self.group_name_display = group_name
+        # self.group_name_display = group_name
 
         # 版面配置
         self.grid_rowconfigure(1, weight=1)
@@ -35,7 +35,7 @@ class ViewGroup(ctk.CTkFrame):
 
         # 設定頂端列的物件
         self.home_button = ctk.CTkButton(self.top_bar, text='Home', font=self.small_font, command=self.on_navigate_home, width=80)
-        self.title_label = ctk.CTkLabel(self.top_bar, text=self.group_name_display, text_color='black', font=self.font_top_bar)
+        self.title_label = ctk.CTkLabel(self.top_bar, text='', text_color='black', font=self.font_top_bar)
         self.logout_button = ctk.CTkButton(self.top_bar, text='Logout', font=self.small_font, command=self.on_logout, width=80)
 
         # 將物件放入頂端列
@@ -64,12 +64,20 @@ class ViewGroup(ctk.CTkFrame):
     def load_group_expenses(self):
         for widget in self.scrollable.winfo_children():
             widget.destroy()
+        
+        try:
+            # 取得群組名稱並更新標題
+            group_name = obtain_group_name(self.controller.clicked_group_id)
+            self.title_label.configure(text=group_name)
+        except Exception as e:
+            print(f"取得群組名稱失敗：{e}")
+            self.title_label.configure(text='Group')
 
         try:
             self.expenses = obtain_expense(self.controller.clicked_group_id)
-            print(f'API 回傳：{self.expenses}')
+            print(f'obtain_expense API 回傳: {self.expenses}')  # 為什這裡印不出來？
         except Exception as error:
-            print(f'API 發生錯誤：{error}')
+            print(f'obtain_expense API 發生錯誤: {error}')
 
         if self.expenses:
             for exp in self.expenses:

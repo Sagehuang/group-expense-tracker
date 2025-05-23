@@ -87,8 +87,9 @@ class SettleUp(ctk.CTkFrame):
         separator2.pack(fill='x', pady=(0, 0))  # 0, 10
 
     def load_settle(self):
-        for widget in self.scrollable.winfo_children():
-            widget.destroy()  # 清空原有元件
+        # 這裡不能清空！在 load_balance 清空一次即可
+        # for widget in self.scrollable.winfo_children():
+        #     widget.destroy()  # 清空原有元件
 
         group_settlement = get_settle_info(self.controller.clicked_group_id)
 

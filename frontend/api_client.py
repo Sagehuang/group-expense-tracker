@@ -244,12 +244,11 @@ def join_group(group_id, user_id):
 # join_success = join_group(1, 4)
 # print("join_success:", join_success)
 
+
 # 取得 group 資訊
-
-
 def get_groups_info(user_id):
     """
-    根據 user_id 查詢該 user 的所有 groups，回傳所有 groups 的 group id 和 group name
+    根據 user id 查詢該 user 的所有 groups，回傳所有 groups 的 group id 和 group name
 
     parameter:
     - user_id (int)
@@ -292,6 +291,35 @@ def get_groups_info(user_id):
 # print("current_groups:", current_groups)
 
 
+# 取得 group name
+def obtain_group_name(group_id):
+    """
+    根據 group id 查詢該 group 的 name，回傳 group name
+
+    parameter:
+    - group_id (int)
+
+    return:
+    - group_name (str)
+    """
+    try:
+        response = requests.get(f"{BASE_URL}/groups/{group_id}")
+        if response.status_code == 200:
+            data = response.json()
+            group_name = data["name"]
+            return group_name
+        else:
+            print(f"Error! Server returned status code: {response.status_code}")
+            return None
+    except requests.exceptions.RequestException as e:
+        print("Request failed:", e)
+        return None
+
+# test
+# group_name = obtain_group_name(3)
+# print("group_name:", group_name)
+
+
 # 取得 expense 的資訊
 def get_expense_info(expense_id):
     """
@@ -315,7 +343,7 @@ def get_expense_info(expense_id):
             original_name = data["name"]
             original_amount = int(data["amount"])
             original_note = data["note"]
-            original_created_at = datetime.strptime(data["created_at"], "%Y-%m-%dT%H:%M:%S")
+            original_created_at = datetime.fromisoformat(data["created_at"]).replace(microsecond=0)
             original_payer = data["payer"]["name"]
             original_participants = [user["name"] for user in data["participants"]]
             return original_name, original_amount, original_note, original_created_at, original_payer, original_participants

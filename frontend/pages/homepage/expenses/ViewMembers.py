@@ -101,15 +101,16 @@ class ViewMembers(ctk.CTkFrame):
         try:
             leave_group(self.controller.user_id, self.controller.clicked_group_id)
             success = True
-            print('API 呼叫成功')
+            print('leave_group API 呼叫成功')
         except Exception as error:
-            print('API 發生錯誤:', error)
+            print('leave_group API 發生錯誤:', error)
             success = False
 
         if success:
             self.result_label.configure(text='Left group.', text_color='green')
             # 1秒後回到HomePage
             self.after(1000, lambda: self.show_page('HomePage'))
+            self.after(1000, lambda: self.result_label.configure(text=''))
         else:
             self.result_label.configure(text='Failed to leave group.', text_color='red')
         return

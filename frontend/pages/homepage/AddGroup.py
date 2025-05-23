@@ -82,7 +82,7 @@ class AddGroup(ctk.CTkFrame):
             try:  # !!!
                 new_group = add_group(group_name, self.controller.user_id)
                 self.result_label.configure(text='Group added successfully.', text_color='green')
-                print('API 回傳:', new_group)
+                print('add_group API 回傳:', new_group)
                 # 1秒後回到HomePage並清空結果文字與文字框
                 self.after(1000, lambda: self.on_navigate_home())
                 self.after(1000, lambda: self.result_label.configure(text=''))

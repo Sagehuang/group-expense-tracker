@@ -175,9 +175,9 @@ class AddExpense(ctk.CTkFrame):
         try:
             api_add_expense(created_at, name, amount, payer, participants, note, group_id)
             success = True
-            print('API 呼叫成功') # print不出東西
+            print('add_expense API 呼叫成功') # print不出東西
         except Exception as error:
-            print('API 發生錯誤:', error) # print不出東西
+            print('add_expense API 發生錯誤:', error) # print不出東西
             success = False
 
         if success:
