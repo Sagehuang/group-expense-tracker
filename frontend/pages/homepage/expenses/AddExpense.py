@@ -138,11 +138,6 @@ class AddExpense(ctk.CTkFrame):
 
     # ADD EXPENSE
     def on_add(self):
-        # print 問題
-        print("Add button clicked")
-        print("Current controller:", self.controller)  # 檢查是否為 None 或有效對象
-        print("Clicked group_id:", getattr(self.controller, "clicked_group_id", "未設定"))
-        return
 
         # collect data
         name = self.item_entry.get().strip()
@@ -180,9 +175,9 @@ class AddExpense(ctk.CTkFrame):
         try:
             api_add_expense(created_at, name, amount, payer, participants, note, group_id)
             success = True
-            print('API 呼叫成功')
+            print('API 呼叫成功') # print不出東西
         except Exception as error:
-            print('API 發生錯誤:', error)
+            print('API 發生錯誤:', error) # print不出東西
             success = False
 
         if success:

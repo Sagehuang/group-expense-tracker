@@ -21,8 +21,6 @@ class ViewMembers(ctk.CTkFrame):
         self.show_page = show_page_callback
         self.controller = controller
 
-        group_name, members_list = get_members_info(self.controller.clicked_group_id)
-
         # 整體排版
         self.grid_rowconfigure(1, weight=1)  # 可捲動區
         self.grid_columnconfigure(0, weight=1)
@@ -48,7 +46,25 @@ class ViewMembers(ctk.CTkFrame):
         self.scrollable = ctk.CTkScrollableFrame(self)
         self.scrollable.grid(row=1, column=0, sticky='nsew', padx=10)
 
-        # 成員資訊（靜態顯示，不會更新）
+        # Leave Group button
+        bottom_frame = ctk.CTkFrame(self, fg_color='transparent')
+        bottom_frame.grid(row=2, column=0, sticky='ew', padx=10, pady=10)
+        bottom_frame.grid_columnconfigure(0, weight=1)
+
+        self.leave_group_button = ctk.CTkButton(bottom_frame, text='Leave Group', font=self.small_font, command=self.on_leave_group)
+        self.leave_group_button.grid(row=0, column=0, padx=10)
+
+        # result
+        self.result_label = ctk.CTkLabel(bottom_frame, text='', text_color='red')
+        self.result_label.grid(row=7, column=0, columnspan=2, pady=(5, 0))
+
+
+    def load_members(self):
+        for widget in self.scrollable.winfo_children():
+            widget.destroy()  # 清空原有元件
+            
+        group_name, members_list = get_members_info(self.controller.clicked_group_id)
+
         members_frame = ctk.CTkFrame(self.scrollable, fg_color='transparent')
         members_frame.pack(padx=10, pady=10, fill='x')
         members_frame.grid_columnconfigure(0, weight=1)
@@ -69,17 +85,7 @@ class ViewMembers(ctk.CTkFrame):
             no_members_label = ctk.CTkLabel(members_frame, text='There are no members in this group.', font=self.small_font)
             no_members_label.grid(row=2, column=0, padx=20, pady=10)
 
-        # Leave Group button
-        bottom_frame = ctk.CTkFrame(self, fg_color='transparent')
-        bottom_frame.grid(row=2, column=0, sticky='ew', padx=10, pady=10)
-        bottom_frame.grid_columnconfigure(0, weight=1)
-
-        self.leave_group_button = ctk.CTkButton(bottom_frame, text='Leave Group', font=self.small_font, command=self.on_leave_group)
-        self.leave_group_button.grid(row=0, column=0, padx=10)
-
-        # result
-        self.result_label = ctk.CTkLabel(bottom_frame, text='', text_color='red')
-        self.result_label.grid(row=7, column=0, columnspan=2, pady=(5, 0))
+        
 
     # 頁面切換
     def on_navigate_back(self):

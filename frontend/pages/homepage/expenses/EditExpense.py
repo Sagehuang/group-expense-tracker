@@ -26,8 +26,6 @@ class EditExpense(ctk.CTkFrame):
         self.show_page = show_page_callback
         self.controller = controller
 
-        original_name, original_amount, original_note, original_created_at, original_payer, original_participants = get_expense_info(self.controller.expense_id)
-
         # 整體排版
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -75,7 +73,6 @@ class EditExpense(ctk.CTkFrame):
 
         self.item_entry = ctk.CTkEntry(bottom_frame)
         self.item_entry.grid(row=1, column=1, padx=(5, 10), pady=10, sticky='ew')
-        self.item_entry.insert(0, original_name)
 
         # 2nd row：Amount
         self.amount_label = ctk.CTkLabel(bottom_frame, text='Amount', anchor='w')
@@ -90,7 +87,6 @@ class EditExpense(ctk.CTkFrame):
 
         self.amount_entry = ctk.CTkEntry(amount_frame, width=120)
         self.amount_entry.pack(side='left')
-        self.amount_entry.insert(0, original_amount)
 
         # 3rd row：Payer
         self.payer_label = ctk.CTkLabel(bottom_frame, text='Payer', anchor='w')
@@ -98,7 +94,6 @@ class EditExpense(ctk.CTkFrame):
 
         self.payer_entry = ctk.CTkEntry(bottom_frame)
         self.payer_entry.grid(row=3, column=1, padx=(5, 10), pady=10, sticky='ew')
-        self.payer_entry.insert(0, original_payer)
 
         # 4th row：Participants
         self.participants_label = ctk.CTkLabel(bottom_frame, text='Participants', anchor='w')
@@ -106,7 +101,6 @@ class EditExpense(ctk.CTkFrame):
 
         self.participants_entry = ctk.CTkEntry(bottom_frame)
         self.participants_entry.grid(row=4, column=1, padx=(5, 10), pady=10, sticky='ew')
-        self.participants_entry.insert(0, ', '.join(original_participants))
 
         # 5th row：Note
         self.note_label = ctk.CTkLabel(bottom_frame, text='Note', anchor='w')
@@ -114,7 +108,6 @@ class EditExpense(ctk.CTkFrame):
 
         self.note_entry = ctk.CTkEntry(bottom_frame)
         self.note_entry.grid(row=5, column=1, padx=(5, 10), pady=10, sticky='ew')
-        self.note_entry.insert(0, orginial_note)
 
         # 6th row：Edit button
         self.edit_group_button = ctk.CTkButton(bottom_frame, text='Edit', command=self.on_edit)
@@ -123,6 +116,26 @@ class EditExpense(ctk.CTkFrame):
         # 7th row: result
         self.result_label = ctk.CTkLabel(bottom_frame, text='', text_color='red')
         self.result_label.grid(row=7, column=0, columnspan=2, pady=(5, 0))
+
+
+    def load_expense(self):
+        original_name, original_amount, original_note, original_created_at, original_payer, original_participants = get_expense_info(self.controller.clicked_expense_id)
+
+        self.item_entry.delete(0, 'end')
+        self.item_entry.insert(0, original_name)
+
+        self.amount_entry.delete(0, 'end')
+        self.amount_entry.insert(0, original_amount)
+
+        self.payer_entry.delete(0, 'end')
+        self.payer_entry.insert(0, original_payer)
+        
+        self.participants_entry.delete(0, 'end')
+        self.participants_entry.insert(0, ', '.join(original_participants))
+
+        self.note_entry.delete(0, 'end')
+        self.note_entry.insert(0, originial_note)
+
 
     # 頁面切換
     def on_navigate_back(self):
@@ -163,12 +176,11 @@ class EditExpense(ctk.CTkFrame):
 
         # 回傳資料（依後端API形式）
         created_at = datetime.now()
-        expense_id = self.controller.clicked_expense_id
-
+        
 
         # 呼叫API function
         try:
-            api_edit_expense(expense_id, name, amount, payer, participants, note)
+            api_edit_expense(self.controller.clicked_expense_id, name, amount, payer, participants, note)
             success = True
             print('API 呼叫成功')
         except Exception as error:
