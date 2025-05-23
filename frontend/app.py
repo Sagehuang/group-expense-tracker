@@ -59,29 +59,51 @@ class App(ctk.CTk):
         self.pages['ViewMembers'] = ViewMembers(self.container, self.show_page, self)
         self.pages['SettleUp'] = SettleUp(self.container, self.show_page, self)
 
-        for page in self.pages.values():
-            page.grid(row=0, column=0, sticky='nsew')
-            page.grid_remove()
-
-        # 預先隱藏所有頁面
+        # 建立再隱藏所有頁面
         for page in self.pages.values():
             page.grid(row=0, column=0, sticky='nsew')
             page.grid_remove()
 
     def show_page(self, page_name):
-        #！！！
-        print(f"Trying to show page: {page_name}")   # 新增
 
         # 隱藏所有頁面
         for page in self.pages.values():
             page.grid_remove()
 
-        # 顯示指定頁面
         if page_name in self.pages:
             page = self.pages[page_name]
+
+            # HomePage attribute: load_groups
+            if page_name == 'HomePage' and hasattr(page, 'load_groups'):
+                page.load_groups()
+
+            # ViewGroup attribute: load_group_expenses
+            if page_name == 'ViewGroup' and hasattr(page, 'load_group_expenses'):
+                page.load_group_expenses()
+
+            # EditExpense attribute: load_expense
+            if page_name == 'EditExpense' and hasattr(page, 'load_expense'):
+                page.load_expense()
+
+            # ViewMembers attribute: load_members
+            if page_name == 'ViewMembers' and hasattr(page, 'load_members'):
+                page.load_members()
+
+            # SettleUp attribute: load_settle
+            if page_name == 'SettleUp' and hasattr(page, 'load_settle'):
+                page.load_settle()
+
+            # SettleUp attribute: load_balance
+            if page_name == 'SettleUp' and hasattr(page, 'load_balance'):
+                page.load_balance()
+
+
+            # 清空重置
             if hasattr(page, 'reset_fields'):
                 page.reset_fields()
+
             page.grid()
+        
         else:
             print(f'頁面 {page_name} 不存在')
 

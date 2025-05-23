@@ -21,7 +21,7 @@ class ViewMembers(ctk.CTkFrame):
         self.show_page = show_page_callback
         self.controller = controller
 
-        group_name, members_list = get_members_info(self.controller.group_id)
+        group_name, members_list = get_members_info(self.controller.clicked_group_id)
 
         # 整體排版
         self.grid_rowconfigure(1, weight=1)  # 可捲動區
@@ -92,8 +92,9 @@ class ViewMembers(ctk.CTkFrame):
     def on_leave_group(self):
 
         # 呼叫API function
-        leave_group(self.controller.user_id, self.controller.group_id)
-        success = True
+        try:
+            leave_group(self.controller.user_id, self.controller.clicked_group_id)
+            success = True
             print('API 呼叫成功')
         except Exception as error:
             print('API 發生錯誤:', error)

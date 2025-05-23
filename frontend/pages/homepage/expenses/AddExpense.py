@@ -110,9 +110,9 @@ class AddExpense(ctk.CTkFrame):
         self.note_entry.grid(row=5, column=1, padx=(5, 10), pady=10, sticky='ew')
 
         # 6th row：Add button
-        # self.add_group_button = ctk.CTkButton(bottom_frame, text='Add', command=self.on_add)
-        self.add_group_button = ctk.CTkButton(bottom_frame, text='Add')
-        self.add_group_button.bind("<Button-1>", lambda e: print("Button clicked!"))
+        self.add_group_button = ctk.CTkButton(bottom_frame, text='Add', command=self.on_add)
+        # self.add_group_button = ctk.CTkButton(bottom_frame, text='Add')
+        # self.add_group_button.bind("<Button-1>", lambda e: print("Button clicked!"))
         self.add_group_button.grid(row=6, column=0, columnspan=2, pady=20)
 
         # 7th row: result
@@ -138,6 +138,7 @@ class AddExpense(ctk.CTkFrame):
 
     # ADD EXPENSE
     def on_add(self):
+        # print 問題
         print("Add button clicked")
         print("Current controller:", self.controller)  # 檢查是否為 None 或有效對象
         print("Clicked group_id:", getattr(self.controller, "clicked_group_id", "未設定"))
@@ -172,7 +173,7 @@ class AddExpense(ctk.CTkFrame):
 
         # 回傳資料（依後端API形式）
         created_at = datetime.now()
-        group_id = self.controller.group_id
+        group_id = self.controller.clicked_group_id
 
 
         # 呼叫API function

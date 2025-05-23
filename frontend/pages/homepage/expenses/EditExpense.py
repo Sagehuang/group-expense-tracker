@@ -163,7 +163,7 @@ class EditExpense(ctk.CTkFrame):
 
         # 回傳資料（依後端API形式）
         created_at = datetime.now()
-        expense_id = self.controller.expense_id
+        expense_id = self.controller.clicked_expense_id
 
 
         # 呼叫API function

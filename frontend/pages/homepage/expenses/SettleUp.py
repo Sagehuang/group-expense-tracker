@@ -1,6 +1,6 @@
 import customtkinter as ctk
-# from api_client import get_balance_info
-# from api_client import get_settle_info
+from api_client import get_balance_info
+from api_client import get_settle_info
 
 
 ctk.set_appearance_mode('System')
@@ -20,8 +20,8 @@ class SettleUp(ctk.CTkFrame):
         self.show_page = show_page_callback
         self.controller = controller
 
-        group_balance = get_balance_info(self.controller.group_id)
-        group_settlement = get_settle_info(self.controller.group_id)
+        group_balance = get_balance_info(self.controller.clicked_group_id)
+        group_settlement = get_settle_info(self.controller.clicked_group_id)
 
         # 整體排版
         self.grid_rowconfigure(1, weight=1)

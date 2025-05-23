@@ -166,8 +166,7 @@ class AddExpense(ctk.CTkFrame):
 
         # 回傳資料（依後端API形式）
         created_at = datetime.now()
-        group_id = self.controller.group_id
-
+        group_id = self.controller.clicked_group_id
 
         # 呼叫API function
         try:
