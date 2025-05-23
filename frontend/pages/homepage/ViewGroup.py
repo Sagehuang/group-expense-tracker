@@ -1,14 +1,8 @@
 import customtkinter as ctk
-from datetime import datetime
 from api_client import obtain_group_name, obtain_expense
-
 
 ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
-
-# 【假資料】
-# group_name = '這是一個名字非常非常長的群組'
-# # 要讓ViewGroup頁面上能出現組內所有expense的資訊，會需要跨頁面傳遞group_id, list of expense_id（群組ID、該ID有哪些expense）
 
 
 class ViewGroup(ctk.CTkFrame):
@@ -16,8 +10,6 @@ class ViewGroup(ctk.CTkFrame):
         super().__init__(master)
         self.show_page = show_page_callback
         self.controller = controller
-
-        # self.group_name_display = group_name
 
         # 版面配置
         self.grid_rowconfigure(1, weight=1)
@@ -64,23 +56,25 @@ class ViewGroup(ctk.CTkFrame):
     def load_group_expenses(self):
         for widget in self.scrollable.winfo_children():
             widget.destroy()
-        
+
         try:
             # 取得群組名稱並更新標題
             group_name = obtain_group_name(self.controller.clicked_group_id)
+            print(f'obtain_group_name API 回傳: {group_name}')
             self.title_label.configure(text=group_name)
-        except Exception as e:
-            print(f"取得群組名稱失敗：{e}")
+        except Exception as error:
+            print(f'obtain_group_name API 發生錯誤: {error}')
             self.title_label.configure(text='Group')
 
         try:
-            self.expenses = obtain_expense(self.controller.clicked_group_id)
-            print(f'obtain_expense API 回傳: {self.expenses}')  # 為什這裡印不出來？
+            # 取得所有花費紀錄
+            expenses = obtain_expense(self.controller.clicked_group_id)
+            print(f'obtain_expense API 回傳: {expenses}')
         except Exception as error:
             print(f'obtain_expense API 發生錯誤: {error}')
 
-        if self.expenses:
-            for exp in self.expenses:
+        if expenses:
+            for exp in expenses:
                 expense_frame = ctk.CTkFrame(self.scrollable, fg_color='transparent')
                 expense_frame.pack(padx=10, pady=15, fill='x')
                 expense_frame.grid_columnconfigure((0, 1), weight=1)
@@ -123,7 +117,6 @@ class ViewGroup(ctk.CTkFrame):
         self.show_page('ViewMembers')
 
     def on_plus(self):
-        print('Switching to AddExpense')
         self.show_page('AddExpense')
 
     def on_settle_up(self):
@@ -132,17 +125,3 @@ class ViewGroup(ctk.CTkFrame):
     def on_edit(self, expense):
         self.controller.clicked_expense_id = expense['expense_id']
         self.show_page('EditExpense')
-
-
-if __name__ == '__main__':
-    app = ctk.CTk()
-    app.geometry('400x640')
-    app.title('Group Expense Tracker')
-
-    app.grid_rowconfigure(0, weight=1)
-    app.grid_columnconfigure(0, weight=1)
-
-    view_group = ViewGroup(app, show_page_callback)
-    view_group.grid(row=0, column=0, sticky='nsew')
-
-    app.mainloop()

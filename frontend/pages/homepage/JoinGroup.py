@@ -80,31 +80,19 @@ class JoinGroup(ctk.CTkFrame):
     # JOIN GROUP
     def join_new_group(self):
         group_id = self.group_name_entry.get().strip()
-        if group_id:  # !!!
+        if group_id:
             success = join_group(group_id, self.controller.user_id)
             print('join_group API 回傳:', success)
             if success:
                 self.result_label.configure(text='Group joined successfully.', text_color='green')
-                # 1秒後回到HomePage並清空結果文字與文字框
+                # 1 秒後回到 HomePage
                 self.after(1000, lambda: self.on_navigate_home())
-                self.after(1000, lambda: self.result_label.configure(text=''))
-                self.after(1000, lambda: self.group_name_entry.delete(0, 'end'))
             else:
                 self.result_label.configure(text='Failed to join group.', text_color='red')
                 return
         else:
             self.result_label.configure(text='Please enter a Group ID.', text_color='red')
 
-
-if __name__ == '__main__':
-    app = ctk.CTk()
-    app.geometry('400x640')
-    app.title('Group Expense Tracker')
-
-    app.grid_rowconfigure(0, weight=1)
-    app.grid_columnconfigure(0, weight=1)
-
-    join_group = JoinGroup(app, show_page_callback)
-    join_group.grid(row=0, column=0, sticky='nsew')
-
-    app.mainloop()
+    def reset_fields(self):
+        self.group_name_entry.delete(0, 'end')
+        self.result_label.configure(text='')

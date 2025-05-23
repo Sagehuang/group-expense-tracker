@@ -1,18 +1,8 @@
 import customtkinter as ctk
-from api_client import get_members_info
-from api_client import leave_group
-
+from api_client import get_members_info, leave_group
 
 ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
-
-# 【假資料】
-# user_id = 1
-# user_name = 'Alice'
-# group_id = 1
-# group_name = 'Group A'
-# members_list = ['Alice', 'Bob', 'Charlie']
-## 要讓ViewMembers頁面上能出現組員名單，會需要跨頁面傳遞group_id, user_id（群組ID、可能要退出群組的當前使用者的ID）
 
 
 class ViewMembers(ctk.CTkFrame):
@@ -58,11 +48,10 @@ class ViewMembers(ctk.CTkFrame):
         self.result_label = ctk.CTkLabel(bottom_frame, text='', text_color='red')
         self.result_label.grid(row=7, column=0, columnspan=2, pady=(5, 0))
 
-
     def load_members(self):
         for widget in self.scrollable.winfo_children():
-            widget.destroy()  # 清空原有元件
-            
+            widget.destroy()
+
         group_name, members_list = get_members_info(self.controller.clicked_group_id)
 
         members_frame = ctk.CTkFrame(self.scrollable, fg_color='transparent')
@@ -85,8 +74,6 @@ class ViewMembers(ctk.CTkFrame):
             no_members_label = ctk.CTkLabel(members_frame, text='There are no members in this group.', font=self.small_font)
             no_members_label.grid(row=2, column=0, padx=20, pady=10)
 
-        
-
     # 頁面切換
     def on_navigate_back(self):
         self.show_page('ViewGroup')
@@ -96,35 +83,19 @@ class ViewMembers(ctk.CTkFrame):
 
     # LEAVE GROUP
     def on_leave_group(self):
-
-        # 呼叫API function
         try:
-            leave_group(self.controller.user_id, self.controller.clicked_group_id)
-            success = True
-            print('leave_group API 呼叫成功')
+            success = leave_group(self.controller.user_id, self.controller.clicked_group_id)
+            print('leave_group API 回傳:', success)
         except Exception as error:
             print('leave_group API 發生錯誤:', error)
-            success = False
 
         if success:
             self.result_label.configure(text='Left group.', text_color='green')
-            # 1秒後回到HomePage
+            # 1 秒後回到 HomePage
             self.after(1000, lambda: self.show_page('HomePage'))
-            self.after(1000, lambda: self.result_label.configure(text=''))
         else:
             self.result_label.configure(text='Failed to leave group.', text_color='red')
         return
 
-
-if __name__ == '__main__':
-    app = ctk.CTk()
-    app.geometry('400x640')
-    app.title('Group Expense Tracker')
-
-    app.grid_rowconfigure(0, weight=1)
-    app.grid_columnconfigure(0, weight=1)
-
-    view_members = ViewMembers(app, show_page_callback)
-    view_members.grid(row=0, column=0, sticky='nsew')
-
-    app.mainloop()
+    def reset_fields(self):
+        self.result_label.configure(text='')

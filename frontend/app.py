@@ -1,6 +1,4 @@
 import customtkinter as ctk
-from datetime import datetime
-import api_client
 
 from pages.SignIn import SignIn
 from pages.homepage.HomePage import HomePage
@@ -26,7 +24,6 @@ class App(ctk.CTk):
         self.clicked_expense_id = None
 
         self.geometry('400x640')
-        # self.minsize(400, 640)
         self.title('Group Expense Tracker')
 
         self.grid_rowconfigure(0, weight=1)
@@ -65,7 +62,6 @@ class App(ctk.CTk):
             page.grid_remove()
 
     def show_page(self, page_name):
-
         # 隱藏所有頁面
         for page in self.pages.values():
             page.grid_remove()
@@ -88,7 +84,7 @@ class App(ctk.CTk):
             # ViewMembers attribute: load_members
             if page_name == 'ViewMembers' and hasattr(page, 'load_members'):
                 page.load_members()
-            
+
             # SettleUp attribute: load_balance
             if page_name == 'SettleUp' and hasattr(page, 'load_balance'):
                 page.load_balance()
@@ -97,13 +93,12 @@ class App(ctk.CTk):
             if page_name == 'SettleUp' and hasattr(page, 'load_settle'):
                 page.load_settle()
 
-
-            # 清空重置
+            # 清空欄位
             if hasattr(page, 'reset_fields'):
                 page.reset_fields()
 
             page.grid()
-        
+
         else:
             print(f'頁面 {page_name} 不存在')
 

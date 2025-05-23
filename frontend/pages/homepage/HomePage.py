@@ -57,19 +57,20 @@ class HomePage(ctk.CTkFrame):
         self.add_group_button.grid(row=0, column=0, padx=10, sticky='ew')
         self.join_group_button.grid(row=0, column=1, padx=10, sticky='ew')
 
-    # 從後端抓取資料；須在 app.py 中呼叫頁面時先行叫出此 method
-    def load_groups(self):  # !!!
+    # 從後端抓取資料，需在切換頁面時先呼叫此 method 載入資料，之後才渲染畫面
+    def load_groups(self):
+        # 清空 scrollable 的內容，避免先前的內容殘留
         for widget in self.scrollable.winfo_children():
             widget.destroy()
 
         try:
-            self.current_groups = get_groups_info(self.controller.user_id)
-            print(f'get_groups_info API 回傳: {self.current_groups}')
+            current_groups = get_groups_info(self.controller.user_id)
+            print(f'get_groups_info API 回傳: {current_groups}')
         except Exception as error:
             print(f'get_groups_info API 發生錯誤: {error}')
 
-        if self.current_groups:
-            for group in self.current_groups:
+        if current_groups:
+            for group in current_groups:
                 group_button = ctk.CTkButton(self.scrollable, text=group['name'], text_color='#FFFFFF', font=self.small_font,
                                              border_width=1, border_color='#B0B0B0', fg_color='#B0B0B0',
                                              command=lambda g=group: self.check_group(g))
@@ -96,17 +97,3 @@ class HomePage(ctk.CTkFrame):
 
     def on_join_group(self):
         self.show_page('JoinGroup')
-
-
-if __name__ == '__main__':
-    app = ctk.CTk()
-    app.geometry('400x640')
-    app.title('Group Expense Tracker')
-
-    app.grid_rowconfigure(0, weight=1)
-    app.grid_columnconfigure(0, weight=1)
-
-    homepage = HomePage(app, show_page_callback)
-    homepage.grid(row=0, column=0, sticky='nsew')
-
-    app.mainloop()

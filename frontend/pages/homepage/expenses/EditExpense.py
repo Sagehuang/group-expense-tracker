@@ -1,25 +1,11 @@
 import customtkinter as ctk
 from datetime import datetime
-from api_client import get_expense_info
-from api_client import edit_expense as api_edit_expense
-
+from api_client import get_expense_info, edit_expense
 
 ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
 
 
-# 【假資料】
-# group_id = 1
-# expense_id = 1
-# original_item = 'Food'
-# original_amount = 300
-# original_payer = 'Alice'
-# original_participants = ['Bob', 'Charlie']
-# orginial_note = 'McDonald\'s'
-## 要讓EditExpense頁面上能出現要修改的那筆expense的資訊，會需要跨頁面傳遞group_id, expense_id（群組ID、修改的那筆expense）
-
-
-# 代入：group_id, expense_id
 class EditExpense(ctk.CTkFrame):
     def __init__(self, master, show_page_callback, controller):
         super().__init__(master)
@@ -117,7 +103,6 @@ class EditExpense(ctk.CTkFrame):
         self.result_label = ctk.CTkLabel(bottom_frame, text='', text_color='red')
         self.result_label.grid(row=7, column=0, columnspan=2, pady=(5, 0))
 
-
     def load_expense(self):
         original_name, original_amount, original_note, original_created_at, original_payer, original_participants = get_expense_info(self.controller.clicked_expense_id)
 
@@ -129,7 +114,7 @@ class EditExpense(ctk.CTkFrame):
 
         self.payer_entry.delete(0, 'end')
         self.payer_entry.insert(0, original_payer)
-        
+
         self.participants_entry.delete(0, 'end')
         self.participants_entry.insert(0, ', '.join(original_participants))
 
@@ -139,7 +124,6 @@ class EditExpense(ctk.CTkFrame):
             self.note_entry.insert(0, original_note)  # str 的情況沒問題
         else:
             self.note_entry.insert(0, '')  # 若為 None 時欄位要填入空字串
-
 
     # 頁面切換
     def on_navigate_back(self):
@@ -178,38 +162,20 @@ class EditExpense(ctk.CTkFrame):
             self.result_label.configure(text='Amount must be a valid positive number.', text_color='red')
             return
 
-        # 回傳資料（依後端API形式）
-        created_at = datetime.now()
-        
-
         # 呼叫API function
         try:
-            api_edit_expense(self.controller.clicked_expense_id, name, amount, payer, participants, note)
-            success = True
-            print('edit_expense API 呼叫成功')
+            success = edit_expense(self.controller.clicked_expense_id, name, amount, payer, participants, note)
+            print('edit_expense API 回傳:', success)
         except Exception as error:
             print('edit_expense API 發生錯誤:', error)
-            success = False
 
         if success:
             self.result_label.configure(text='Expense edited successfully.', text_color='green')
-            # 1秒後回到ViewGroup並清空結果文字與文字框
+            # 1 秒後回到 ViewGroup
             self.after(1000, lambda: self.on_navigate_back())
-            self.after(1000, lambda: self.result_label.configure(text=''))
-            # self.after(1000, lambda: self.reset_fields())  # load 時會 delete 這時應該不用 reset
         else:
             self.result_label.configure(text='Failed to edit expense.', text_color='red')
 
-
-if __name__ == '__main__':
-    app = ctk.CTk()
-    app.geometry('400x640')
-    app.title('Group Expense Tracker')
-
-    app.grid_rowconfigure(0, weight=1)
-    app.grid_columnconfigure(0, weight=1)
-
-    edit_expense = EditExpense(app, show_page_callback)
-    edit_expense.grid(row=0, column=0, sticky='nsew')
-
-    app.mainloop()
+    def reset_fields(self):
+        self.result_label.configure(text='')
+        # self.reset_fields()  # load 時會 delete 這時應該不用 reset

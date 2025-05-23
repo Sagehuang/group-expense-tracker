@@ -10,7 +10,7 @@
 import requests
 from datetime import datetime
 
-BASE_URL = "http://localhost:5001/api"  # 設定後端主機與 API 前綴
+BASE_URL = "http://localhost:5001/api"  # 後端 server 運行的位置
 
 
 # 登入
@@ -71,7 +71,7 @@ def add_expense(created_at, name, amount, payer, participants, note, group_id):
     - group_id (int): 此 group 的 id
 
     return:
-    - None
+    - add_success (bool): 是否成功新增 expense
     """
     headers = {
         "Content-Type": "application/json"
@@ -98,18 +98,18 @@ def add_expense(created_at, name, amount, payer, participants, note, group_id):
 
         # 根據收到的 response 做處理
         if response.status_code == 201:
-            return None
+            return True
         else:
             print(f"後端回傳錯誤狀態碼: {response.status_code}")
             print("回傳內容：", response.text)
-            return None
+            return False
     except requests.exceptions.RequestException as e:
         print("發送失敗，錯誤為：", e)
-        return None
+        return False
 
 # test
-# new_expense = add_expense(datetime(2025, 5, 22, 18, 30, 0), "Book", 300, "Alice", ["Alice", "Bob"], "note", 1)
-# print("new_expense:", new_expense)  # None
+# add_success = add_expense(datetime(2025, 5, 22, 18, 30, 0), "Book", 300, "Alice", ["Alice", "Bob"], "note", 1)
+# print("add_success:", add_success)  # True
 
 
 # 編輯花費
@@ -127,7 +127,7 @@ def edit_expense(expense_id, name, amount, payer, participants, note):
     - group_id (int): 此 group 的 id
 
     return:
-    - None
+    - edit_success (bool): 是否成功編輯 expense
     """
     headers = {
         "Content-Type": "application/json"
@@ -150,18 +150,18 @@ def edit_expense(expense_id, name, amount, payer, participants, note):
             json=payload
         )
         if response.status_code == 200:
-            return None
+            return True
         else:
             print(f"後端回傳錯誤狀態碼: {response.status_code}")
             print("回傳內容：", response.text)
-            return None
+            return False
     except requests.exceptions.RequestException as e:
         print("發送失敗，錯誤為：", e)
-        return None
+        return False
 
 # test
-# expense = edit_expense(4, "2 Books", 600, "Bob", ["Alice, Bob"], "note")
-# print("expense:", expense)  # None
+# edit_success = edit_expense(4, "2 Books", 600, "Bob", ["Alice, Bob"], "note")
+# print("edit_success:", edit_success)  # True
 
 
 # 新增群組
@@ -450,14 +450,14 @@ def get_members_info(group_id):
 # 離開群組
 def leave_group(user_id, group_id):
     """
-    使用者離開 group
+    使用者離開 group，成功離開則回傳 True，查無 user 或 group 則回傳 False
 
     parameters:
     - user_id (int)
     - group_id (int)
 
     return:
-    - None
+    - leave_success (bool): 是否成功離開 group
     """
     headers = {
         "Content-Type": "application/json"
@@ -473,17 +473,17 @@ def leave_group(user_id, group_id):
             json=payload
         )
         if response.status_code == 200:
-            return None
+            return True
         else:
             print(f"Error! Server returned status code: {response.status_code}")
-            return None
+            return False
     except requests.exceptions.RequestException as e:
         print("Request failed:", e)
-        return None
+        return False
 
 # test
-# result = leave_group(3, 2)
-# print(result)  # None
+# leave_success = leave_group(3, 2)
+# print("leave_success:", leave_success)  # True
 
 
 # 計算群組最終付款金額
@@ -555,43 +555,3 @@ def get_settle_info(group_id):
 # test
 # group_settlement = get_settle_info(2)
 # print("group_settlement:", group_settlement)
-
-
-'''
-等到你徹底熟悉上面 function 的寫法就可以寫得更簡潔一點 以下是上面 function 的簡潔版:
-def sign_in(name):
-    """
-    傳送 name 給後端，若已有該 user 則登入，否則自動創建 user 後登入，回傳 user_info dict
-
-    parameters:
-    - name (str): user name
-
-    return:
-    - user_info (dict): 連線成功, 回傳使用者資訊包含 user id, name, groups
-    - None: 連線失敗
-    """
-    headers = {
-        "Content-Type": "application/json"
-    }
-    payload = {
-        "name": name
-    }
-
-    try:
-        # 發送 HTTP request 並收到 response (HTTP method: POST, Route: /api/users/signin)
-        response = requests.post(
-            f"{BASE_URL}/users/signin",
-            headers=headers,
-            json=payload
-        )
-
-        # 根據收到的 response 做處理
-        if response.status_code == 200:
-            return response.json()
-        else:
-            print(f"Error! Server returned status code: {response.status_code}")
-            return None
-    except requests.exceptions.RequestException as e:
-        print("Request failed:", e)
-        return None
-'''

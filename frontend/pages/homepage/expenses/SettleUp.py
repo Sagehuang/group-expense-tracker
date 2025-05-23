@@ -1,17 +1,8 @@
 import customtkinter as ctk
-from api_client import get_balance_info
-from api_client import get_settle_info
-
+from api_client import get_balance_info, get_settle_info
 
 ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
-
-
-# 【假資料】
-# group_id = 1
-# group_balance = [{'user_name': 'Alice', 'net_balance': -500}, {'user_name': 'Bob', 'net_balance': 250}, {'user_name': 'Brian', 'net_balance': 250}]
-# group_settlement = [{'payer': 'Alice', 'receiver': 'Bob', 'amount': 250}, {'payer': 'Alice', 'receiver': 'Brian', 'amount': 250}]
-## 要讓SettleUp頁面上能出現組員之間的balance、settle，會需要跨頁面傳遞group_id
 
 
 class SettleUp(ctk.CTkFrame):
@@ -47,9 +38,14 @@ class SettleUp(ctk.CTkFrame):
 
     def load_balance(self):
         for widget in self.scrollable.winfo_children():
-            widget.destroy()  # 清空原有元件
+            widget.destroy()
 
-        group_balance = get_balance_info(self.controller.clicked_group_id)
+        # 呼叫API function
+        try:
+            group_balance = get_balance_info(self.controller.clicked_group_id)
+            print('get_balance_info API 回傳:', group_balance)
+        except Exception as error:
+            print('get_balance_info API 發生錯誤:', error)
 
         # 模擬群組內有成員
         if group_balance:
@@ -57,7 +53,7 @@ class SettleUp(ctk.CTkFrame):
             balance_frame.pack(padx=10, pady=10, fill='x')
             balance_frame.grid_columnconfigure(0, weight=1)
 
-            # 遍歷group_balance
+            # 遍歷 group_balance
             for index, balance_dict in enumerate(group_balance):
                 # 組員
                 member_balance_label = ctk.CTkLabel(balance_frame, text=balance_dict['user_name'], font=self.mid_font)
@@ -87,11 +83,16 @@ class SettleUp(ctk.CTkFrame):
         separator2.pack(fill='x', pady=(0, 0))  # 0, 10
 
     def load_settle(self):
-        # 這裡不能清空！在 load_balance 清空一次即可
+        # 這裡不能清空元件！在 load_balance 清空一次即可
         # for widget in self.scrollable.winfo_children():
         #     widget.destroy()  # 清空原有元件
 
-        group_settlement = get_settle_info(self.controller.clicked_group_id)
+        # 呼叫API function
+        try:
+            group_settlement = get_settle_info(self.controller.clicked_group_id)
+            print('get_settle_info API 回傳:', group_settlement)
+        except Exception as error:
+            print('get_settle_info API 發生錯誤:', error)
 
         # 模擬群組內有成員
         if group_settlement:
@@ -99,7 +100,7 @@ class SettleUp(ctk.CTkFrame):
             settle_frame.pack(padx=10, pady=5, fill='x')
             settle_frame.grid_columnconfigure(0, weight=1)
 
-            # 遍歷group_settlement
+            # 遍歷 group_settlement
             for index, settle_dict in enumerate(group_settlement):
 
                 # 組員
@@ -121,17 +122,3 @@ class SettleUp(ctk.CTkFrame):
 
     def on_logout(self):
         self.show_page('SignIn')
-
-
-if __name__ == '__main__':
-    app = ctk.CTk()
-    app.geometry('400x640')
-    app.title('Group Expense Tracker')
-
-    app.grid_rowconfigure(0, weight=1)
-    app.grid_columnconfigure(0, weight=1)
-
-    settle_up = SettleUp(app, show_page_callback,)
-    settle_up.grid(row=0, column=0, sticky='nsew')
-
-    app.mainloop()

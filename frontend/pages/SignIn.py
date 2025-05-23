@@ -9,8 +9,7 @@ class SignIn(ctk.CTkFrame):
     def __init__(self, master, show_page_callback, controller):
         super().__init__(master)
         self.show_page = show_page_callback
-        self.controller = controller  # self.controller 就是 app 這個 object
-        # 改用 self.controller.user_id 來取得或修改 user_id
+        self.controller = controller  # self.controller 就是 app 這個 object, 可以用 self.controller.user_id 來取得或修改 user_id
 
         # 整體用 grid 分三行，上中下置中
         self.grid_rowconfigure(0, weight=1)
@@ -59,10 +58,10 @@ class SignIn(ctk.CTkFrame):
     def handle_sign_in(self):
         name = self.name_entry.get().strip()
         if not name:
-            self.result_label.configure(text='Please enter a name.')
+            self.result_label.configure(text='Please enter a name.', text_color='red')
             return
 
-        try:  # !!!
+        try:
             self.controller.user_id = sign_in(name)
             print(f'User ID {self.controller.user_id} logging in...')
         except Exception as error:
@@ -70,7 +69,7 @@ class SignIn(ctk.CTkFrame):
 
         if self.controller.user_id:
             self.result_label.configure(text=f'Welcome, {name}!', text_color='green')
-            # 1秒後跳到HomePage
+            # 1 秒後跳到 HomePage
             self.after(1000, lambda: self.show_page('HomePage'))
         else:
             self.result_label.configure(text='Sign-in failed.', text_color='red')
@@ -78,18 +77,3 @@ class SignIn(ctk.CTkFrame):
     def reset_fields(self):
         self.name_entry.delete(0, 'end')
         self.result_label.configure(text='')
-
-
-if __name__ == '__main__':
-    app = ctk.CTk()
-    app.geometry('400x640')
-    app.title('Group Expense Tracker')
-
-    # 設定 app 內 grid
-    app.grid_rowconfigure(0, weight=1)
-    app.grid_columnconfigure(0, weight=1)
-
-    sign_in = SignIn(app, show_page_callback)
-    sign_in.grid(row=0, column=0, sticky='nsew')
-
-    app.mainloop()

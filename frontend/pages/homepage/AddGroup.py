@@ -79,30 +79,18 @@ class AddGroup(ctk.CTkFrame):
     def add_new_group(self):
         group_name = self.group_name_entry.get().strip()
         if group_name:
-            try:  # !!!
+            try:
                 new_group = add_group(group_name, self.controller.user_id)
                 self.result_label.configure(text='Group added successfully.', text_color='green')
                 print('add_group API 回傳:', new_group)
-                # 1秒後回到HomePage並清空結果文字與文字框
+                # 1 秒後回到 HomePage
                 self.after(1000, lambda: self.on_navigate_home())
-                self.after(1000, lambda: self.result_label.configure(text=''))
-                self.after(1000, lambda: self.group_name_entry.delete(0, 'end'))
             except Exception as error:
                 self.result_label.configure(text='Failed to add group.', text_color='red')
                 print(error)
         else:
             self.result_label.configure(text='Please enter a Group Name.', text_color='red')
 
-
-if __name__ == '__main__':
-    app = ctk.CTk()
-    app.geometry('400x640')
-    app.title('Group Expense Tracker')
-
-    app.grid_rowconfigure(0, weight=1)
-    app.grid_columnconfigure(0, weight=1)
-
-    add_group = AddGroup(app, show_page_callback)
-    add_group.grid(row=0, column=0, sticky='nsew')
-
-    app.mainloop()
+    def reset_fields(self):
+        self.group_name_entry.delete(0, 'end')
+        self.result_label.configure(text='')

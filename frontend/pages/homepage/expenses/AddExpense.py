@@ -1,18 +1,11 @@
 import customtkinter as ctk
 from datetime import datetime
-from api_client import add_expense as api_add_expense
-
-
+from api_client import add_expense
 
 ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
 
-# 【假資料】
-# group_id = 1
-## 要回傳加入的expense給後端，會需要跨頁面傳遞group_id
 
-
-# 代入：group_id
 class AddExpense(ctk.CTkFrame):
     def __init__(self, master, show_page_callback, controller):
         super().__init__(master)
@@ -111,8 +104,6 @@ class AddExpense(ctk.CTkFrame):
 
         # 6th row：Add button
         self.add_group_button = ctk.CTkButton(bottom_frame, text='Add', command=self.on_add)
-        # self.add_group_button = ctk.CTkButton(bottom_frame, text='Add')
-        # self.add_group_button.bind("<Button-1>", lambda e: print("Button clicked!"))
         self.add_group_button.grid(row=6, column=0, columnspan=2, pady=20)
 
         # 7th row: result
@@ -120,8 +111,6 @@ class AddExpense(ctk.CTkFrame):
         self.result_label.grid(row=7, column=0, columnspan=2, pady=(5, 0))
 
     def reset_fields(self):
-        #!!!
-        print('Reset fields called in AddExpense')
         self.item_entry.delete(0, 'end')
         self.amount_entry.delete(0, 'end')
         self.payer_entry.delete(0, 'end')
@@ -170,33 +159,16 @@ class AddExpense(ctk.CTkFrame):
         created_at = datetime.now()
         group_id = self.controller.clicked_group_id
 
-
         # 呼叫API function
         try:
-            api_add_expense(created_at, name, amount, payer, participants, note, group_id)
-            success = True
-            print('add_expense API 呼叫成功') # print不出東西
+            success = add_expense(created_at, name, amount, payer, participants, note, group_id)
+            print('add_expense API 回傳:', success)
         except Exception as error:
-            print('add_expense API 發生錯誤:', error) # print不出東西
-            success = False
+            print('add_expense API 發生錯誤:', error)
 
         if success:
             self.result_label.configure(text='Expense added successfully.', text_color='green')
-            # 1秒後清空欄位，讓使用者加入新的一筆expense
+            # 1 秒後清空欄位，讓使用者加入新的一筆 expense
             self.after(1000, lambda: self.reset_fields())
         else:
             self.result_label.configure(text='Failed to add expense.', text_color='red')
-
-
-if __name__ == '__main__':
-    app = ctk.CTk()
-    app.geometry('400x640')
-    app.title('Group Expense Tracker')
-
-    app.grid_rowconfigure(0, weight=1)
-    app.grid_columnconfigure(0, weight=1)
-
-    add_expense = AddExpense(app, show_page_callback)
-    add_expense.grid(row=0, column=0, sticky='nsew')
-
-    app.mainloop()
