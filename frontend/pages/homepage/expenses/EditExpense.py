@@ -69,14 +69,15 @@ class EditExpense(ctk.CTkFrame):
         self.amount_label.grid(row=2, column=0, padx=(10, 5), pady=10, sticky='w')
 
         # 4th frame（放NT$ + entry）
-        amount_frame = ctk.CTkFrame(bottom_frame, fg_color='transparent')
-        amount_frame.grid(row=2, column=1, columnspan=2, padx=(5, 10), pady=10, sticky='ew')
+        self.amount_frame = ctk.CTkFrame(bottom_frame, fg_color='transparent')
+        self.amount_frame.grid(row=2, column=1, padx=(5, 10), pady=10, sticky='ew')
+        self.amount_frame.grid_columnconfigure(1, weight=1)
 
-        self.amount_prefix_label = ctk.CTkLabel(amount_frame, text='NT$ ', font=self.small_font, anchor='w')
-        self.amount_prefix_label.pack(side='left', padx=(0, 2))
+        self.amount_prefix_label = ctk.CTkLabel(self.amount_frame, text='NT$', font=self.small_font, width=45, anchor='w')
+        self.amount_prefix_label.grid(row=0, column=0, sticky='w')
 
-        self.amount_entry = ctk.CTkEntry(amount_frame)
-        self.amount_entry.pack(side='left')
+        self.amount_entry = ctk.CTkEntry(self.amount_frame)
+        self.amount_entry.grid(row=0, column=1, sticky='ew')
 
         # 3rd row：Payer
         self.payer_label = ctk.CTkLabel(bottom_frame, text='Payer', font=self.small_font, anchor='w')
