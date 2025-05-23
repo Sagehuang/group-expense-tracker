@@ -28,7 +28,7 @@ python app.py
 
 ```bash
 cd frontend
-python client.py
+python app.py
 ```
 
 Then you will see the GUI.
