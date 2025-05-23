@@ -40,14 +40,13 @@ class HomePage(ctk.CTkFrame):
 
         # 主體捲動區設置
         self.scrollable = ctk.CTkScrollableFrame(self)
-        self.scrollable.grid(row=1, column=0, sticky='nsew', padx=10, pady=(0, 10))
+        self.scrollable.grid(row=1, column=0, sticky='nsew', padx=10)
         self.scrollable.grid_columnconfigure(0, weight=1)
 
         # 底部列設置
         self.bottom_frame = ctk.CTkFrame(self, fg_color='transparent')
         self.bottom_frame.grid(row=2, column=0, sticky='ew', padx=10, pady=10)
-        self.bottom_frame.grid_columnconfigure(0, weight=1)
-        self.bottom_frame.grid_columnconfigure(1, weight=1)
+        self.bottom_frame.grid_columnconfigure((0, 1), weight=1)
 
         # 設定底部的按鈕
         self.add_group_button = ctk.CTkButton(self.bottom_frame, text='Add Group', font=self.small_font, command=self.on_add_group)

@@ -16,14 +16,18 @@ class EditExpense(ctk.CTkFrame):
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        # 1st frame: top bar
-        top_bar = ctk.CTkFrame(self, fg_color='#F3F6F4')
-        top_bar.grid(row=0, column=0, sticky='ew')
-        top_bar.grid_columnconfigure(1, weight=1)
+        # Pre-defined fonts
+        self.font_top_bar = ctk.CTkFont(family='Gotham', size=20, weight='bold')
+        self.small_font = ctk.CTkFont(family='Gotham', size=12)
 
-        self.back_button = ctk.CTkButton(top_bar, text='Back', command=self.on_navigate_back, width=80)
-        self.title_label = ctk.CTkLabel(top_bar, text='Edit Expense', font=ctk.CTkFont(size=18, weight='bold'))
-        self.logout_button = ctk.CTkButton(top_bar, text='Logout', command=self.on_logout, width=80)
+        # 1st frame: top bar
+        self.top_bar = ctk.CTkFrame(self, fg_color='#F3F6F4')
+        self.top_bar.grid(row=0, column=0, sticky='ew')
+        self.top_bar.grid_columnconfigure(1, weight=1)
+
+        self.back_button = ctk.CTkButton(self.top_bar, text='Back', font=self.small_font, command=self.on_navigate_back, width=80)
+        self.title_label = ctk.CTkLabel(self.top_bar, text='Edit Expense', text_color='black', font=self.font_top_bar)
+        self.logout_button = ctk.CTkButton(self.top_bar, text='Logout', font=self.small_font, command=self.on_logout, width=80)
 
         self.back_button.grid(row=0, column=0, padx=10, pady=10, sticky='w')
         self.title_label.grid(row=0, column=1, padx=10, pady=10)
@@ -31,7 +35,7 @@ class EditExpense(ctk.CTkFrame):
 
         # 2rd frame（主要容器）: Item, Amount, Payer, Participants, Note, Edit button
         bottom_frame = ctk.CTkFrame(self, fg_color='transparent')
-        bottom_frame.grid(row=1, column=0, pady=20, sticky='n')
+        bottom_frame.grid(row=1, column=0, pady=20, sticky='nsew')
         bottom_frame.grid_columnconfigure((0, 1), weight=1)
         bottom_frame.grid_rowconfigure((1, 2, 3, 4, 5, 6, 7), weight=1)
 
@@ -47,60 +51,60 @@ class EditExpense(ctk.CTkFrame):
         date_str = now.strftime("%Y/%m/%d")  # Y：完整年份
         time_str = now.strftime("%H:%M")
 
-        self.date_label = ctk.CTkLabel(top_date_time_frame, text=f"Date: {date_str}")
+        self.date_label = ctk.CTkLabel(top_date_time_frame, text=f"Date: {date_str}", font=self.small_font)
         self.date_label.grid(row=0, column=0, padx=10, pady=5, sticky='e')  # 靠右對齊
 
-        self.time_label = ctk.CTkLabel(top_date_time_frame, text=f"Time: {time_str}")
+        self.time_label = ctk.CTkLabel(top_date_time_frame, text=f"Time: {time_str}", font=self.small_font)
         self.time_label.grid(row=0, column=1, padx=10, pady=5, sticky='w')  # 靠左對齊
 
         # 1st row：Item
-        self.item_label = ctk.CTkLabel(bottom_frame, text='Item', anchor='w')
+        self.item_label = ctk.CTkLabel(bottom_frame, text='Item', font=self.small_font, anchor='w')
         self.item_label.grid(row=1, column=0, padx=(10, 5), pady=10, sticky='w')
 
         self.item_entry = ctk.CTkEntry(bottom_frame)
         self.item_entry.grid(row=1, column=1, padx=(5, 10), pady=10, sticky='ew')
 
         # 2nd row：Amount
-        self.amount_label = ctk.CTkLabel(bottom_frame, text='Amount', anchor='w')
+        self.amount_label = ctk.CTkLabel(bottom_frame, text='Amount', font=self.small_font, anchor='w')
         self.amount_label.grid(row=2, column=0, padx=(10, 5), pady=10, sticky='w')
 
         # 4th frame（放NT$ + entry）
         amount_frame = ctk.CTkFrame(bottom_frame, fg_color='transparent')
-        amount_frame.grid(row=2, column=1, columnspan=2, padx=(5, 10), pady=10, sticky='w')
+        amount_frame.grid(row=2, column=1, columnspan=2, padx=(5, 10), pady=10, sticky='ew')
 
-        self.amount_prefix_label = ctk.CTkLabel(amount_frame, text='NT$', anchor='w')
+        self.amount_prefix_label = ctk.CTkLabel(amount_frame, text='NT$ ', font=self.small_font, anchor='w')
         self.amount_prefix_label.pack(side='left', padx=(0, 2))
 
-        self.amount_entry = ctk.CTkEntry(amount_frame, width=120)
+        self.amount_entry = ctk.CTkEntry(amount_frame)
         self.amount_entry.pack(side='left')
 
         # 3rd row：Payer
-        self.payer_label = ctk.CTkLabel(bottom_frame, text='Payer', anchor='w')
+        self.payer_label = ctk.CTkLabel(bottom_frame, text='Payer', font=self.small_font, anchor='w')
         self.payer_label.grid(row=3, column=0, padx=(10, 5), pady=10, sticky='w')
 
         self.payer_entry = ctk.CTkEntry(bottom_frame)
         self.payer_entry.grid(row=3, column=1, padx=(5, 10), pady=10, sticky='ew')
 
         # 4th row：Participants
-        self.participants_label = ctk.CTkLabel(bottom_frame, text='Participants', anchor='w')
+        self.participants_label = ctk.CTkLabel(bottom_frame, text='Participants', font=self.small_font, anchor='w')
         self.participants_label.grid(row=4, column=0, padx=(10, 5), pady=10, sticky='w')
 
         self.participants_entry = ctk.CTkEntry(bottom_frame)
         self.participants_entry.grid(row=4, column=1, padx=(5, 10), pady=10, sticky='ew')
 
         # 5th row：Note
-        self.note_label = ctk.CTkLabel(bottom_frame, text='Note', anchor='w')
+        self.note_label = ctk.CTkLabel(bottom_frame, text='Note', font=self.small_font, anchor='w')
         self.note_label.grid(row=5, column=0, padx=(10, 5), pady=10, sticky='w')
 
         self.note_entry = ctk.CTkEntry(bottom_frame)
         self.note_entry.grid(row=5, column=1, padx=(5, 10), pady=10, sticky='ew')
 
         # 6th row：Edit button
-        self.edit_group_button = ctk.CTkButton(bottom_frame, text='Edit', command=self.on_edit)
+        self.edit_group_button = ctk.CTkButton(bottom_frame, text='Edit', font=self.small_font, command=self.on_edit)
         self.edit_group_button.grid(row=6, column=0, columnspan=2, pady=20)
 
         # 7th row: result
-        self.result_label = ctk.CTkLabel(bottom_frame, text='', text_color='red')
+        self.result_label = ctk.CTkLabel(bottom_frame, text='', font=self.small_font, text_color='red')
         self.result_label.grid(row=7, column=0, columnspan=2, pady=(5, 0))
 
     def load_expense(self):
@@ -119,6 +123,7 @@ class EditExpense(ctk.CTkFrame):
         self.participants_entry.insert(0, ', '.join(original_participants))
 
         self.note_entry.delete(0, 'end')
+
         # original_note 可能是 str 也可能是 None
         if original_note:
             self.note_entry.insert(0, original_note)  # str 的情況沒問題

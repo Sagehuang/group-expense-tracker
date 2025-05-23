@@ -20,13 +20,13 @@ class SettleUp(ctk.CTkFrame):
         self.small_font = ctk.CTkFont(family='Gotham', size=12)
 
         # 頂端列
-        top_bar = ctk.CTkFrame(self, fg_color='#F3F6F4')
-        top_bar.grid(row=0, column=0, sticky='ew')
-        top_bar.grid_columnconfigure(1, weight=1)
+        self.top_bar = ctk.CTkFrame(self, fg_color='#F3F6F4')
+        self.top_bar.grid(row=0, column=0, sticky='ew')
+        self.top_bar.grid_columnconfigure(1, weight=1)
 
-        self.back_button = ctk.CTkButton(top_bar, text='Back', font=self.small_font, command=self.on_navigate_back, width=80)
-        self.title_label = ctk.CTkLabel(top_bar, text='Settle Up', text_color='black', font=self.font_top_bar)
-        self.logout_button = ctk.CTkButton(top_bar, text='Logout', font=self.small_font, command=self.on_logout, width=80)
+        self.back_button = ctk.CTkButton(self.top_bar, text='Back', font=self.small_font, command=self.on_navigate_back, width=80)
+        self.title_label = ctk.CTkLabel(self.top_bar, text='Settle Up', text_color='black', font=self.font_top_bar)
+        self.logout_button = ctk.CTkButton(self.top_bar, text='Logout', font=self.small_font, command=self.on_logout, width=80)
 
         self.back_button.grid(row=0, column=0, padx=10, pady=10, sticky='w')
         self.title_label.grid(row=0, column=1, padx=10, pady=10)
@@ -62,9 +62,9 @@ class SettleUp(ctk.CTkFrame):
                 # 金額
                 amount_balance = balance_dict['net_balance']
                 if amount_balance >= 0:
-                    amount_balance_label = ctk.CTkLabel(balance_frame, text='+ NT$' + str(amount_balance), font=self.mid_font)
+                    amount_balance_label = ctk.CTkLabel(balance_frame, text='+ NT$ ' + str(amount_balance), font=self.mid_font)
                 else:
-                    amount_balance_label = ctk.CTkLabel(balance_frame, text='- NT$' + str(abs(amount_balance)), font=self.mid_font)
+                    amount_balance_label = ctk.CTkLabel(balance_frame, text='- NT$ ' + str(abs(amount_balance)), font=self.mid_font)
                 amount_balance_label.grid(row=index * 2, column=1, padx=20, sticky='e')
 
                 # 加一條黑色橫線
@@ -109,7 +109,7 @@ class SettleUp(ctk.CTkFrame):
 
                 # 金額
                 amount_settle = settle_dict['amount']
-                amount_settle_label = ctk.CTkLabel(settle_frame, text='NT$' + str(amount_settle), font=self.mid_font)
+                amount_settle_label = ctk.CTkLabel(settle_frame, text='NT$ ' + str(amount_settle), font=self.mid_font)
                 amount_settle_label.grid(row=index * 2, column=1, padx=20, sticky='e')
 
                 # 加一條黑色橫線

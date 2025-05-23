@@ -38,6 +38,7 @@ class ViewGroup(ctk.CTkFrame):
         # 可捲動區
         self.scrollable = ctk.CTkScrollableFrame(self)
         self.scrollable.grid(row=1, column=0, sticky='nsew', padx=10)
+        self.scrollable.grid_columnconfigure(0, weight=1)
 
         # 底部按鈕
         self.bottom_frame = ctk.CTkFrame(self, fg_color='transparent')
@@ -103,7 +104,7 @@ class ViewGroup(ctk.CTkFrame):
                 line_frame.pack(fill='x', padx=10, pady=(0, 10))
 
         else:
-            no_group_label = ctk.CTkLabel(self.scrollable, text='Add an expense!', font=self.small_font)
+            no_group_label = ctk.CTkLabel(self.scrollable, text='This group has no expenses for now.\nTry adding an expense! It makes life easier. ;)', font=self.small_font)
             no_group_label.pack(pady=20)
 
     # 頁面切換
