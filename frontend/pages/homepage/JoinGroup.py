@@ -62,12 +62,13 @@ class JoinGroup(ctk.CTkFrame):
         self.group_name_entry.grid(row=1, column=0, sticky='w', pady=(0, 10))  # sticky='w' 對齊左邊
 
         # Add button
-        self.add_button = ctk.CTkButton(self.main_frame, width=50, text='Join', font=self.small_font, command=self.add_new_group)
+        self.add_button = ctk.CTkButton(self.main_frame, width=50, text='Join', font=self.small_font, command=self.join_new_group)
         self.add_button.grid(row=2, column=0, pady=(0, 10))
 
         # 結果文字
         self.result_label = ctk.CTkLabel(self.main_frame, width=200, text='', font=self.small_font)
         self.result_label.grid(row=3, column=0, pady=(0, 10))
+        self.result_label.configure(text='')
 
     # 頁面切換
     def on_navigate_home(self):
@@ -77,15 +78,17 @@ class JoinGroup(ctk.CTkFrame):
         self.show_page('SignIn')
 
     # JOIN GROUP
-    def add_new_group(self):
+    def join_new_group(self):
         group_id = self.group_name_entry.get().strip()
         if group_id:  # !!!
             success = join_group(group_id, self.controller.user_id)
             print('API 回傳:', success)
             if success:
                 self.result_label.configure(text='Group joined successfully.', text_color='green')
-                # 1秒後回到HomePage
+                # 1秒後回到HomePage並清空結果文字與文字框
                 self.after(1000, lambda: self.on_navigate_home())
+                self.after(1000, lambda: self.result_label.configure(text=''))
+                self.after(1000, lambda: self.group_name_entry.delete(0, 'end'))
             else:
                 self.result_label.configure(text='Failed to join group.', text_color='red')
                 return

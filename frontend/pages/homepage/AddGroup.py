@@ -83,8 +83,10 @@ class AddGroup(ctk.CTkFrame):
                 new_group = add_group(group_name, self.controller.user_id)
                 self.result_label.configure(text='Group added successfully.', text_color='green')
                 print('API 回傳:', new_group)
-                # 1秒後回到HomePage
+                # 1秒後回到HomePage並清空結果文字與文字框
                 self.after(1000, lambda: self.on_navigate_home())
+                self.after(1000, lambda: self.result_label.configure(text=''))
+                self.after(1000, lambda: self.group_name_entry.delete(0, 'end'))
             except Exception as error:
                 self.result_label.configure(text='Failed to add group.', text_color='red')
                 print(error)
