@@ -1,5 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+# from datetime import datetime  # db debug
+# from models.user import User  # db debug
+# from models.group import Group  # db debug
+# from models.expense import Expense  # db debug
 
 # 建立 SQLAlchemy 實例
 db = SQLAlchemy()
@@ -11,14 +14,12 @@ def init_db(app):
 
     db.init_app(app)  # 綁定 Flask app 和 SQLAlchemy 的 db
 
-    from models.user import User  # db debug
-    from models.group import Group  # db debug
-    from models.expense import Expense  # db debug
-
     with app.app_context():
         db.create_all()  # 根據使用 SQLAlchemy 定義的所有 data models，在資料庫中建立對應的表格
 
-        # db testing
+        """
+        # db debug
+        # 建立假資料
         if not User.query.first():  # 如果資料表是空的，才建立測試資料
             # 建立使用者
             user1 = User(name='Alice')
@@ -66,6 +67,7 @@ def init_db(app):
                 expense1, expense2, expense3
             ])
             db.session.commit()
+            """
 
 # association
 # 定義 User 和 Group 的多對多關聯
