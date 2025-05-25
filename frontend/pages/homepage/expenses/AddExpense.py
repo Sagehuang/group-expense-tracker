@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from datetime import datetime
-from api_client import add_expense
+from api_client import add_expense, get_members_info
 
 ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
@@ -134,6 +134,13 @@ class AddExpense(ctk.CTkFrame):
         payer = self.payer_entry.get().strip()
 
         participants_raw = self.participants_entry.get().strip()
+
+        # 確定輸入格式正確
+        if ',' not in participants_raw:
+            if len(participants_raw.split()) > 1: # 使用者可能是用空格輸入
+                self.result_label.configure(text='Please separate multiple participants with commas.', text_color='red')
+                return
+
         participants = []
         for participant in participants_raw.split(','):
             stripped_participant = participant.strip()
@@ -153,7 +160,19 @@ class AddExpense(ctk.CTkFrame):
             self.result_label.configure(text='Amount must be a valid positive number.', text_color='red')
             return
 
-        # 回傳資料（依後端API形式）
+        group_name, members_list = get_members_info(self.controller.clicked_group_id)
+        if payer not in members_list:
+            self.result_label.configure(text='Payer is not a group member.', text_color='red')
+            return
+        invalid_participants = []
+        for participant in participants:
+            if participant not in members_list:
+                invalid_participants.append(participant)
+        if invalid_participants:
+            self.result_label.configure(text=f"Participants not in group: {', '.join(invalid_participants)}", text_color='red')
+            return
+
+        # 回傳資料
         created_at = datetime.now()
         group_id = self.controller.clicked_group_id
 

@@ -149,6 +149,13 @@ class EditExpense(ctk.CTkFrame):
         payer = self.payer_entry.get().strip()
 
         participants_raw = self.participants_entry.get().strip()
+
+        # 確定輸入格式正確
+        if ',' not in participants_raw:
+            if len(participants_raw.split()) > 1: # 使用者可能是用空格輸入
+                self.result_label.configure(text='Please separate multiple participants with commas.', text_color='red')
+                return
+
         participants = []
         for participant in participants_raw.split(','):
             stripped_participant = participant.strip()
@@ -166,6 +173,18 @@ class EditExpense(ctk.CTkFrame):
         amount = int(amount_str)
         if amount <= 0:
             self.result_label.configure(text='Amount must be a valid positive number.', text_color='red')
+            return
+
+        group_name, members_list = get_members_info(self.controller.clicked_group_id)
+        if payer not in members_list:
+            self.result_label.configure(text='Payer is not a group member.', text_color='red')
+            return
+        invalid_participants = []
+        for participant in participants:
+            if participant not in members_list:
+                invalid_participants.append(participant)
+        if invalid_participants:
+            self.result_label.configure(text=f"Participants not in group: {', '.join(invalid_participants)}", text_color='red')
             return
 
         # 呼叫API function
