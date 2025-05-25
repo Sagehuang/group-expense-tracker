@@ -22,7 +22,7 @@ def sign_in(name):
     - name (str): user name
 
     return:
-    - user_info (dict): 連線成功, 回傳使用者資訊包含 user id, name, groups
+    - user_id (int): 此 user 的 id
     - None: 連線失敗
     """
     headers = {

@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from datetime import datetime
-from api_client import get_expense_info, edit_expense
+from api_client import get_expense_info, edit_expense, get_members_info
 
 ctk.set_appearance_mode('System')
 ctk.set_default_color_theme('blue')
